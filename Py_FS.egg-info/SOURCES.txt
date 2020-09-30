@@ -8,4 +8,3 @@ Py_FS.egg-info/PKG-INFO
 Py_FS.egg-info/SOURCES.txt
 Py_FS.egg-info/dependency_links.txt
 Py_FS.egg-info/top_level.txt
-dist/Py_FS-0.0.0-py3-none-any.whl
