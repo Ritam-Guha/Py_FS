@@ -10,8 +10,8 @@ setuptools.setup(
      author_email="ritamguha16@gmail.com",
      description="A Python Package for Feature Selection",
      long_description=long_description,
-   long_description_content_type="text/markdown",
-     url="https://github.com/javatechy/dokr",
+    long_description_content_type="text/markdown",
+     url="https://github.com/Ritam-Guha/PyFS",
      packages=setuptools.find_packages(),
      classifiers=[
          "Programming Language :: Python :: 3",
