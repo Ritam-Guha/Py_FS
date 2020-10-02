@@ -8,3 +8,7 @@ Py_FS.egg-info/PKG-INFO
 Py_FS.egg-info/SOURCES.txt
 Py_FS.egg-info/dependency_links.txt
 Py_FS.egg-info/top_level.txt
+Py_FS/wrapper/__init__.py
+Py_FS/wrapper/nature_inspired/GA.py
+Py_FS/wrapper/nature_inspired/__init__.py
+Py_FS/wrapper/nature_inspired/_utilities.py

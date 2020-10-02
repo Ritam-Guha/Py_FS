@@ -1,12 +1,14 @@
 Metadata-Version: 2.1
 Name: Py-FS
-Version: 0.0.0.0
+Version: 0.0.0.9
 Summary: A Python Package for Feature Selection
 Home-page: https://github.com/Ritam-Guha/Py_FS
 Author: Ritam Guha
 Author-email: ritamguha16@gmail.com
 License: UNKNOWN
 Description: Py_FS: A Python Package for Feature Selection
+        
+        
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
