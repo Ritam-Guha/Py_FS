@@ -2,14 +2,26 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from utilities import Solution, Data, initialize, sort_agents, display
-from sklearn.neighbors import KNeighborsClassifier
+from utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from sklearn import datasets
 
-def GA(num_agents, max_iter, obj_function, train_data, train_label):
+def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_cross=0.4, prob_mut=0.3):
 
     # Genetic Algorithm
+    ############################### Parameters ####################################
+    #                                                                             #
+    #   num_agents: number of chromosomes                                         #
+    #   max_iter: maximum number of generations                                   #
+    #   train_data: training samples of data                                      #
+    #   train_label: class labels for the training samples                        #                
+    #   obj_function: the function to maximize while doing feature selection      #
+    #   prob_cross: probability of crossover                                      #
+    #   prob_mut: probability of mutation                                         #
+    #                                                                             #
+    ###############################################################################
+
     num_features = train_data.shape[1]
+    cross_limit = 5
 
     # initialize chromosomes and Leader (the agent with the max fitness)
     chromosomes = initialize(num_agents, num_features)
@@ -41,13 +53,14 @@ def GA(num_agents, max_iter, obj_function, train_data, train_label):
 
     # main loop
     for iter_no in range(max_iter):
-
         print('\n================================================================================')
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
 
-         ################# GA #################
-        
+        # perform crossover, mutation and replacement
+        cross_mut(chromosomes, fitness, obj_function, data, prob_cross, cross_limit, prob_mut)
+
+        # update final information
         chromosomes, fitness = sort_agents(chromosomes, obj_function, data)
         display(chromosomes, fitness)
         Leader_agent = chromosomes[0].copy()
@@ -87,27 +100,95 @@ def GA(num_agents, max_iter, obj_function, train_data, train_label):
 
     return solution
 
+
+def crossover(parent_1, parent_2, prob_cross):
+    # perform crossover with crossover probability prob_cross
+    num_features = parent_1.shape[0]
+    child_1 = parent_1.copy()
+    child_2 = parent_2.copy()
+
+    for i in range(num_features):
+        if(np.random.rand()<prob_cross):
+            child_1[i] = parent_2[i]
+            child_2[i] = parent_1[i]
+
+    return child_1, child_2
+
+
+def mutation(chromosome, prob_mut):
+    # perform mutation with mutation probability prob_mut
+    num_features = chromosome.shape[0]
+    mut_chromosome = chromosome.copy()
+
+    for i in range(num_features):
+        if(np.random.rand()<prob_mut):
+            mut_chromosome[i] = 1-mut_chromosome[i]
+    
+    return mut_chromosome
+
+
+def roulette_wheel(fitness):
+    maximum = sum([f for f in fitness])
+    selection_probs = [f/maximum for f in fitness]
+    return np.random.choice(len(fitness), p=selection_probs)
+
+
+def cross_mut(chromosomes, fitness, obj_function, data, prob_cross, cross_limit, prob_mut):
+    # perform crossover, mutation and replacement
+    count = 0
+    num_agents = chromosomes.shape[0]
+    print('Crossover-Mutation phase starting....')
+
+    while(count<cross_limit):
+        print('\nCrossover no. {}'.format(count+1))
+        id_1 = roulette_wheel(fitness)
+        id_2 = roulette_wheel(fitness)
+
+        if(id_1 != id_2):
+            child_1, child_2 = crossover(chromosomes[id_1], chromosomes[id_2], prob_cross)
+            child_1 = mutation(child_1, prob_mut)
+            child_2 = mutation(child_2, prob_mut)
+            fitness_1 = obj_function(child_1, data)
+            fitness_2 = obj_function(child_2, data)
+
+            if(fitness_1 < fitness_2):
+                temp = child_1, fitness_1
+                child_1, fitness_1 = child_2, fitness_2
+                child_2, fitness_2 = temp
+
+            for i in range(num_agents):
+                if(fitness_1 > fitness[i]):
+                    print('1st child replaced with chromosome having id {}'.format(i+1))
+                    chromosomes[i] = child_1
+                    fitness[i] = fitness_1
+                    break
+
+            for i in range(num_agents):
+                if(fitness_2 > fitness[i]):
+                    print('2nd child replaced with chromosome having id {}'.format(i+1))
+                    chromosomes[i] = child_2
+                    fitness[i] = fitness_2
+                    break
+
+            count = count+1
+
+        else:
+            print('Crossover failed....')
+            print('Restarting crossover....\n')
+
+
 ############# for testing purpose ################
-
-def compute_accuracy(agent, data): 
-    cols=np.flatnonzero(agent)     
-    if(cols.shape[0]==0):
-        return 0    
-
-    clf=KNeighborsClassifier(n_neighbors=5)
-
-    train_data=data.train_X[:,cols]
-    train_label = data.train_Y
-    val_data=data.val_X[:,cols]
-    val_label = data.val_Y
-
-    clf.fit(train_data,train_label)
-    acc=clf.score(val_data,val_label)
-
-    return acc
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    GA(10, 20, compute_accuracy, iris.data, iris.target)
+    GA(10, 20, iris.data, iris.target, compute_accuracy)
+    # a = np.array([1, 0, 0, 1, 1])
+    # b = np.array([0, 1, 1, 0, 0])
+    # c, d = crossover(a, b, 0.4)
+    # print(a)
+    # print(b)
+
+    # print(c)
+    # print(d)
 
 ############# for testing purpose ################

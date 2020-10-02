@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
 
 class Solution():    
     #structure of the solution 
@@ -57,7 +58,7 @@ def sort_agents(agents, obj_function, data):
 
 def display(agents, fitness):
     # display the population
-    print('Number of agents: {}'.format(agents.shape[0]))
+    print('\nNumber of agents: {}'.format(agents.shape[0]))
     print('\n------------- Best Agent -------------')
     print('Fitness: {}'.format(fitness[0]))
     print('Number of Features: {}'.format(int(np.sum(agents[0]))))
@@ -67,3 +68,20 @@ def display(agents, fitness):
         print('Agent {} - Fitness: {}, Number of Features: {}'.format(id, fitness[id], int(np.sum(agent))))
 
     print('================================================================================\n')
+
+def compute_accuracy(agent, data): 
+    cols=np.flatnonzero(agent)     
+    if(cols.shape[0]==0):
+        return 0    
+
+    clf=KNeighborsClassifier(n_neighbors=5)
+
+    train_data=data.train_X[:,cols]
+    train_label = data.train_Y
+    val_data=data.val_X[:,cols]
+    val_label = data.val_Y
+
+    clf.fit(train_data,train_label)
+    acc=clf.score(val_data,val_label)
+
+    return acc
