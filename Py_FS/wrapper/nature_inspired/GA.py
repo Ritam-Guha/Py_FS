@@ -89,24 +89,21 @@ def GA(num_agents, max_iter, obj_function, train_data, train_label):
 
 ############# for testing purpose ################
 
-def compute_accuracy(agents, data): 
-    num_agents = agents.shape[0]
-    acc = np.zeros(num_agents)
+def compute_accuracy(agent, data): 
+    cols=np.flatnonzero(agent)     
+    if(cols.shape[0]==0):
+        return 0    
 
-    for id, agent in enumerate(agents):
-        cols=np.flatnonzero(agent)     
-        if(cols.shape[0]==0):
-            return 0    
+    clf=KNeighborsClassifier(n_neighbors=5)
 
-        clf=KNeighborsClassifier(n_neighbors=5)
+    train_data=data.train_X[:,cols]
+    train_label = data.train_Y
+    val_data=data.val_X[:,cols]
+    val_label = data.val_Y
 
-        train_data=data.train_X[:,cols]
-        train_label = data.train_Y
-        val_data=data.val_X[:,cols]
-        val_label = data.val_Y
+    clf.fit(train_data,train_label)
+    acc=clf.score(val_data,val_label)
 
-        clf.fit(train_data,train_label)
-        acc[id]=clf.score(val_data,val_label)
     return acc
 
 if __name__ == '__main__':

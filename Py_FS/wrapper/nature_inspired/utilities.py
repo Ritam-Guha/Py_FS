@@ -45,7 +45,10 @@ def initialize(num_agents, num_features):
 
 def sort_agents(agents, obj_function, data):
     # sort the agents according to fitness
-    fitness = obj_function(agents, data)
+    num_agents = agents.shape[0]
+    fitness = np.zeros(num_agents)
+    for id, agent in enumerate(agents):
+        fitness[id] = obj_function(agent, data)
     idx = np.argsort(-fitness)
     sorted_agents = agents[idx].copy()
     sorted_fitness = fitness[idx].copy()
