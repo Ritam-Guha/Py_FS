@@ -19,7 +19,6 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     #   prob_mut: probability of mutation                                         #
     #                                                                             #
     ###############################################################################
-
     num_features = train_data.shape[1]
     cross_limit = 5
 
@@ -128,6 +127,7 @@ def mutation(chromosome, prob_mut):
 
 
 def roulette_wheel(fitness):
+    # Perform roulette wheel selection
     maximum = sum([f for f in fitness])
     selection_probs = [f/maximum for f in fitness]
     return np.random.choice(len(fitness), p=selection_probs)
