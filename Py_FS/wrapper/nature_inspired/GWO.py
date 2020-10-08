@@ -3,8 +3,8 @@
 Programmer: Shameem Ahmed
 Date of Development: 9/10/2020
 This code has been developed according to the procedures mentioned in the following research article:
-"Mafarja, M., & Mirjalili, S. (2018). Whale optimization approaches for wrapper feature selection. 
-Applied Soft Computing, 62, 441-453."
+"Mirjalili, S., Mirjalili, S. M., & Lewis, A. (2014). Grey wolf optimizer. 
+Advances in engineering software, 69, 46-61."
 
 """
 
