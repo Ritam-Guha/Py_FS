@@ -118,7 +118,7 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                 r1 = np.random.random() # r1 is a random number in [0,1]
                 r2 = np.random.random() # r2 is a random number in [0,1]
                 A2 = (2 * a * r1) - a # calculate A2
-                C2 = 2*r2 # calculate C2
+                C2 = 2 * r2 # calculate C2
                 D_beta = abs(C2 * beta[j] - greywolves[i, j]) # find distance from beta
                 X2 = beta[j] - (A2 * D_beta) # Eq. (3.6)
 
@@ -126,7 +126,7 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                 r1 = np.random.random() # r1 is a random number in [0,1]
                 r2 = np.random.random() # r2 is a random number in [0,1]
                 A3 = (2* a * r1) - a # calculate A3
-                C3 = 2*r2 # calculate C3
+                C3 = 2 * r2 # calculate C3
                 D_delta = abs(C3 * delta[j] - greywolves[i, j]) # find distance from delta
                 X3 = delta[j]-A3*D_delta # Eq. (3.6)
 
