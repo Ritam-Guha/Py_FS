@@ -17,7 +17,7 @@ from sklearn import datasets
 
 # from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
-from _transformation_functions import get_trans_function
+from _transfer_functions import get_trans_function
 
 
 def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s'):
