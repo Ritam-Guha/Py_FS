@@ -24,11 +24,12 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     # Grey Wolf Optimizer
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: greywolves size                                               #
+    #   num_agents: number of greywolves                                          #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
-    #   train_label: class labels for the training samples                        #
+    #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
+    #   trans_function_shape: shape of the transfer function used for mapping     #
     #                                                                             #
     ###############################################################################
     
@@ -66,10 +67,8 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     start_time = time.time()
 
     # initialize the alpha, beta and delta grey wolves and their fitness
-    alpha, beta, delta = np.zeros((1, num_features)), np.zeros((
-        1, num_features)), np.zeros((1, num_features))
-    alpha_fit, beta_fit, delta_fit = float(
-        "-inf"), float("-inf"), float("-inf")
+    alpha, beta, delta = np.zeros((1, num_features)), np.zeros((1, num_features)), np.zeros((1, num_features))
+    alpha_fit, beta_fit, delta_fit = float("-inf"), float("-inf"), float("-inf")
 
     for iter_no in range(max_iter):
         print('\n================================================================================')

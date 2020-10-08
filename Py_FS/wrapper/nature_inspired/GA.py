@@ -74,8 +74,9 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
         # update final information
         chromosomes, fitness = sort_agents(chromosomes, obj_function, data)
         display(chromosomes, fitness, agent_name)
-        Leader_agent = chromosomes[0].copy()
-        Leader_fitness = fitness[0].copy()
+        if fitness[0]>Leader_fitness:
+            Leader_agent = chromosomes[0].copy()
+            Leader_fitness = fitness[0].copy()
         convergence_curve['fitness'][iter_no] = Leader_fitness
         convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
 

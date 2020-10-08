@@ -25,13 +25,12 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     # Whale Optimization Algorithm
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: number of chromosomes                                         #
+    #   num_agents: number of whales                                              #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   prob_cross: probability of crossover                                      #
-    #   prob_mut: probability of mutation                                         #
+    #   trans_function_shape: shape of the transfer function used for mapping     #
     #                                                                             #
     ###############################################################################
     
@@ -63,7 +62,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     solution.obj_function = obj_function
 
     # rank initial population
-    chromosomes, fitness = sort_agents(whales, obj_function, data)
+    whales, fitness = sort_agents(whales, obj_function, data)
 
     # start timer
     start_time = time.time()
@@ -111,10 +110,11 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                     whales[i,j] = 0
 
         # update final information
-        chromosomes, fitness = sort_agents(chromosomes, obj_function, data)
-        display(chromosomes, fitness, agent_name)
-        Leader_agent = chromosomes[0].copy()
-        Leader_fitness = fitness[0].copy()
+        whales, fitness = sort_agents(whales, obj_function, data)
+        display(whales, fitness, agent_name)
+        if fitness[0]>Leader_fitness:
+            Leader_agent = whales[0].copy()
+            Leader_fitness = fitness[0].copy()
         convergence_curve['fitness'][iter_no] = Leader_fitness
         convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
 
@@ -144,7 +144,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     solution.best_agent = Leader_agent
     solution.best_fitness = Leader_fitness
     solution.convergence_curve = convergence_curve
-    solution.final_population = chromosomes
+    solution.final_population = whales
     solution.final_fitness = fitness
     solution.execution_time = exec_time
 
