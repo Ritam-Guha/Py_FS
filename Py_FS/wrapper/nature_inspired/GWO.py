@@ -109,29 +109,29 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                 # calculate distance between alpha and current agent
                 r1 = np.random.random() # r1 is a random number in [0,1]
                 r2 = np.random.random() # r2 is a random number in [0,1]
-                A1 = (2 * a * r1) - a # calculate A1
+                A1 = (2 * a * r1) - a # calculate A1 
                 C1 = 2 * r2 # calculate C1
-                D_alpha = abs(C1 * alpha[j] - greywolves[i, j]) # find D_alpha
-                X1 = alpha[j] - (A1 * D_alpha) 
+                D_alpha = abs(C1 * alpha[j] - greywolves[i, j]) # find distance from alpha
+                X1 = alpha[j] - (A1 * D_alpha) # Eq. (3.6)
 
                 # calculate distance between beta and current agent
                 r1 = np.random.random() # r1 is a random number in [0,1]
                 r2 = np.random.random() # r2 is a random number in [0,1]
                 A2 = (2 * a * r1) - a # calculate A2
                 C2 = 2*r2 # calculate C2
-                D_beta = abs(C2 * beta[j] - greywolves[i, j]) # find D_beta
-                X2 = beta[j] - (A2 * D_beta)
+                D_beta = abs(C2 * beta[j] - greywolves[i, j]) # find distance from beta
+                X2 = beta[j] - (A2 * D_beta) # Eq. (3.6)
 
                 # calculate distance between delta and current agent
                 r1 = np.random.random() # r1 is a random number in [0,1]
                 r2 = np.random.random() # r2 is a random number in [0,1]
                 A3 = (2* a * r1) - a # calculate A3
                 C3 = 2*r2 # calculate C3
-                D_delta = abs(C3 * delta[j] - greywolves[i, j]) # find D_delta
-                X3 = delta[j]-A3*D_delta
+                D_delta = abs(C3 * delta[j] - greywolves[i, j]) # find distance from delta
+                X3 = delta[j]-A3*D_delta # Eq. (3.6)
 
                 # update the position of current agent
-                greywolves[i, j] = (X1 + X2 + X3) / 3
+                greywolves[i, j] = (X1 + X2 + X3) / 3 # Eq. (3.7)
 
             # Apply transformation function on the updated greywolf
             for j in range(num_features):
