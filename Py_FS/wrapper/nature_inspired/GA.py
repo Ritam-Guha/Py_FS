@@ -2,7 +2,8 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+# from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from sklearn import datasets
 
 def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_cross=0.4, prob_mut=0.3):
@@ -137,6 +138,7 @@ def cross_mut(chromosomes, fitness, obj_function, data, prob_cross, cross_limit,
     # perform crossover, mutation and replacement
     count = 0
     num_agents = chromosomes.shape[0]
+    train_X, val_X, train_Y, val_Y = data.train_X, data.val_X, data.train_Y, data.val_Y
     print('Crossover-Mutation phase starting....')
 
     while(count<cross_limit):
@@ -148,8 +150,8 @@ def cross_mut(chromosomes, fitness, obj_function, data, prob_cross, cross_limit,
             child_1, child_2 = crossover(chromosomes[id_1], chromosomes[id_2], prob_cross)
             child_1 = mutation(child_1, prob_mut)
             child_2 = mutation(child_2, prob_mut)
-            fitness_1 = obj_function(child_1, data)
-            fitness_2 = obj_function(child_2, data)
+            fitness_1 = obj_function(child_1, train_X, val_X, train_Y, val_Y)
+            fitness_2 = obj_function(child_2, train_X, val_X, train_Y, val_Y)
 
             if(fitness_1 < fitness_2):
                 temp = child_1, fitness_1
@@ -182,13 +184,4 @@ def cross_mut(chromosomes, fitness, obj_function, data, prob_cross, cross_limit,
 if __name__ == '__main__':
     iris = datasets.load_iris()
     GA(10, 20, iris.data, iris.target, compute_accuracy)
-    # a = np.array([1, 0, 0, 1, 1])
-    # b = np.array([0, 1, 1, 0, 0])
-    # c, d = crossover(a, b, 0.4)
-    # print(a)
-    # print(b)
-
-    # print(c)
-    # print(d)
-
 ############# for testing purpose ################
