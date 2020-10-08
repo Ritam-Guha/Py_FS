@@ -1,36 +1,43 @@
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+"""
+
+Programmer: Shameem Ahmed
+Date of Development: 9/10/2020
+This code has been developed according to the procedures mentioned in the following research article:
+"Mafarja, M., & Mirjalili, S. (2018). Whale optimization approaches for wrapper feature selection. 
+Applied Soft Computing, 62, 441-453."
+
+"""
+
 import time, random, math
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn import datasets
-from _transformation_functions import get_trans_function
 import numpy as np
 
+from sklearn.model_selection import train_test_split
+from sklearn import datasets
+
+# from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+from _transformation_functions import get_trans_function
 
 
-def sigmoid(gamma):
-    if gamma < 0:
-        return 1 - 1/(1 + math.exp(gamma))
-    else:
-        return 1/(1 + math.exp(-gamma))
-
-
-def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy):
+def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_func_shape='s'):
     # Grey Wolf Optimizer
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: population size                                               #
+    #   num_agents: greywolves size                                               #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #
     #   obj_function: the function to maximize while doing feature selection      #
     #                                                                             #
     ###############################################################################
-
+    
+    agent_name = 'Greywolf'
     num_features = train_data.shape[1]
+    trans_function = get_trans_function(trans_func_shape)
 
     # initialize chromosomes and Leader (the agent with the max fitness)
-    population = initialize(num_agents, num_features)
+    greywolves = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
     Leader_agent = np.zeros((1, num_features))
     Leader_fitness = float("-inf")
@@ -52,8 +59,8 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     solution.num_features = num_features
     solution.obj_function = obj_function
 
-    # rank initial population
-    population, fitness = sort_agents(population, obj_function, data)
+    # rank initial greywolves
+    greywolves, fitness = sort_agents(greywolves, obj_function, data)
 
     # start timer
     start_time = time.time()
@@ -79,99 +86,68 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                 beta_fit = alpha_fit
                 beta = alpha.copy()
                 alpha_fit = fitness[i]
-                alpha = population[i, :].copy()
+                alpha = greywolves[i, :].copy()
 
             # update beta, delta
             elif fitness[i] > beta_fit:
                 delta_fit = beta_fit
                 delta = beta.copy()
                 beta_fit = fitness[i]
-                beta = population[i, :].copy()
+                beta = greywolves[i, :].copy()
 
             # update delta
             elif fitness[i] > delta_fit:
                 delta_fit = fitness[i]
-                delta = population[i, :].copy()
+                delta = greywolves[i, :].copy()
 
         # a decreases linearly fron 2 to 0
         a = 2-iter_no*((2)/max_iter)
 
         for i in range(num_agents):
-            for j in range(num_features):
+            for j in range(num_features):  
 
-                random.seed(time.time()%10)
-                # r1 is a random number in [0,1]
-                r1 = np.random.random()
-
-                random.seed(time.time()%7)
-                # r2 is a random number in [0,1]
-                r2 = np.random.random()
-
-                # calculate A1
-                A1 = 2*a*r1-a
-                # calculate C1
-                C1 = 2*r2
-
-                # find D_alpha
-                D_alpha = abs(C1*alpha[j]-population[i, j])
                 # calculate distance between alpha and current agent
-                X1 = alpha[j]-A1*D_alpha
+                r1 = np.random.random() # r1 is a random number in [0,1]
+                r2 = np.random.random() # r2 is a random number in [0,1]
+                A1 = (2 * a * r1) - a # calculate A1
+                C1 = 2 * r2 # calculate C1
+                D_alpha = abs(C1 * alpha[j] - greywolves[i, j]) # find D_alpha
+                X1 = alpha[j] - (A1 * D_alpha) 
 
-                random.seed(time.time()%9)
-                # r1 is a random number in [0,1]
-                r1 = np.random.random()
-
-                # r2 is a random number in [0,1]
-                r2 = np.random.random()
-
-                # calculate A2
-                A2 = 2*a*r1-a
-                # calculate C2
-                C2 = 2*r2
-
-                # find D_beta
-                D_beta = abs(C2*beta[j]-population[i, j])
                 # calculate distance between beta and current agent
-                X2 = beta[j]-A2*D_beta
+                r1 = np.random.random() # r1 is a random number in [0,1]
+                r2 = np.random.random() # r2 is a random number in [0,1]
+                A2 = (2 * a * r1) - a # calculate A2
+                C2 = 2*r2 # calculate C2
+                D_beta = abs(C2 * beta[j] - greywolves[i, j]) # find D_beta
+                X2 = beta[j] - (A2 * D_beta)
 
-                random.seed(time.time() % 11)
-                # r1 is a random number in [0,1]
-                r1 = np.random.random()
-
-                # r2 is a random number in [0,1]
-                r2 = np.random.random()
-
-                # calculate A3
-                A3 = 2*a*r1-a
-                # calculate C3
-                C3 = 2*r2
-
-                # find D_delta
-                D_delta = abs(C3*delta[j]-population[i, j])
                 # calculate distance between delta and current agent
+                r1 = np.random.random() # r1 is a random number in [0,1]
+                r2 = np.random.random() # r2 is a random number in [0,1]
+                A3 = (2* a * r1) - a # calculate A3
+                C3 = 2*r2 # calculate C3
+                D_delta = abs(C3 * delta[j] - greywolves[i, j]) # find D_delta
                 X3 = delta[j]-A3*D_delta
 
                 # update the position of current agent
-                population[i, j] = (X1 + X2 + X3) / 3
+                greywolves[i, j] = (X1 + X2 + X3) / 3
 
-
-                # convert to binary values
-                random.seed(time.time()*iter_no)
-
-                if (sigmoid(population[i][j]) > np.random.random()):
-                    population[i][j] = 1
+            # Apply transformation function on the updated greywolf
+            for j in range(num_features):
+                trans_value = trans_function(greywolves[i,j])
+                if (np.random.random() < trans_value): 
+                    greywolves[i,j] = 1
                 else:
-                    population[i][j] = 0
-
-
+                    greywolves[i,j] = 0
 
         # update final information
-        population, fitness = sort_agents(population, obj_function, data)
-        display(population, fitness)
+        greywolves, fitness = sort_agents(greywolves, obj_function, data)
+        display(greywolves, fitness, agent_name)
         
         # update Leader (best agent)
         if fitness[0] > Leader_fitness:
-            Leader_agent = population[0].copy()
+            Leader_agent = greywolves[0].copy()
             Leader_fitness = fitness[0].copy()
 
         if alpha_fit > Leader_fitness:
@@ -209,7 +185,7 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     solution.best_agent = Leader_agent
     solution.best_fitness = Leader_fitness
     solution.convergence_curve = convergence_curve
-    solution.final_population = population
+    solution.final_greywolves = greywolves
     solution.final_fitness = fitness
     solution.execution_time = exec_time
 

@@ -1,6 +1,6 @@
 """
 
-Author: Ritam Guha
+Programmer: Ritam Guha
 Date of Development: 8/10/2020
 This code has been developed according to the procedures mentioned in the following research article:
 "Mafarja, M., & Mirjalili, S. (2018). Whale optimization approaches for wrapper feature selection. 
@@ -11,11 +11,14 @@ Applied Soft Computing, 62, 441-453."
 import numpy as np
 import time
 import matplotlib.pyplot as plt
+
 from sklearn.model_selection import train_test_split
+from sklearn import datasets
+
 # from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from _transformation_functions import get_trans_function
-from sklearn import datasets
+
 
 def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s'):
 
@@ -31,6 +34,8 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     #   prob_mut: probability of mutation                                         #
     #                                                                             #
     ###############################################################################
+    
+    agent_name = 'Whale'
     num_features = train_data.shape[1]
     cross_limit = 5
     trans_function = get_trans_function(trans_function_shape)
@@ -64,7 +69,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     start_time = time.time()
 
     # main loop
-    for iter_no in range(1, max_iter+1):
+    for iter_no in range(max_iter):
         print('\n================================================================================')
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
@@ -107,11 +112,11 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
 
         # update final information
         chromosomes, fitness = sort_agents(chromosomes, obj_function, data)
-        display(chromosomes, fitness)
+        display(chromosomes, fitness, agent_name)
         Leader_agent = chromosomes[0].copy()
         Leader_fitness = fitness[0].copy()
-        convergence_curve['fitness'][iter_no - 1] = Leader_fitness
-        convergence_curve['feature_count'][iter_no - 1] = int(np.sum(Leader_agent))
+        convergence_curve['fitness'][iter_no] = Leader_fitness
+        convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
 
     # stop timer
     end_time = time.time()

@@ -1,10 +1,20 @@
+"""
+
+Programmer: Ritam Guha
+Date of Development: 6/10/2020
+
+"""
+
 import numpy as np
 import time
 import matplotlib.pyplot as plt
+
 from sklearn.model_selection import train_test_split
+from sklearn import datasets
+
 # from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
-from sklearn import datasets
+
 
 def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_cross=0.4, prob_mut=0.3):
 
@@ -20,6 +30,7 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     #   prob_mut: probability of mutation                                         #
     #                                                                             #
     ###############################################################################
+    agent_name = 'Chromosome'
     num_features = train_data.shape[1]
     cross_limit = 5
 
@@ -52,7 +63,7 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     start_time = time.time()
 
     # main loop
-    for iter_no in range(1, max_iter+1):
+    for iter_no in range(max_iter):
         print('\n================================================================================')
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
@@ -62,11 +73,11 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
 
         # update final information
         chromosomes, fitness = sort_agents(chromosomes, obj_function, data)
-        display(chromosomes, fitness)
+        display(chromosomes, fitness, agent_name)
         Leader_agent = chromosomes[0].copy()
         Leader_fitness = fitness[0].copy()
-        convergence_curve['fitness'][iter_no - 1] = Leader_fitness
-        convergence_curve['feature_count'][iter_no - 1] = int(np.sum(Leader_agent))
+        convergence_curve['fitness'][iter_no] = Leader_fitness
+        convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
 
     # stop timer
     end_time = time.time()
@@ -177,6 +188,9 @@ def cross_mut(chromosomes, fitness, obj_function, data, prob_cross, cross_limit,
         else:
             print('Crossover failed....')
             print('Restarting crossover....\n')
+
+
+
 
 
 ############# for testing purpose ################
