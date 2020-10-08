@@ -167,10 +167,12 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
         # update final information
         population, fitness = sort_agents(population, obj_function, data)
         display(population, fitness)
-        Leader_agent = population[0].copy()
-        Leader_fitness = fitness[0].copy()
-
+        
         # update Leader (best agent)
+        if fitness[0] > Leader_fitness:
+            Leader_agent = population[0].copy()
+            Leader_fitness = fitness[0].copy()
+
         if alpha_fit > Leader_fitness:
             Leader_fitness = alpha_fit
             Leader_agent = alpha.copy()
