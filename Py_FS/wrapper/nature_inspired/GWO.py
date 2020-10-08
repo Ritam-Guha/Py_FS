@@ -3,6 +3,7 @@ import time, random, math
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
+from _transformation_functions import get_trans_function
 import numpy as np
 
 
@@ -15,7 +16,7 @@ def sigmoid(gamma):
 
 
 def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy):
-    # Grey Wolf optimizer
+    # Grey Wolf Optimizer
     ############################### Parameters ####################################
     #                                                                             #
     #   num_agents: population size                                               #

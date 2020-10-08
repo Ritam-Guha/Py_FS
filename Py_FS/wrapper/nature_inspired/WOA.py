@@ -1,14 +1,25 @@
+"""
+
+Author: Ritam Guha
+Date of Development: 8/10/2020
+This code has been developed according to the procedures mentioned in the following research article:
+"Mafarja, M., & Mirjalili, S. (2018). Whale optimization approaches for wrapper feature selection. 
+Applied Soft Computing, 62, 441-453."
+
+"""
+
 import numpy as np
 import time
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 # from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+from _transformation_functions import get_trans_function
 from sklearn import datasets
 
-def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_cross=0.4, prob_mut=0.3):
+def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s'):
 
-    # Genetic Algorithm
+    # Whale Optimization Algorithm
     ############################### Parameters ####################################
     #                                                                             #
     #   num_agents: number of chromosomes                                         #
@@ -22,9 +33,10 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     ###############################################################################
     num_features = train_data.shape[1]
     cross_limit = 5
+    trans_function = get_trans_function(trans_function_shape)
 
-    # initialize chromosomes and Leader (the agent with the max fitness)
-    chromosomes = initialize(num_agents, num_features)
+    # initialize whales and Leader (the agent with the max fitness)
+    whales = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
     Leader_agent = np.zeros((1, num_features))
     Leader_fitness = float("-inf")
@@ -46,7 +58,7 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     solution.obj_function = obj_function
 
     # rank initial population
-    chromosomes, fitness = sort_agents(chromosomes, obj_function, data)
+    chromosomes, fitness = sort_agents(whales, obj_function, data)
 
     # start timer
     start_time = time.time()
@@ -57,8 +69,41 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
 
-        # perform crossover, mutation and replacement
-        cross_mut(chromosomes, fitness, obj_function, data, prob_cross, cross_limit, prob_mut)
+        a = 2 - iter_no * (2/max_iter)  # a decreases linearly fron 2 to 0
+        # Update the position of each whale
+        for i in range(num_agents):
+            # update the parameters
+            r = np.random.random() # r is a random number in [0, 1]
+            A = (2 * a * r) - a  # Eq. (3)
+            C = 2 * r  # Eq. (4)
+            l = -1 + (np.random.random() * 2)   # l is a random number in [-1, 1]
+            p = np.random.random()  # p is a random number in [0, 1]
+            b = 1  # defines shape of the spiral               
+            
+            if p<0.5:
+                # Shrinking Encircling mechanism
+                if abs(A)>=1:
+                    rand_agent_index = np.random.randint(0, num_agents)
+                    rand_agent = whales[rand_agent_index, :]
+                    mod_dist_rand_agent = abs(C * rand_agent - whales[i,:]) 
+                    whales[i,:] = rand_agent - (A * mod_dist_rand_agent)   # Eq. (9)
+                    
+                else:
+                    mod_dist_Leader = abs(C * Leader_agent - whales[i,:]) 
+                    whales[i,:] = Leader_agent - (A * mod_dist_Leader)  # Eq. (2)
+                
+            else:
+                # Spiral-Shaped Attack mechanism
+                dist_Leader = abs(Leader_agent - whales[i,:])
+                whales[i,:] = dist_Leader * np.exp(b * l) * np.cos(l * 2 * np.pi) + Leader_agent
+
+            # Apply transformation function on the updated whale
+            for j in range(num_features):
+                trans_value = trans_function(whales[i,j])
+                if (np.random.random() < trans_value): 
+                    whales[i,j] = 1
+                else:
+                    whales[i,j] = 0
 
         # update final information
         chromosomes, fitness = sort_agents(chromosomes, obj_function, data)
@@ -101,87 +146,12 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     return solution
 
 
-def crossover(parent_1, parent_2, prob_cross):
-    # perform crossover with crossover probability prob_cross
-    num_features = parent_1.shape[0]
-    child_1 = parent_1.copy()
-    child_2 = parent_2.copy()
 
-    for i in range(num_features):
-        if(np.random.rand()<prob_cross):
-            child_1[i] = parent_2[i]
-            child_2[i] = parent_1[i]
-
-    return child_1, child_2
-
-
-def mutation(chromosome, prob_mut):
-    # perform mutation with mutation probability prob_mut
-    num_features = chromosome.shape[0]
-    mut_chromosome = chromosome.copy()
-
-    for i in range(num_features):
-        if(np.random.rand()<prob_mut):
-            mut_chromosome[i] = 1-mut_chromosome[i]
-    
-    return mut_chromosome
-
-
-def roulette_wheel(fitness):
-    # Perform roulette wheel selection
-    maximum = sum([f for f in fitness])
-    selection_probs = [f/maximum for f in fitness]
-    return np.random.choice(len(fitness), p=selection_probs)
-
-
-def cross_mut(chromosomes, fitness, obj_function, data, prob_cross, cross_limit, prob_mut):
-    # perform crossover, mutation and replacement
-    count = 0
-    num_agents = chromosomes.shape[0]
-    train_X, val_X, train_Y, val_Y = data.train_X, data.val_X, data.train_Y, data.val_Y
-    print('Crossover-Mutation phase starting....')
-
-    while(count<cross_limit):
-        print('\nCrossover no. {}'.format(count+1))
-        id_1 = roulette_wheel(fitness)
-        id_2 = roulette_wheel(fitness)
-
-        if(id_1 != id_2):
-            child_1, child_2 = crossover(chromosomes[id_1], chromosomes[id_2], prob_cross)
-            child_1 = mutation(child_1, prob_mut)
-            child_2 = mutation(child_2, prob_mut)
-            fitness_1 = obj_function(child_1, train_X, val_X, train_Y, val_Y)
-            fitness_2 = obj_function(child_2, train_X, val_X, train_Y, val_Y)
-
-            if(fitness_1 < fitness_2):
-                temp = child_1, fitness_1
-                child_1, fitness_1 = child_2, fitness_2
-                child_2, fitness_2 = temp
-
-            for i in range(num_agents):
-                if(fitness_1 > fitness[i]):
-                    print('1st child replaced with chromosome having id {}'.format(i+1))
-                    chromosomes[i] = child_1
-                    fitness[i] = fitness_1
-                    break
-
-            for i in range(num_agents):
-                if(fitness_2 > fitness[i]):
-                    print('2nd child replaced with chromosome having id {}'.format(i+1))
-                    chromosomes[i] = child_2
-                    fitness[i] = fitness_2
-                    break
-
-            count = count+1
-
-        else:
-            print('Crossover failed....')
-            print('Restarting crossover....\n')
 
 
 ############# for testing purpose ################
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    GA(10, 20, iris.data, iris.target, compute_accuracy)
+    WOA(10, 20, iris.data, iris.target, compute_accuracy)
 ############# for testing purpose ################
