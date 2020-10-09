@@ -15,13 +15,16 @@ class Solution():
         self.final_population = None
         self.final_fitness = None
 
+
 class Data():
-    # structure of the dataset
+    # structure of the training data
     def __init__(self):
         self.train_X = None
         self.train_Y = None
         self.val_X = None
         self.val_Y = None
+
+
 
 def initialize(num_agents, num_features):
     # define min and max number of features
@@ -44,19 +47,24 @@ def initialize(num_agents, num_features):
 
     return agents
 
+
+
 def sort_agents(agents, obj_function, data):
     # sort the agents according to fitness
     num_agents = agents.shape[0]
     fitness = np.zeros(num_agents)
+    train_X, val_X, train_Y, val_Y = data.train_X, data.val_X, data.train_Y, data.val_Y
     for id, agent in enumerate(agents):
-        fitness[id] = obj_function(agent, data)
+        fitness[id] = obj_function(agent, train_X, val_X, train_Y, val_Y)
     idx = np.argsort(-fitness)
     sorted_agents = agents[idx].copy()
     sorted_fitness = fitness[idx].copy()
 
     return sorted_agents, sorted_fitness
 
-def display(agents, fitness):
+
+
+def display(agents, fitness, agent_name='Agent'):
     # display the population
     print('\nNumber of agents: {}'.format(agents.shape[0]))
     print('\n------------- Best Agent -------------')
@@ -65,23 +73,26 @@ def display(agents, fitness):
     print('----------------------------------------\n')
 
     for id, agent in enumerate(agents):
-        print('Agent {} - Fitness: {}, Number of Features: {}'.format(id, fitness[id], int(np.sum(agent))))
+        print('{} {} - Fitness: {}, Number of Features: {}'.format(agent_name, id+1, fitness[id], int(np.sum(agent))))
 
     print('================================================================================\n')
 
-def compute_accuracy(agent, data): 
+
+
+def compute_accuracy(agent, train_X, val_X, train_Y, val_Y): 
+    # compute classification accuracy of the given agents
     cols=np.flatnonzero(agent)     
     if(cols.shape[0]==0):
         return 0    
-
     clf=KNeighborsClassifier(n_neighbors=5)
 
-    train_data=data.train_X[:,cols]
-    train_label = data.train_Y
-    val_data=data.val_X[:,cols]
-    val_label = data.val_Y
+    train_data = train_X[:,cols]
+    train_label = train_Y
+    val_data = val_X[:,cols]
+    val_label = val_Y
 
     clf.fit(train_data,train_label)
     acc=clf.score(val_data,val_label)
 
     return acc
+        
