@@ -21,7 +21,7 @@ from _utilities import Solution, Data, initialize, sort_agents, display, compute
 from _transfer_functions import get_trans_function
 
 
-def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s'):
+def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', save_conv_graph=False):
 
     # Whale Optimization Algorithm
     ############################### Parameters ####################################
@@ -36,6 +36,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     ###############################################################################
     
     agent_name = 'Whale'
+    short_name = 'WOA'
     num_features = train_data.shape[1]
     cross_limit = 5
     trans_function = get_trans_function(trans_function_shape)
@@ -139,6 +140,8 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     axes[1].set_ylabel('Number of Selected Features')
     axes[1].plot(iters, convergence_curve['feature_count'])
 
+    if(save_conv_graph):
+        plt.savefig('convergence_graph_'+ short_name + '.jpg')
     plt.show()
 
     # update attributes of solution
@@ -159,5 +162,5 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    WOA(10, 20, iris.data, iris.target, compute_accuracy)
+    WOA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
 ############# for testing purpose ################

@@ -21,7 +21,7 @@ from _utilities import Solution, Data, initialize, sort_agents, display, compute
 from _transfer_functions import get_trans_function
 
 
-def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_func_shape='s'):
+def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_func_shape='s', save_conv_graph=False):
     # Grey Wolf Optimizer
     ############################### Parameters ####################################
     #                                                                             #
@@ -35,6 +35,7 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     ###############################################################################
     
     agent_name = 'Greywolf'
+    short_name = 'GWO'
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_func_shape)
 
@@ -179,6 +180,8 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     axes[1].set_ylabel('Number of Selected Features')
     axes[1].plot(iters, convergence_curve['feature_count'])
 
+    if(save_conv_graph):
+        plt.savefig('convergence_graph_'+ short_name + '.jpg')
     plt.show()
 
     # update attributes of solution
@@ -195,4 +198,4 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
 if __name__ == '__main__':
 
     iris = datasets.load_iris()
-    GWO(10, 20, iris.data, iris.target, compute_accuracy)
+    GWO(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)

@@ -12,11 +12,11 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+# from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 
 
-def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_cross=0.4, prob_mut=0.3):
+def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_cross=0.4, prob_mut=0.3, save_conv_graph=False):
 
     # Genetic Algorithm
     ############################### Parameters ####################################
@@ -31,6 +31,7 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     #                                                                             #
     ###############################################################################
     agent_name = 'Chromosome'
+    short_name = 'GA'
     num_features = train_data.shape[1]
     cross_limit = 5
 
@@ -99,7 +100,9 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     axes[1].set_xlabel('Iteration')
     axes[1].set_ylabel('Number of Selected Features')
     axes[1].plot(iters, convergence_curve['feature_count'])
-
+    
+    if(save_conv_graph):
+        plt.savefig('convergence_graph_'+ short_name + '.jpg')
     plt.show()
 
     # update attributes of solution
@@ -198,5 +201,5 @@ def cross_mut(chromosomes, fitness, obj_function, data, prob_cross, cross_limit,
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    GA(10, 20, iris.data, iris.target, compute_accuracy)
+    GA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
 ############# for testing purpose ################
