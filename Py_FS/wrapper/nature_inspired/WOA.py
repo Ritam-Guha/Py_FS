@@ -8,7 +8,7 @@ Applied Soft Computing, 62, 441-453."
 
 """
 
-import numpy as np1
+import numpy as np
 import time
 import matplotlib.pyplot as plt
 
