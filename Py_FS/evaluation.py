@@ -10,7 +10,7 @@ import numpy as np
 
 class Metric():
     
-    def __init__(self, train_X, test_X, train_Y, test_Y, classifier='knn', agent=None, save_conf_mat=False):
+    def __init__(self, train_X, test_X, train_Y, test_Y, agent, classifier, save_conf_mat):
         self.train_X = train_X
         self.test_X = test_X
         self.train_Y = train_Y
@@ -89,14 +89,12 @@ class Metric():
         plt.show()
 
 
+def evaluate(train_X, test_X, train_Y, test_Y, agent=None, classifier='knn', save_conf_mat=False):
+    # driver function
+    metric = Metric(train_X, test_X, train_Y, test_Y, agent, classifier, save_conf_mat)
+
 
 if __name__ == "__main__":
     iris = datasets.load_iris()
     train_X, test_X, train_Y, test_Y = train_test_split(iris.data, iris.target, stratify=iris.target, test_size=0.2)
-    # acc = compute_accuracy(train_X, test_X, train_Y, test_Y, classifier='rf')
-    metric = Metric(train_X, test_X, train_Y, test_Y, save_conf_mat=True)
-    # print(metric.accuracy)
-    # print(metric.precision)
-    # print(metric.recall)
-    # print(metric.f1_score)
-    # print(metric.confusion_matrix)
+    evaluate(train_X, test_X, train_Y, test_Y, save_conf_mat=True)
