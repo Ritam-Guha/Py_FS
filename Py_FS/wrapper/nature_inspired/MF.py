@@ -24,7 +24,7 @@ from statistics import stdev
 from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from _transfer_functions import get_trans_function
 
-def Mayfly(num_agents, max_iter, train_data, train_label, prob_mut=0.2, obj_function=compute_accuracy, trans_function_shape='s'):
+def MF(num_agents, max_iter, train_data, train_label, prob_mut=0.2, obj_function=compute_accuracy, trans_function_shape='s'):
     
     # Mayfly Algorithm
     ############################### Parameters ####################################
@@ -41,6 +41,7 @@ def Mayfly(num_agents, max_iter, train_data, train_label, prob_mut=0.2, obj_func
 
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
+    short_name = 'MF'
 
     #intializing control parameters
     a1 = 1
@@ -177,6 +178,10 @@ def Mayfly(num_agents, max_iter, train_data, train_label, prob_mut=0.2, obj_func
     axes[1].set_ylabel('Number of Selected Features')
     axes[1].plot(iters, convergence_curve['feature_count'])
 
+    plt.show()
+
+    if(save_conv_graph):
+        plt.savefig('convergence_graph_'+ short_name + '.png')
     plt.show()
 
     # update attributes of solution

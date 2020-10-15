@@ -1,3 +1,12 @@
+"""
+
+Programmer: Ali Hussain Khan
+Date of Development: 15/10/2020
+This code has been developed according to the procedures mentioned in the following research article:
+""
+
+"""
+
 import numpy as np
 import time
 import matplotlib.pyplot as plt

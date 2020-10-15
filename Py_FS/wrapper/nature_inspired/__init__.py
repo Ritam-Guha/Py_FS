@@ -2,6 +2,8 @@ from Py_FS.wrapper.nature_inspired._utilities import Data, Solution, initialize,
 from Py_FS.wrapper.nature_inspired.GA import GA
 from Py_FS.wrapper.nature_inspired.WOA import WOA
 from Py_FS.wrapper.nature_inspired.GWO import GWO
+from Py_FS.wrapper.nature_inspired.HS import HS
+from Py_FS.wrapper.nature_inspired.GWO import GWO
 
 __all__ = [
     'compute_accuracy',
