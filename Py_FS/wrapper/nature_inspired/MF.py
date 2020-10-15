@@ -24,7 +24,7 @@ from statistics import stdev
 from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from _transfer_functions import get_trans_function
 
-def MF(num_agents, max_iter, train_data, train_label, prob_mut=0.2, obj_function=compute_accuracy, trans_function_shape='s'):
+def MF(num_agents, max_iter, train_data, train_label, prob_mut=0.2, obj_function=compute_accuracy, trans_function_shape='s', save_conv_graph=False):
     
     # Mayfly Algorithm
     ############################### Parameters ####################################
@@ -54,11 +54,13 @@ def MF(num_agents, max_iter, train_data, train_label, prob_mut=0.2, obj_function
 
     # initialize position and velocities of male and female mayflies and Leader (the agent with the max fitness)
     male_pos = initialize(num_agents, num_features)
-    female_pos = initialize(num_agents, num_features)
-    female_vel = initialize(num_agents, num_features)
     male_vel = initialize(num_agents, num_features)
     male_fitness = np.zeros((num_agents))
+
+    female_pos = initialize(num_agents, num_features)
+    female_vel = initialize(num_agents, num_features)
     female_fitness = np.zeros((num_agents))
+
     Leader_agent = np.zeros((num_features))
     Leader_fitness = float("-inf")
     male_personal_best = np.zeros((num_agents, num_features))
@@ -311,4 +313,4 @@ def compare_and_replace(pos, off, fit, data, obj_function):
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    Mayfly(20, 20, iris.data, iris.target, compute_accuracy)
+    MF(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
