@@ -26,12 +26,13 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     # Whale Optimization Algorithm
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: number of whales                                              #
+    #   num_agents: number of chromosomes                                         #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   trans_function_shape: shape of the transfer function used for mapping     #
+    #   trans_func_shape: shape of the transfer function used                     #
+    #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
     
@@ -77,7 +78,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
         print('================================================================================\n')
 
         a = 2 - iter_no * (2/max_iter)  # a decreases linearly fron 2 to 0
-        # Update the position of each whale
+        # update the position of each whale
         for i in range(num_agents):
             # update the parameters
             r = np.random.random() # r is a random number in [0, 1]

@@ -11,28 +11,34 @@ Industrial Engineering (2020)
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
-from sklearn import datasets
-import pandas as pd
 import math
 import random
-from statistics import stdev
-from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
 
-def Mayfly(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', mut_prob=0.2):
+from sklearn.model_selection import train_test_split
+from sklearn import datasets
+import pandas as pd
+from statistics import stdev
+
+# from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+# from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
+from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+from _transfer_functions import get_trans_function
+
+def Mayfly(num_agents, max_iter, train_data, train_label, prob_mut=0.2, obj_function=compute_accuracy, trans_function_shape='s'):
+    
     # Mayfly Algorithm
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: number of mayflies                                            #
+    #   num_agents: number of chromosomes                                         #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
-    #   train_label: class labels for the training samples                        #
+    #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   prob_cross: probability of crossover                                      #
-    #   prob_mut: probability of mutation                                         #
+    #   trans_func_shape: shape of the transfer function used                     #
+    #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
+
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
 
@@ -45,7 +51,7 @@ def Mayfly(num_agents, max_iter, train_data, train_label, obj_function=compute_a
     beta = 2
     delta = 0.8
 
-    # initialize position and velocities of male and female mayflies' and Leader (the agent with the max fitness)
+    # initialize position and velocities of male and female mayflies and Leader (the agent with the max fitness)
     male_pos = initialize(num_agents, num_features)
     female_pos = initialize(num_agents, num_features)
     female_vel = initialize(num_agents, num_features)
@@ -145,8 +151,9 @@ def Mayfly(num_agents, max_iter, train_data, train_label, obj_function=compute_a
 
         #update final information
         display(male_pos, male_fitness)
-        Leader_agent = male_pos[0].copy()
-        Leader_fitness = male_fitness[0].copy()
+        if male_fitness[0] > Leader_fitness:
+            Leader_agent = male_pos[0].copy()
+            Leader_fitness = male_fitness[0].copy()
         convergence_curve['fitness'][iter_no] = Leader_fitness
         convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
 
@@ -183,6 +190,7 @@ def Mayfly(num_agents, max_iter, train_data, train_label, obj_function=compute_a
     return solution
 
 
+
 def update_max_velocity(male, female):
     size, length = male.shape
     agent1 = []
@@ -193,6 +201,8 @@ def update_max_velocity(male, female):
         agent2.append((female[0][j]-female[size-1][j])*r) #Eq 16
 
     return (agent1, agent2)
+
+
 
 def update_velocity(m_pos, f_pos, m_vel, f_vel, Leader_agent, pbest, a1, a2, d, fl, g, b, agent_number, data, obj_function):
     tot_features = m_pos.shape[0]
@@ -226,6 +236,8 @@ def update_velocity(m_pos, f_pos, m_vel, f_vel, Leader_agent, pbest, a1, a2, d, 
 
     return (agent1, agent2)
 
+
+
 def check_velocity_limits(m_vel, f_vel, vmax_m, vmax_f):
     tot_features = len(m_vel)
     for j in range(tot_features):
@@ -235,6 +247,8 @@ def check_velocity_limits(m_vel, f_vel, vmax_m, vmax_f):
         f_vel[j] = np.maximum(f_vel[j], -vmax_f[j]) #Eq 15.2
 
     return (m_vel, f_vel)
+
+
 
 def cross_mut(m_pos, f_pos):
     tot_features = len(m_pos)
@@ -267,6 +281,8 @@ def cross_mut(m_pos, f_pos):
     else:
         return (offspring2, offspring1)
 
+
+
 def compare_and_replace(pos, off, fit, data, obj_function):
     agents, features = pos.shape
     newfit = np.zeros((agents))
@@ -286,10 +302,6 @@ def compare_and_replace(pos, off, fit, data, obj_function):
             j+=1
         cnt+=1
     return temp_pos
-
-def trans_function1(velocity):
-    t = abs(velocity/(math.sqrt(1+velocity*velocity)))
-    return t
 
 
 if __name__ == '__main__':

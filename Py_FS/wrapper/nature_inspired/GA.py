@@ -16,7 +16,7 @@ from sklearn import datasets
 from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 
 
-def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_cross=0.4, prob_mut=0.3, classifier='knn', save_conv_graph=False):
+def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_cross=0.4, prob_mut=0.3, save_conv_graph=False):
 
     # Genetic Algorithm
     ############################### Parameters ####################################
@@ -28,8 +28,10 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     #   obj_function: the function to maximize while doing feature selection      #
     #   prob_cross: probability of crossover                                      #
     #   prob_mut: probability of mutation                                         #
+    #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
+
     agent_name = 'Chromosome'
     short_name = 'GA'
     train_data, train_label = np.array(train_data), np.array(train_label)

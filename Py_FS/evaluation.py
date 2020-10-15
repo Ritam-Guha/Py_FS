@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 class Metric():
-    
+    # class for defining the evaluation metrics
     def __init__(self, train_X, test_X, train_Y, test_Y, agent, classifier, save_conf_mat):
         self.train_X = train_X
         self.test_X = test_X
@@ -92,6 +92,7 @@ class Metric():
 def evaluate(train_X, test_X, train_Y, test_Y, agent=None, classifier='knn', save_conf_mat=False):
     # driver function
     metric = Metric(train_X, test_X, train_Y, test_Y, agent, classifier, save_conf_mat)
+    return metric
 
 
 if __name__ == "__main__":

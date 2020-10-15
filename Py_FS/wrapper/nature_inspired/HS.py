@@ -1,6 +1,7 @@
 """
     Programmer: Khalid Hassan
-     
+    Date of Development: 15/10/2020
+
     Paper 1: A New Heuristic Optimization Algorithm: Harmony Search
     Authors: Zong Woo Geem and Joong Hoon Kim, G. V. Loganathan
 
@@ -17,19 +18,20 @@ from sklearn import datasets
 
 from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 
-def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_accuracy, HMCR = 0.90, save_conv_graph = False):
+def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_accuracy, save_conv_graph = False):
+    
     # Harmony Search Algorithm
-    # Parameters
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: number of harmonies                                           #
+    #   num_agents: number of chromosomes                                         #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   HMCR: Harmony Memory Consideration Rate                                   #
-    ############################################################################### 
-
+    #   trans_func_shape: shape of the transfer function used                     #
+    #   save_conv_graph: boolean value for saving convergence graph               #
+    #                                                                             #
+    ###############################################################################
 
     # <STEPS OF HARMOMY SEARCH ALGORITH>
     # Step 1. Initialize a Harmony Memory (HM).
@@ -42,25 +44,25 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_acc
     num_features = train_data.shape[1]
 
     short_name = "HS"
-    agent_name = "Harmony Search"
+    agent_name = "Harmony"
 
-    ########################################                 STEP: 1 Initialize                                   ########################################
-    # Intialisation
-    harmonyMemory = initialize(num_agents, num_features);
+    # intialize the harmonies and Leader (the agent with the max fitness)
+    harmonyMemory = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
     Leader_agent = np.zeros((1, num_features))
     Leader_fitness = float("-inf")
+    HMCR = 0.90     # Harmony Memory Consideration Rate
 
     # initialize convergence curves
     convergence_curve = {}
     convergence_curve['fitness'] = np.zeros(max_iter)
     convergence_curve['feature_count'] = np.zeros(max_iter)
 
-    # initialise data class
+    # format the data
     data = Data()
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=0.2)
 
-    # Initialise solution class
+    # create a Solution object
     solution = Solution()
     solution.num_agents = num_agents
     solution.max_iter = max_iter
@@ -73,7 +75,7 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_acc
     # calculate initial fitess and sort the harmony memory and rank them
     harmonyMemory, fitness = sort_agents(harmonyMemory, obj_function, data)
 
-    # Create new harmonies in each iteration
+    # create new harmonies in each iteration
     for iterCount in range(max_iter):
         print('\n================================================================================')
         print('                          Iteration - {}'.format(iterCount + 1))
@@ -81,40 +83,39 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_acc
         HMCR_randValue = np.random.rand()
         newHarmony = np.zeros([1, num_features])
 
-        print(HMCR)
-        print(HMCR_randValue)
+        # print(HMCR)
+        # print(HMCR_randValue)
 
-        ########################################                 STEP: 2 Improvise Harmony                                 ########################################
         if HMCR_randValue <= HMCR:
             for featureNum in range(num_features):
                 selectedAgent = random.randint(0, num_agents - 1)
-
                 newHarmony[0, featureNum] = harmonyMemory[selectedAgent, featureNum]
 
         else:
             for featureNum in range(num_features):
                 newHarmony[0, featureNum] = random.randint(0, 1)
 
-        ########################################                 STEP: 3 Replace better performing harmony                 ########################################
         fitnessHarmony = obj_function(newHarmony, data.train_X, data.val_X, data.train_Y, data.val_Y)
 
         if fitness[num_agents-1] < fitnessHarmony:
             harmonyMemory[num_agents-1, :] = newHarmony
             fitness[num_agents-1] = fitnessHarmony
 
-        # Sort harmony memory
+        # sort harmony memory
         harmonyMemory, fitness = sort_agents(harmonyMemory, obj_function, data)
+        if fitness[0] > Leader_fitness:
+            Leader_agent = harmonyMemory[0].copy()
+            Leader_fitness = fitness[0].copy()
 
-
-        # Update 
-        convergence_curve['fitness'][iterCount] = fitness[0];
-        convergence_curve['feature_count'][iterCount] = int(np.sum(harmonyMemory[0, :]))
+        # update 
+        convergence_curve['fitness'][iterCount] = Leader_fitness
+        convergence_curve['feature_count'][iterCount] = int(np.sum(Leader_agent))
 
         display(harmonyMemory, fitness, agent_name)
     
     # leader agent and leader fitneess
     Leader_fitness = fitness[0]
-    Leader_agent = harmonyMemory[0].copy();
+    Leader_agent = harmonyMemory[0].copy()
 
 
     # stop timer
