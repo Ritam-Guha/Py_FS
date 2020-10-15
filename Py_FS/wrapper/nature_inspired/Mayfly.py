@@ -20,7 +20,7 @@ import random
 from statistics import stdev
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
 
-def Mayfly(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', a1=1, a2=1.5, d=0.1, fl=0.1, g=0.8, beta=2, mut_prob=0.2, delta=0.8):
+def Mayfly(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', mut_prob=0.2):
     # Mayfly Algorithm
     ############################### Parameters ####################################
     #                                                                             #
@@ -35,6 +35,15 @@ def Mayfly(num_agents, max_iter, train_data, train_label, obj_function=compute_a
     ###############################################################################
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
+
+    #intializing control parameters
+    a1 = 1
+    a2 = 1.5
+    d = 0.1     #male nuptial dance coefficient
+    fl = 0.1    #female nuptial dance coefficient
+    g = 0.8     #gravitational constant used
+    beta = 2
+    delta = 0.8
 
     # initialize position and velocities of male and female mayflies' and Leader (the agent with the max fitness)
     male_pos = initialize(num_agents, num_features)
