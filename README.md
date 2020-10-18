@@ -26,8 +26,6 @@ The current structure of the package is mentioned below. Depending on the level 
     * [PSO.py](./Py_FS/wrapper/nature_inspired/PSO.py)
     * [RDA.py](./Py_FS/wrapper/nature_inspired/RDA.py)
     * [WOA.py](./Py_FS/wrapper/nature_inspired/WOA.py)
-    * [_transfer_functions.py](./Py_FS/wrapper/nature_inspired/_transfer_functions.py)
-    * [_utilities.py](./Py_FS/wrapper/nature_inspired/_utilities.py)
 * [evaluation.py](./Py_FS/evaluation.py)
 
 For example, if someone wants to use GA, he needs to import GA using the following statement:
