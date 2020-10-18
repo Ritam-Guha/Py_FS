@@ -3,7 +3,9 @@
 Programmer: Ali Hussain Khan
 Date of Development: 15/10/2020
 This code has been developed according to the procedures mentioned in the following research article:
-""
+"Khanesar, M. A., Teshnehlab, M., & Shoorehdeli, M. A. (2007, June). 
+A novel binary particle swarm optimization. 
+In 2007 Mediterranean conference on control & automation (pp. 1-6). IEEE."
 
 """
 

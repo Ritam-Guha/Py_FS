@@ -4,8 +4,8 @@ from sklearn.svm import SVC as SVM
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_score, recall_score, f1_score, plot_confusion_matrix, confusion_matrix
 from sklearn import datasets
-import matplotlib.pyplot as plt
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 class Metric():
