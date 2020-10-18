@@ -30,4 +30,4 @@ The current structure of the package is mentioned below. Depending on the level 
 
 For example, if someone wants to use GA, he needs to import GA using the following statement:
 
-    import Py_FS.wrapper.GA
+    import Py_FS.wrapper.nature_inspired.GA
