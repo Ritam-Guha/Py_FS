@@ -6,6 +6,7 @@ Py_FS is a toolbox developed with complete focus on Feature Selection (FS) using
 
 The package is publicly avaliable at PYPI: Python Package Index.
 Anybody willing to use the package can install it by simply calling:
+    
     pip install Py_FS
 
 
