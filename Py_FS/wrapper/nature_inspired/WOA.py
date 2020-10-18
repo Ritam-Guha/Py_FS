@@ -36,8 +36,8 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     #                                                                             #
     ###############################################################################
     
-    agent_name = 'Whale'
     short_name = 'WOA'
+    agent_name = 'Whale'
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     cross_limit = 5

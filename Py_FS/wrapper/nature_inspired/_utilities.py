@@ -67,7 +67,7 @@ def sort_agents(agents, obj_function, data):
 def display(agents, fitness, agent_name='Agent'):
     # display the population
     print('\nNumber of agents: {}'.format(agents.shape[0]))
-    print('\n------------- Best Agent -------------')
+    print('\n------------- Best Agent ---------------')
     print('Fitness: {}'.format(fitness[0]))
     print('Number of Features: {}'.format(int(np.sum(agents[0]))))
     print('----------------------------------------\n')

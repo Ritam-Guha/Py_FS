@@ -37,8 +37,8 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     #                                                                             #
     ###############################################################################
     
-    agent_name = 'Particle'
     short_name = 'PSO'
+    agent_name = 'Particle'
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_func_shape)

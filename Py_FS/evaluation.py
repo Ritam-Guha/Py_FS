@@ -25,8 +25,8 @@ class Metric():
             self.clf = SVM()
         else:
             self.clf = None
-            print("[Info] We don't support {} currently...".format(classifier))
-            exit(0)
+            print('\n[Error!] We don\'t currently support {} classifier...\n'.format(classifier))
+            exit(1)
             
         if(agent == None):
             self.agent = np.ones(train_X.shape[1])

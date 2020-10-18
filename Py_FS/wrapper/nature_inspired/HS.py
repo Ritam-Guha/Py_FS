@@ -16,6 +16,7 @@ import math, time, sys, random
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
+# from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 
 def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_accuracy, save_conv_graph = False):
@@ -39,12 +40,10 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_acc
     # Step 3. If the new harmony is better than minimum harmony in HM, include the new harmony in HM, and exclude the minimum harmony from HM.
     # Step 4. If stopping criteria are not satisfied, go to Step 2.
 
-
+    short_name = 'HS'
+    agent_name = 'Harmony'
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
-
-    short_name = "HS"
-    agent_name = "Harmony"
 
     # intialize the harmonies and Leader (the agent with the max fitness)
     harmonyMemory = initialize(num_agents, num_features)

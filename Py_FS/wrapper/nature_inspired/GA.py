@@ -32,8 +32,8 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     #                                                                             #
     ###############################################################################
 
-    agent_name = 'Chromosome'
     short_name = 'GA'
+    agent_name = 'Chromosome'
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     cross_limit = 5
