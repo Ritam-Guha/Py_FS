@@ -19,16 +19,18 @@ import random
 import time
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
 
-def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', p_a=0.25):
+def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s'):
+    
     # Cuckoo Search Algorithm
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_nests: number of host nests                                           #
+    #   num_agents: number of chromosomes                                         #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
-    #   train_label: class labels for the training samples                        #
+    #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   p_a: fraction of nests to be replaced                                     #
+    #   trans_func_shape: shape of the transfer function used                     #
+    #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
 
@@ -44,6 +46,7 @@ def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accur
     cuckoo_fitness = float("-inf")
     Leader_agent = np.zeros((num_features))
     Leader_fitness = float("-inf")
+    p_a=0.25    # fraction of nests to be replaced   
 
     # initialize convergence curves
     convergence_curve = {}
