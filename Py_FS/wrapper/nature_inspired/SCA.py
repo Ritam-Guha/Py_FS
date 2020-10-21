@@ -21,19 +21,22 @@ from _transfer_functions import get_trans_function
 
 
 def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_func_shape='s', save_conv_graph=False):
+    
     # Sine Cosine Algorithm
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: population size                                               #
+    #   num_agents: number of chromosomes                                         #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
-    #   train_label: class labels for the training samples                        #
+    #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
+    #   trans_func_shape: shape of the transfer function used                     #
+    #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
 
     short_name = 'SCA'
-    agent_name = 'population'
+    agent_name = 'Agent'
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_func_shape)
@@ -41,8 +44,8 @@ def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     # initialize particles and Leader (the agent with the max fitness)
     population = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
-    Destination_agent = np.zeros((1, num_features))
-    Destination_fitness = float("-inf")
+    Leader_agent = np.zeros((1, num_features))
+    Leader_fitness = float("-inf")
 
     # initialize convergence curves
     convergence_curve = {}
@@ -63,8 +66,8 @@ def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
 
     # rank initial population
     population, fitness = sort_agents(population, obj_function, data)
-    Destination_agent = population[0].copy()
-    Destination_fitness = fitness[0].copy()
+    Leader_agent = population[0].copy()
+    Leader_fitness = fitness[0].copy()
 
     # start timer
     start_time = time.time()
@@ -85,19 +88,19 @@ def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
             for j in range(num_features):
 
                 # Update r2, r3, and r4 for Eq. (3.3)
-                r2 = (2*np.pi)*random.random()
-                r3 = 2*random.random()
-                r4 = random.random()
+                r2 = (2 * np.pi) * np.random.random()
+                r3 = 2 * np.random.random()
+                r4 = np.random.random()
 
                 # Eq. (3.3)
                 if r4 < 0.5:
                     # Eq. (3.1)
                     population[i, j] = population[i, j] + \
-                        (r1*np.sin(r2)*abs(r3*Destination_agent[j]-population[i, j]))
+                        (r1*np.sin(r2)*abs(r3*Leader_agent[j]-population[i, j]))
                 else:
                     # Eq. (3.2)
                     population[i, j] = population[i, j] + \
-                        (r1*np.cos(r2)*abs(r3*Destination_agent[j]-population[i, j]))
+                        (r1*np.cos(r2)*abs(r3*Leader_agent[j]-population[i, j]))
 
                 temp = population[i, j].copy()
                 temp = trans_function(temp)
@@ -111,13 +114,13 @@ def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
         population, fitness = sort_agents(population, obj_function, data)
         display(population, fitness)
 
-        if fitness[0] > Destination_fitness:
-            Destination_agent = population[0].copy()
-            Destination_fitness = fitness[0].copy()
+        if fitness[0] > Leader_fitness:
+            Leader_agent = population[0].copy()
+            Leader_fitness = fitness[0].copy()
 
 
-        convergence_curve['fitness'][iter_no] = Destination_fitness
-        convergence_curve['feature_count'][iter_no] = int(np.sum(Destination_agent))
+        convergence_curve['fitness'][iter_no] = Leader_fitness
+        convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
 
     # stop timer
     end_time = time.time()
@@ -144,8 +147,8 @@ def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     plt.show()
 
     # update attributes of solution
-    solution.best_agent = Destination_agent
-    solution.best_fitness = Destination_fitness
+    solution.best_agent = Leader_agent
+    solution.best_fitness = Leader_fitness
     solution.convergence_curve = convergence_curve
     solution.final_particles = population
     solution.final_fitness = fitness
