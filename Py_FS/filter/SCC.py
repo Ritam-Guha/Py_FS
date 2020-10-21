@@ -3,7 +3,7 @@ from _utilities import normalize
 from sklearn import datasets
 
 def SCC(data):
-    # function that assigns scores to features according to Pearson's Correlation Coefficient (SCC)
+    # function that assigns scores to features according to Spearman's Correlation Coefficient (SCC)
     # the rankings should be done in increasing order of the SCC scores 
     feature_values = np.array(data)
     feature_ranks = np.argsort(-feature_values, axis=0)
