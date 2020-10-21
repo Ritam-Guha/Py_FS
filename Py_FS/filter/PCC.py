@@ -1,5 +1,4 @@
 import numpy as np
-from sklearn import datasets
 from _utilities import normalize
 
 def PCC(data):
@@ -21,9 +20,4 @@ def PCC(data):
         PCC_values[ind] = -np.sum(abs(PCC_mat[ind,:]))
 
     PCC_scores = normalize(PCC_values)
-    print(PCC_scores)
-
-if __name__=='__main__':
-    iris = datasets.load_iris()
-    data = iris.data
-    PCC(data)
+    return PCC_scores
