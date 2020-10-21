@@ -11,15 +11,16 @@ December 2009, India. IEEE Publications, USA, pp. 210-214 (2009).
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
-from sklearn import datasets
-import math
-import random
-import time
-from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
 
-def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s'):
+from sklearn.model_selection import train_test_split
+from sklearn import datasets
+
+# from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+# from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
+from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+from _transfer_functions import get_trans_function
+
+def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', save_conv_graph=False):
     
     # Cuckoo Search Algorithm
     ############################### Parameters ####################################
@@ -34,6 +35,8 @@ def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accur
     #                                                                             #
     ###############################################################################
 
+    short_name = 'CS'
+    agent_name = 'Agent'
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
     num_agents = num_nests
@@ -102,9 +105,12 @@ def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accur
         nest, nest_fitness = sort_agents(nest, obj_function, data)
 
         #update final information
-        display(nest, nest_fitness)
-        Leader_agent = nest[0].copy()
-        Leader_fitness = nest_fitness[0].copy()
+        display(nest, nest_fitness, agent_name)
+
+        if nest_fitness[0]>Leader_fitness:
+            Leader_agent = nest[0].copy()
+            Leader_fitness = nest_fitness[0].copy()
+
         convergence_curve['fitness'][iter_no] = Leader_fitness
         convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
 
@@ -127,8 +133,11 @@ def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accur
     axes[1].set_xlabel('Iteration')
     axes[1].set_ylabel('Number of Selected Features')
     axes[1].plot(iters, convergence_curve['feature_count'])
-
+    
+    if(save_conv_graph):
+        plt.savefig('convergence_graph_'+ short_name + '.jpg')
     plt.show()
+
 
     # update attributes of solution
     solution.best_agent = Leader_agent
@@ -144,9 +153,9 @@ def get_cuckoo(agent, alpha=np.random.randint(-2,3)):
     features = len(agent)
     lamb = np.random.uniform(low=-3, high=-1, size=(features))
     levy = np.zeros((features))
-    get_test_value = 1/(math.pow((np.random.normal(0,1)),2))
+    get_test_value = 1/(np.power((np.random.normal(0,1)),2))
     for j in range(features):
-        levy[j] = math.pow(get_test_value, lamb[j])   #Eq 2
+        levy[j] = np.power(get_test_value, lamb[j])   #Eq 2
     for j in range(features):
         agent[j]+=(alpha*levy[j])    #Eq 1
 
@@ -163,4 +172,4 @@ def replace_worst(agent, fraction):
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    CS(20, 30, iris.data, iris.target, compute_accuracy)
+    CS(20, 30, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
