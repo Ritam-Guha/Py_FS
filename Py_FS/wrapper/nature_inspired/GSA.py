@@ -12,7 +12,6 @@ This code has been developed according to the procedures mentioned in the follow
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-import random, math
 
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
@@ -28,12 +27,13 @@ def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     # Gravitational Search Algorithm
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: number of particles                                           #
+    #   num_agents: number of chromosomes                                         #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   trans_function_shape: shape of the transfer function used for mapping     #
+    #   trans_func_shape: shape of the transfer function used                     #
+    #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
     
