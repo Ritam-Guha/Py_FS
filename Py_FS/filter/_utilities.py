@@ -9,6 +9,14 @@ def normalize(vector, lb=0, ub=1):
 
     return norm_vector
 
+class Result():
+    # structure of the result
+    def __init__(self):
+        self.ranks = None
+        self.scores = None
+        self.features = None
+        self.ranked_features = None 
+        
 
 if __name__=='__main__':
     a = np.array([1, 5, 6, 2, 7, 8])

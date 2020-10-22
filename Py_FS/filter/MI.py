@@ -1,15 +1,20 @@
 import numpy as np
-from _utilities import normalize
+from _utilities import normalize, Result
 from sklearn import datasets
 
 def MI(data):
     # function that assigns scores to features according to Mutual Information (MI)
     # the rankings should be done in increasing order of the MI scores 
+    
+    # initialize the variables and result structure
     feature_values = np.array(data)
     num_features = feature_values.shape[1]
     MI_mat = np.zeros((num_features, num_features))
     MI_values = np.zeros(num_features)
+    result = Result()
+    result.features = feature_values
     
+    # generate the information matrix
     for ind_1 in range(num_features):
         for ind_2 in range(num_features):
             MI_mat[ind_1, ind_2] = MI_mat[ind_2, ind_1] = compute_MI(feature_values[:, ind_1], feature_values[:, ind_2])
@@ -17,9 +22,16 @@ def MI(data):
     for ind in range(num_features):
         MI_values[ind] = -np.sum(abs(MI_mat[ind,:]))
 
+    # produce scores and ranks from the information matrix
     MI_scores = normalize(MI_values)
-    print(MI_scores)
-    return MI_scores  
+    MI_ranks = np.argsort(-MI_scores)
+
+    # assign the results to the appropriate fields
+    result.scores = MI_scores
+    result.ranks = MI_ranks
+    result.ranked_features = feature_values[:, MI_ranks]
+
+    return result  
 
 def compute_MI(x, y):
     # function to compute mutual information between two variables 
