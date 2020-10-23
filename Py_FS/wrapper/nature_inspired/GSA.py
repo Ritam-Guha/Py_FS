@@ -32,7 +32,7 @@ def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   trans_func_shape: shape of the transfer function used                     #
+    #   trans_function_shape: shape of the transfer function used                     #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
@@ -58,7 +58,7 @@ def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     data = Data()
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=0.2)
 
-    # create a Solution object
+    # create a solution object
     solution = Solution()
     solution.num_agents = num_agents
     solution.max_iter = max_iter
@@ -87,37 +87,37 @@ def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
         
-        # Updating value of G
+        # updating value of G
         G = G_ini - iter_no * (G_ini / max_iter) # Eq. (13)
         
-        # Finding mass of each particle
+        # finding mass of each particle
         best_fitness = fitness[0]
         worst_fitness = fitness[-1]
         m = (fitness - worst_fitness) / (best_fitness - worst_fitness + eps) # Eq. (15)
         sum_fitness = np.sum(m) 
         mass = m / sum_fitness # Eq. (16)
                       
-        # Finding force acting between each pair of particles
+        # finding force acting between each pair of particles
         for i in range(num_agents):
             for j in range(num_agents):
                 for k in range(num_features):
                     R[i][j] += abs(position[i][k] - position[j][k]) # Eq. (8)
                 F[i][j] = G * (mass[i] * mass[j]) / (R[i][j] + eps) * (position[j] - position[i]) # Eq. (7)
         
-        # Finding net force acting on each particle
+        # finding net force acting on each particle
         for i in range(num_agents):
             for j in kBest:
                 if i != j:
                     force[i] += np.random.random() * F[i][j] # Eq. (9)
         
-        # Finding acceleration of each particle
+        # finding acceleration of each particle
         for i in range(num_agents):
             acc[i] = force[i] / (mass[i] + eps) # Eq. (10)
                
-        # Updating velocity of each particle
+        # updating velocity of each particle
         velocity = np.random.random() * velocity + acc # Eq. (11)
         
-        # Apply transformation function on the velocity
+        # apply transformation function on the velocity
         for i in range(num_agents):
             for j in range(num_features):
                 trans_value = trans_function(velocity[i][j])

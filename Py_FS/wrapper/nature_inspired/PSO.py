@@ -32,7 +32,7 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   trans_func_shape: shape of the transfer function used                     #
+    #   trans_function_shape: shape of the transfer function used                     #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
@@ -43,7 +43,7 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_func_shape)
 
-    # initialize chromosomes and Leader (the agent with the max fitness)
+    # initialize particles and Leader (the agent with the max fitness)
     particles = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
     Leader_agent = np.zeros((1, num_features))
@@ -58,14 +58,14 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     data = Data()
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=0.2)
 
-    # create a Solution object
+    # create a solution object
     solution = Solution()
     solution.num_agents = num_agents
     solution.max_iter = max_iter
     solution.num_features = num_features
     solution.obj_function = obj_function
 
-    # rank initial greywolves
+    # rank initial particles
     particles, fitness = sort_agents(particles, obj_function, data)
 
     # start timer
@@ -83,7 +83,6 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
         print('\n================================================================================')
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
-        #print(particles)
         
         # update weight
         weight = 1.0 - (iter_no / max_iter)

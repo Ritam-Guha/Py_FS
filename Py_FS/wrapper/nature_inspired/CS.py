@@ -30,7 +30,7 @@ def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accur
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   trans_func_shape: shape of the transfer function used                     #
+    #   trans_function_shape: shape of the transfer function used                     #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
@@ -41,7 +41,7 @@ def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accur
     trans_function = get_trans_function(trans_function_shape)
     num_agents = num_nests
 
-    #initializing cuckoo and host nests
+    # initializing cuckoo and host nests
     levy_flight = np.random.uniform(low=-2, high=2, size=(num_features))
     cuckoo = np.random.randint(low=0, high=2, size=(num_features))
     nest = initialize(num_nests, num_features)
@@ -59,14 +59,14 @@ def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accur
     data = Data()
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=0.2)
 
-    # create a Solution object
+    # create a solution object
     solution = Solution()
     solution.num_agents = num_agents
     solution.max_iter = max_iter
     solution.num_features = num_features
     solution.obj_function = obj_function
 
-    #rank initial nests
+    # rank initial nests
     nest, nest_fitness = sort_agents(nest, obj_function, data)
 
     # start timer
@@ -78,12 +78,12 @@ def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accur
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
 
-        #updating leader nest
+        # updating leader nest
         if nest_fitness[0] > Leader_fitness:
             Leader_agent = nest[0].copy()
             Leader_fitness = nest_fitness[0]
 
-        #get new cuckoo
+        # get new cuckoo
         levy_flight = get_cuckoo(levy_flight)
         for j in range(num_features):
             if trans_function(levy_flight[j]) > np.random.random():
@@ -91,7 +91,7 @@ def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accur
             else:
                 cuckoo[j]=0
 
-        #check if a nest needs to be replaced
+        # check if a nest needs to be replaced
         j = np.random.randint(0,num_nests)
         if cuckoo_fitness > nest_fitness[j]:
             nest[j] = cuckoo.copy()
@@ -99,12 +99,12 @@ def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accur
 
         nest, nest_fitness = sort_agents(nest, obj_function, data)
 
-        #eliminate worse nests and generate new ones
+        # eliminate worse nests and generate new ones
         nest = replace_worst(nest, p_a)
 
         nest, nest_fitness = sort_agents(nest, obj_function, data)
 
-        #update final information
+        # update final information
         display(nest, nest_fitness, agent_name)
 
         if nest_fitness[0]>Leader_fitness:

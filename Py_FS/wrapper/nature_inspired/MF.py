@@ -31,7 +31,7 @@ def MF(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
     #   prob_mut: probability of mutation                                         #
-    #   trans_func_shape: shape of the transfer function used                     #
+    #   trans_function_shape: shape of the transfer function used                     #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
@@ -42,7 +42,7 @@ def MF(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
     
-    #control parameters
+    # control parameters
     a1 = 1
     a2 = 1.5
     d = 0.1
@@ -74,7 +74,7 @@ def MF(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     data = Data()
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=0.2)
     
-    # create a Solution object
+    # create a solution object
     solution = Solution()
     solution.num_agents = num_agents
     solution.max_iter = max_iter

@@ -33,7 +33,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   trans_func_shape: shape of the transfer function used                     #
+    #   trans_function_shape: shape of the transfer function used                     #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
@@ -44,7 +44,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
 
-    # initialize whales and Leader (the agent with the max fitness)
+    # initialize red deers and Leader (the agent with the max fitness)
     deer = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
     Leader_agent = np.zeros((1, num_features))
@@ -59,7 +59,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     data = Data()
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=0.2)
 
-    # create a Solution object
+    # create a solution object
     solution = Solution()
     solution.num_agents = num_agents
     solution.max_iter = max_iter
@@ -88,7 +88,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
         males = deer[:num_males,:]
         hinds = deer[num_males:,:]
         
-        # Roaring of male deer
+        # roaring of male deer
         for i in range(num_males):
             r1 = np.random.random() # r1 is a random number in [0, 1]
             r2 = np.random.random() # r2 is a random number in [0, 1]
@@ -99,7 +99,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
             else:
                 new_male -= r1 * (((UB - LB) * r2) + LB)
                 
-            # Apply transformation function on the new male
+            # apply transformation function on the new male
             for j in range(num_features):
                 trans_value = trans_function(new_male[j])
                 if (np.random.random() < trans_value): 
@@ -110,14 +110,14 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
             if obj_function(new_male, data.train_X, data.val_X, data.train_Y, data.val_Y) < obj_function(males[i], data.train_X, data.val_X, data.train_Y, data.val_Y):
                 males[i] = new_male
         
-        # Selection of male commanders and stags
+        # selection of male commanders and stags
         num_coms = int(num_males * gamma) # Eq. (4)
         num_stags = num_males - num_coms # Eq. (5)
 
         coms = males[:num_coms,:]
         stags = males[num_coms:,:]
         
-        # Fight between male commanders and stags       
+        # fight between male commanders and stags       
         for i in range(num_coms):
             chosen_com = coms[i].copy()
             chosen_stag = random.choice(stags)
@@ -126,7 +126,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
             new_male_1 = (chosen_com + chosen_stag) / 2 + r1 * (((UB - LB) * r2) + LB) # Eq. (6)
             new_male_2 = (chosen_com + chosen_stag) / 2 - r1 * (((UB - LB) * r2) + LB) # Eq. (7)
             
-            # Apply transformation function on new_male_1
+            # apply transformation function on new_male_1
             for j in range(num_features):
                 trans_value = trans_function(new_male_1[j])
                 if (np.random.random() < trans_value): 
@@ -134,7 +134,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                 else:
                     new_male_1[j] = 0
                     
-            # Apply transformation function on new_male_2
+            # apply transformation function on new_male_2
             for j in range(num_features):
                 trans_value = trans_function(new_male_2[j])
                 if (np.random.random() < trans_value): 
@@ -156,7 +156,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
             elif fitness[0] < fitness[3] and fitness[3] == bestfit:
                 coms[i] = new_male_2.copy()
 
-        # Formation of harems
+        # formation of harems
         coms, fitness = sort_agents(coms, obj_function, data)
         norm = np.linalg.norm(fitness)
         normal_fit = fitness / norm
@@ -173,7 +173,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                 harem[i][j] = hinds[itr]
                 itr += 1
         
-        # Mating of commander with hinds in his harem
+        # mating of commander with hinds in his harem
         num_harem_mate = [int(x * alpha) for x in num_harems] # Eq. (11)
         population_pool = list(deer)
         for i in range(num_coms):
@@ -182,7 +182,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                 r = np.random.random() # r is a random number in [0, 1]
                 offspring = (coms[i] + harem[i][j]) / 2 + (UB - LB) * r # Eq. (12)
                 
-                # Apply transformation function on offspring
+                # apply transformation function on offspring
                 for j in range(num_features):
                     trans_value = trans_function(offspring[j])
                     if (np.random.random() < trans_value): 
@@ -191,7 +191,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                         offspring[j] = 0
                 population_pool.append(list(offspring))
                 
-                # Mating of commander with hinds in another harem
+                # mating of commander with hinds in another harem
                 k = i
                 while k == i:
                     k = random.choice(range(num_coms))
@@ -202,7 +202,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                 for j in range(num_mate):
                     r = np.random.random() # r is a random number in [0, 1]
                     offspring = (coms[i] + harem[k][j]) / 2 + (UB - LB) * r 
-                    # Apply transformation function on offspring
+                    # apply transformation function on offspring
                     for j in range(num_features):
                         trans_value = trans_function(offspring[j])
                         if (np.random.random() < trans_value): 
@@ -211,7 +211,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                             offspring[j] = 0
                     population_pool.append(list(offspring))
         
-        # Mating of stag with nearest hind
+        # mating of stag with nearest hind
         for stag in stags:
             dist = np.zeros(num_hinds)
             for i in range(num_hinds):
@@ -223,7 +223,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                     r = np.random.random() # r is a random number in [0, 1]
                     offspring = (stag + hinds[i])/2 + (UB - LB) * r
                     
-                    # Apply transformation function on offspring
+                    # apply transformation function on offspring
                     for j in range(num_features):
                         trans_value = trans_function(offspring[j])
                         if (np.random.random() < trans_value): 
@@ -234,7 +234,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                     
                     break
         
-        # Selection of the next generation
+        # selection of the next generation
         population_pool = np.array(population_pool)            
         population_pool, fitness = sort_agents(population_pool, obj_function, data)
         maximum = sum([f for f in fitness])

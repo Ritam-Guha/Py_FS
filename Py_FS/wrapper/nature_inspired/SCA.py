@@ -30,7 +30,7 @@ def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   trans_func_shape: shape of the transfer function used                     #
+    #   trans_function_shape: shape of the transfer function used                     #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
@@ -41,7 +41,7 @@ def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_func_shape)
 
-    # initialize particles and Leader (the agent with the max fitness)
+    # initialize agents and Leader (the agent with the max fitness)
     population = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
     Leader_agent = np.zeros((1, num_features))
@@ -57,7 +57,7 @@ def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(
         train_data, train_label, stratify=train_label, test_size=0.2)
 
-    # create a Solution object
+    # create a solution object
     solution = Solution()
     solution.num_agents = num_agents
     solution.max_iter = max_iter
@@ -83,11 +83,11 @@ def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
         # Eq. (3.4)
         r1 = a-iter_no*((a)/max_iter)  # r1 decreases linearly from a to 0
 
-        # Update the Position of search agents
+        # update the Position of search agents
         for i in range(num_agents):
             for j in range(num_features):
 
-                # Update r2, r3, and r4 for Eq. (3.3)
+                # update r2, r3, and r4 for Eq. (3.3)
                 r2 = (2 * np.pi) * np.random.random()
                 r3 = 2 * np.random.random()
                 r4 = np.random.random()
