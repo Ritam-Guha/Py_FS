@@ -181,7 +181,7 @@ def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    GSA(50, 10, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
+    GSA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
 ############# for testing purpose ################
 
 

@@ -98,7 +98,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                 new_male += r1 * (((UB - LB) * r2) + LB)
             else:
                 new_male -= r1 * (((UB - LB) * r2) + LB)
-                
+                 
             # apply transformation function on the new male
             for j in range(num_features):
                 trans_value = trans_function(new_male[j])
@@ -109,6 +109,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                     
             if obj_function(new_male, data.train_X, data.val_X, data.train_Y, data.val_Y) < obj_function(males[i], data.train_X, data.val_X, data.train_Y, data.val_Y):
                 males[i] = new_male
+        
         
         # selection of male commanders and stags
         num_coms = int(num_males * gamma) # Eq. (4)
@@ -133,7 +134,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                     new_male_1[j] = 1
                 else:
                     new_male_1[j] = 0
-                    
+             
             # apply transformation function on new_male_2
             for j in range(num_features):
                 trans_value = trans_function(new_male_2[j])
@@ -190,9 +191,9 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                     else:
                         offspring[j] = 0
                 population_pool.append(list(offspring))
-                
+        
                 # mating of commander with hinds in another harem
-                k = i
+                k = i 
                 while k == i:
                     k = random.choice(range(num_coms))
                     
@@ -292,5 +293,5 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    RDA(50, 10, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
+    RDA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
 ############# for testing purpose ################

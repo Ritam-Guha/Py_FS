@@ -305,4 +305,4 @@ def trans_function1(velocity):
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    MF(20, 20, iris.data, iris.target, compute_accuracy, trans_function_shape='t', save_conv_graph=True)
+    MF(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)

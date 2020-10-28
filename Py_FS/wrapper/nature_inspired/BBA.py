@@ -158,7 +158,7 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     axes[1].plot(iters, convergence_curve['feature_count'])
 
     if(save_conv_graph):
-        plt.savefig('convergence_graph_'+ short_name + '.png')
+        plt.savefig('convergence_graph_'+ short_name + '.jpg')
     plt.show()
 
 

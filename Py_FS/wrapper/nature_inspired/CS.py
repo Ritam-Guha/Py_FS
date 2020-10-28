@@ -172,4 +172,4 @@ def replace_worst(agent, fraction):
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    CS(20, 30, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
+    CS(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
