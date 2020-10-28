@@ -11,7 +11,7 @@ Please install the required utilities for the package by running this piece of c
 
     pip3 install -r requirements.txt
 
-The package is publicly avaliable at *PYPI: Python Package Index*.
+The package is publicly avaliable at **PYPI: Python Package Index**.
 Anybody willing to use the package can install it by simply running:
     
     pip3 install Py_FS
