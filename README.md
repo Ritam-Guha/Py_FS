@@ -13,6 +13,7 @@ Anybody willing to use the package can install it by simply running:
     pip3 install Py_FS
 
 Please install the requirements for the package by running this piece of code before using:
+
     pip3 install -r requirements.txt
 
 ## Structure
