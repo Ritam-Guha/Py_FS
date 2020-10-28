@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-# from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
-from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 
 
 def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_cross=0.4, prob_mut=0.3, save_conv_graph=False):

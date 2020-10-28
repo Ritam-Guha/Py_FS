@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
      name='Py_FS',  
-     version='0.0.0.14',
+     version='0.0.1.0',
      author="Ritam Guha",
      author_email="ritamguha16@gmail.com",
      description="A Python Package for Feature Selection",

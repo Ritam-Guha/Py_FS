@@ -6,8 +6,8 @@ Date of Development: 28/10/2020
 """
 
 import numpy as np
-from _utilities import normalize, Result
-from sklearn import datasets
+from Py_FS.filter._utilities import normalize, Result
+# from sklearn import datasets
 
 def PCC(data, target):
     # function that assigns scores to features according to Pearson's Correlation Coefficient (PCC)
