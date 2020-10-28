@@ -1,10 +1,11 @@
 """
 
-Programmer: Ritam Guha
-Date of Development: 8/10/2020
+Programmer: Ali Hussain Khan
+Date of Development: 15/10/2020
 This code has been developed according to the procedures mentioned in the following research article:
-"Mafarja, M., & Mirjalili, S. (2018). Whale optimization approaches for wrapper feature selection. 
-Applied Soft Computing, 62, 441-453."
+"Khanesar, M. A., Teshnehlab, M., & Shoorehdeli, M. A. (2007, June). 
+A novel binary particle swarm optimization. 
+In 2007 Mediterranean conference on control & automation (pp. 1-6). IEEE."
 
 """
 
@@ -21,9 +22,9 @@ from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
 # from _transfer_functions import get_trans_function
 
 
-def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', save_conv_graph=False):
-
-    # Whale Optimization Algorithm
+def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_func_shape='s', save_conv_graph=False):
+    
+    # Particle Swarm Optimizer
     ############################### Parameters ####################################
     #                                                                             #
     #   num_agents: number of chromosomes                                         #
@@ -36,15 +37,14 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     #                                                                             #
     ###############################################################################
     
-    short_name = 'WOA'
-    agent_name = 'Whale'
+    short_name = 'PSO'
+    agent_name = 'Particle'
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
-    cross_limit = 5
-    trans_function = get_trans_function(trans_function_shape)
+    trans_function = get_trans_function(trans_func_shape)
 
-    # initialize whales and Leader (the agent with the max fitness)
-    whales = initialize(num_agents, num_features)
+    # initialize particles and Leader (the agent with the max fitness)
+    particles = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
     Leader_agent = np.zeros((1, num_features))
     Leader_fitness = float("-inf")
@@ -54,7 +54,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     convergence_curve['fitness'] = np.zeros(max_iter)
     convergence_curve['feature_count'] = np.zeros(max_iter)
 
-    # format the data 
+    # format the data
     data = Data()
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=0.2)
 
@@ -65,73 +65,79 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     solution.num_features = num_features
     solution.obj_function = obj_function
 
-    # rank initial population
-    whales, fitness = sort_agents(whales, obj_function, data)
+    # rank initial particles
+    particles, fitness = sort_agents(particles, obj_function, data)
 
     # start timer
     start_time = time.time()
 
-    # main loop
+    # initialize global and local best particles
+    globalBestParticle = [0 for i in range(num_features)]
+    globalBestFitness = float("-inf")
+    localBestParticle = [ [ 0 for i in range(num_features) ] for j in range(num_agents) ] 
+    localBestFitness = [float("-inf") for i in range(num_agents) ]
+    weight = 1.0 
+    velocity = [ [ 0.0 for i in range(num_features) ] for j in range(num_agents) ]
+    
     for iter_no in range(max_iter):
         print('\n================================================================================')
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
-
-        a = 2 - iter_no * (2/max_iter)  # a decreases linearly fron 2 to 0
-        # update the position of each whale
+        
+        # update weight
+        weight = 1.0 - (iter_no / max_iter)
+        
+        # update the velocity
         for i in range(num_agents):
-            # update the parameters
-            r = np.random.random() # r is a random number in [0, 1]
-            A = (2 * a * r) - a  # Eq. (3)
-            C = 2 * r  # Eq. (4)
-            l = -1 + (np.random.random() * 2)   # l is a random number in [-1, 1]
-            p = np.random.random()  # p is a random number in [0, 1]
-            b = 1  # defines shape of the spiral               
-            
-            if p<0.5:
-                # Shrinking Encircling mechanism
-                if abs(A)>=1:
-                    rand_agent_index = np.random.randint(0, num_agents)
-                    rand_agent = whales[rand_agent_index, :]
-                    mod_dist_rand_agent = abs(C * rand_agent - whales[i,:]) 
-                    whales[i,:] = rand_agent - (A * mod_dist_rand_agent)   # Eq. (9)
-                    
-                else:
-                    mod_dist_Leader = abs(C * Leader_agent - whales[i,:]) 
-                    whales[i,:] = Leader_agent - (A * mod_dist_Leader)  # Eq. (2)
-                
-            else:
-                # Spiral-Shaped Attack mechanism
-                dist_Leader = abs(Leader_agent - whales[i,:])
-                whales[i,:] = dist_Leader * np.exp(b * l) * np.cos(l * 2 * np.pi) + Leader_agent
-
-            # Apply transformation function on the updated whale
             for j in range(num_features):
-                trans_value = trans_function(whales[i,j])
+                velocity[i][j] = (weight*velocity[i][j])
+                r1, r2 = np.random.random(2)
+                velocity[i][j] = velocity[i][j] + (r1 * (localBestParticle[i][j] - particles[i][j]))
+                velocity[i][j] = velocity[i][j] + (r2 * (globalBestParticle[j] - particles[i][j]))
+       
+        # updating position of particles
+        for i in range(num_agents):
+            for j in range(num_features):
+                trans_value = trans_function(velocity[i][j])
                 if (np.random.random() < trans_value): 
-                    whales[i,j] = 1
+                    particles[i][j] = 1
                 else:
-                    whales[i,j] = 0
+                    particles[i][j] = 0
+                 
+        # updating fitness of particles
+        particles, fitness = sort_agents(particles, obj_function, data)
+        display(particles, fitness, agent_name)
+        
+        
+        # updating the global best and local best particles
+        for i in range(num_agents):
+            if fitness[i]>localBestFitness[i]:
+                localBestFitness[i]=fitness[i]
+                localBestParticle[i]=particles[i][:]
 
-        # update final information
-        whales, fitness = sort_agents(whales, obj_function, data)
-        display(whales, fitness, agent_name)
-        if fitness[0]>Leader_fitness:
-            Leader_agent = whales[0].copy()
-            Leader_fitness = fitness[0].copy()
+            if fitness[i]>globalBestFitness:
+                globalBestFitness=fitness[i]
+                globalBestParticle=particles[i][:]
+
+        # update Leader (best agent)
+        if globalBestFitness > Leader_fitness:
+            Leader_agent = globalBestParticle.copy()
+            Leader_fitness = globalBestFitness.copy()
+
         convergence_curve['fitness'][iter_no] = Leader_fitness
         convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
+
 
     # stop timer
     end_time = time.time()
     exec_time = end_time - start_time
-    
+
     # plot convergence curves
     iters = np.arange(max_iter)+1
     fig, axes = plt.subplots(2, 1)
-    fig.tight_layout(pad = 5) 
+    fig.tight_layout(pad=5)
     fig.suptitle('Convergence Curves')
-    
+
     axes[0].set_title('Convergence of Fitness over Iterations')
     axes[0].set_xlabel('Iteration')
     axes[0].set_ylabel('Fitness')
@@ -150,19 +156,15 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     solution.best_agent = Leader_agent
     solution.best_fitness = Leader_fitness
     solution.convergence_curve = convergence_curve
-    solution.final_population = whales
+    solution.final_particles = particles
     solution.final_fitness = fitness
     solution.execution_time = exec_time
 
     return solution
 
 
-
-
-
-############# for testing purpose ################
-
 if __name__ == '__main__':
+    
     iris = datasets.load_iris()
-    WOA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
-############# for testing purpose ################
+    PSO(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
+

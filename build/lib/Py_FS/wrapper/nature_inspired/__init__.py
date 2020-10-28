@@ -1,16 +1,28 @@
-from Py_FS.wrapper.nature_inspired._utilities import Data, Solution, initialize, sort_agents, display, compute_accuracy
+from Py_FS.wrapper.nature_inspired.BBA import BBA
+from Py_FS.wrapper.nature_inspired.CS import CS
+from Py_FS.wrapper.nature_inspired.EO import EO
 from Py_FS.wrapper.nature_inspired.GA import GA
-from Py_FS.wrapper.nature_inspired.WOA import WOA
+from Py_FS.wrapper.nature_inspired.GSA import GSA
 from Py_FS.wrapper.nature_inspired.GWO import GWO
+from Py_FS.wrapper.nature_inspired.HS import HS
+from Py_FS.wrapper.nature_inspired.MF import MA
+from Py_FS.wrapper.nature_inspired.PSO import PSO
+from Py_FS.wrapper.nature_inspired.RDA import RDA
+from Py_FS.wrapper.nature_inspired.SCA import SCA
+from Py_FS.wrapper.nature_inspired.WOA import WOA
+
 
 __all__ = [
-    'compute_accuracy',
-    'Data',
-    'display',
+    'BBA',
+    'CS',
+    'EO',
     'GA',
+    'GSA',
     'GWO',
-    'initialize',
-    'Solution',
-    'sort_agents',
+    'HS',
+    'MA',
+    'PSO',
+    'RDA',
+    'SCA',
     'WOA'
 ]

@@ -1,10 +1,10 @@
 """
-
-Programmer: Ritam Guha
-Date of Development: 8/10/2020
+Programmer: Trinav Bhattacharyya
+Date of Development: 18/10/2020
 This code has been developed according to the procedures mentioned in the following research article:
-"Mafarja, M., & Mirjalili, S. (2018). Whale optimization approaches for wrapper feature selection. 
-Applied Soft Computing, 62, 441-453."
+X.-S. Yang, S. Deb, “Cuckoo search via L´evy flights”, in: Proc. of
+World Congress on Nature & Biologically Inspired Computing (NaBIC 2009),
+December 2009, India. IEEE Publications, USA, pp. 210-214 (2009).
 
 """
 
@@ -13,17 +13,16 @@ import time
 import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
-from sklearn import datasets
+# from sklearn import datasets
 
 from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
-from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
+from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
 # from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 # from _transfer_functions import get_trans_function
 
-
-def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', save_conv_graph=False):
-
-    # Whale Optimization Algorithm
+def CS (num_nests, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', save_conv_graph=False):
+    
+    # Cuckoo Search Algorithm
     ############################### Parameters ####################################
     #                                                                             #
     #   num_agents: number of chromosomes                                         #
@@ -35,26 +34,28 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
-    
-    short_name = 'WOA'
-    agent_name = 'Whale'
-    train_data, train_label = np.array(train_data), np.array(train_label)
-    num_features = train_data.shape[1]
-    cross_limit = 5
-    trans_function = get_trans_function(trans_function_shape)
 
-    # initialize whales and Leader (the agent with the max fitness)
-    whales = initialize(num_agents, num_features)
-    fitness = np.zeros(num_agents)
-    Leader_agent = np.zeros((1, num_features))
+    short_name = 'CS'
+    agent_name = 'Agent'
+    num_features = train_data.shape[1]
+    trans_function = get_trans_function(trans_function_shape)
+    num_agents = num_nests
+
+    # initializing cuckoo and host nests
+    levy_flight = np.random.uniform(low=-2, high=2, size=(num_features))
+    cuckoo = np.random.randint(low=0, high=2, size=(num_features))
+    nest = initialize(num_nests, num_features)
+    nest_fitness = np.zeros(num_nests)
+    cuckoo_fitness = float("-inf")
+    Leader_agent = np.zeros((num_features))
     Leader_fitness = float("-inf")
+    p_a=0.25    # fraction of nests to be replaced   
 
     # initialize convergence curves
     convergence_curve = {}
     convergence_curve['fitness'] = np.zeros(max_iter)
     convergence_curve['feature_count'] = np.zeros(max_iter)
 
-    # format the data 
     data = Data()
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=0.2)
 
@@ -65,8 +66,8 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     solution.num_features = num_features
     solution.obj_function = obj_function
 
-    # rank initial population
-    whales, fitness = sort_agents(whales, obj_function, data)
+    # rank initial nests
+    nest, nest_fitness = sort_agents(nest, obj_function, data)
 
     # start timer
     start_time = time.time()
@@ -77,61 +78,52 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
 
-        a = 2 - iter_no * (2/max_iter)  # a decreases linearly fron 2 to 0
-        # update the position of each whale
-        for i in range(num_agents):
-            # update the parameters
-            r = np.random.random() # r is a random number in [0, 1]
-            A = (2 * a * r) - a  # Eq. (3)
-            C = 2 * r  # Eq. (4)
-            l = -1 + (np.random.random() * 2)   # l is a random number in [-1, 1]
-            p = np.random.random()  # p is a random number in [0, 1]
-            b = 1  # defines shape of the spiral               
-            
-            if p<0.5:
-                # Shrinking Encircling mechanism
-                if abs(A)>=1:
-                    rand_agent_index = np.random.randint(0, num_agents)
-                    rand_agent = whales[rand_agent_index, :]
-                    mod_dist_rand_agent = abs(C * rand_agent - whales[i,:]) 
-                    whales[i,:] = rand_agent - (A * mod_dist_rand_agent)   # Eq. (9)
-                    
-                else:
-                    mod_dist_Leader = abs(C * Leader_agent - whales[i,:]) 
-                    whales[i,:] = Leader_agent - (A * mod_dist_Leader)  # Eq. (2)
-                
-            else:
-                # Spiral-Shaped Attack mechanism
-                dist_Leader = abs(Leader_agent - whales[i,:])
-                whales[i,:] = dist_Leader * np.exp(b * l) * np.cos(l * 2 * np.pi) + Leader_agent
+        # updating leader nest
+        if nest_fitness[0] > Leader_fitness:
+            Leader_agent = nest[0].copy()
+            Leader_fitness = nest_fitness[0]
 
-            # Apply transformation function on the updated whale
-            for j in range(num_features):
-                trans_value = trans_function(whales[i,j])
-                if (np.random.random() < trans_value): 
-                    whales[i,j] = 1
-                else:
-                    whales[i,j] = 0
+        # get new cuckoo
+        levy_flight = get_cuckoo(levy_flight)
+        for j in range(num_features):
+            if trans_function(levy_flight[j]) > np.random.random():
+                cuckoo[j]=1
+            else:
+                cuckoo[j]=0
+
+        # check if a nest needs to be replaced
+        j = np.random.randint(0,num_nests)
+        if cuckoo_fitness > nest_fitness[j]:
+            nest[j] = cuckoo.copy()
+            nest_fitness[j] = cuckoo_fitness
+
+        nest, nest_fitness = sort_agents(nest, obj_function, data)
+
+        # eliminate worse nests and generate new ones
+        nest = replace_worst(nest, p_a)
+
+        nest, nest_fitness = sort_agents(nest, obj_function, data)
 
         # update final information
-        whales, fitness = sort_agents(whales, obj_function, data)
-        display(whales, fitness, agent_name)
-        if fitness[0]>Leader_fitness:
-            Leader_agent = whales[0].copy()
-            Leader_fitness = fitness[0].copy()
+        display(nest, nest_fitness, agent_name)
+
+        if nest_fitness[0]>Leader_fitness:
+            Leader_agent = nest[0].copy()
+            Leader_fitness = nest_fitness[0].copy()
+
         convergence_curve['fitness'][iter_no] = Leader_fitness
         convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
 
     # stop timer
     end_time = time.time()
     exec_time = end_time - start_time
-    
+
     # plot convergence curves
     iters = np.arange(max_iter)+1
     fig, axes = plt.subplots(2, 1)
-    fig.tight_layout(pad = 5) 
+    fig.tight_layout(pad = 5)
     fig.suptitle('Convergence Curves')
-    
+
     axes[0].set_title('Convergence of Fitness over Iterations')
     axes[0].set_xlabel('Iteration')
     axes[0].set_ylabel('Fitness')
@@ -141,28 +133,43 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     axes[1].set_xlabel('Iteration')
     axes[1].set_ylabel('Number of Selected Features')
     axes[1].plot(iters, convergence_curve['feature_count'])
-
+    
     if(save_conv_graph):
         plt.savefig('convergence_graph_'+ short_name + '.jpg')
     plt.show()
+
 
     # update attributes of solution
     solution.best_agent = Leader_agent
     solution.best_fitness = Leader_fitness
     solution.convergence_curve = convergence_curve
-    solution.final_population = whales
-    solution.final_fitness = fitness
+    solution.final_population = nest
+    solution.final_fitness = nest_fitness
     solution.execution_time = exec_time
 
     return solution
 
+def get_cuckoo(agent, alpha=np.random.randint(-2,3)):
+    features = len(agent)
+    lamb = np.random.uniform(low=-3, high=-1, size=(features))
+    levy = np.zeros((features))
+    get_test_value = 1/(np.power((np.random.normal(0,1)),2))
+    for j in range(features):
+        levy[j] = np.power(get_test_value, lamb[j])   #Eq 2
+    for j in range(features):
+        agent[j]+=(alpha*levy[j])    #Eq 1
 
+    return agent
 
+def replace_worst(agent, fraction):
+    pop, features = agent.shape
+    for i in range(int((1-fraction)*pop), pop):
+        agent[i] = np.random.randint(low=0, high=2, size=(features))
+        if np.sum(agent[i])==0:
+            agent[i][np.random.randint(0,features)]=1
 
-
-############# for testing purpose ################
+    return agent
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    WOA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
-############# for testing purpose ################
+    CS(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)

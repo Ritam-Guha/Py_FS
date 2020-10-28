@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsClassifier as KNN
 
 class Solution():    
     #structure of the solution 
@@ -67,7 +67,7 @@ def sort_agents(agents, obj_function, data):
 def display(agents, fitness, agent_name='Agent'):
     # display the population
     print('\nNumber of agents: {}'.format(agents.shape[0]))
-    print('\n------------- Best Agent -------------')
+    print('\n------------- Best Agent ---------------')
     print('Fitness: {}'.format(fitness[0]))
     print('Number of Features: {}'.format(int(np.sum(agents[0]))))
     print('----------------------------------------\n')
@@ -79,20 +79,20 @@ def display(agents, fitness, agent_name='Agent'):
 
 
 
-def compute_accuracy(agent, train_X, val_X, train_Y, val_Y): 
+def compute_accuracy(agent, train_X, test_X, train_Y, test_Y): 
     # compute classification accuracy of the given agents
-    cols=np.flatnonzero(agent)     
-    if(cols.shape[0]==0):
+    cols = np.flatnonzero(agent)     
+    if(cols.shape[0] == 0):
         return 0    
-    clf=KNeighborsClassifier(n_neighbors=5)
+    clf = KNN()
 
     train_data = train_X[:,cols]
     train_label = train_Y
-    val_data = val_X[:,cols]
-    val_label = val_Y
+    test_data = test_X[:,cols]
+    test_label = test_Y
 
     clf.fit(train_data,train_label)
-    acc=clf.score(val_data,val_label)
+    acc = clf.score(test_data,test_label)
 
     return acc
         

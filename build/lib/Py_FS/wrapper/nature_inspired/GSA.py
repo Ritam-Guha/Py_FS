@@ -1,10 +1,11 @@
+
 """
 
-Programmer: Ritam Guha
-Date of Development: 8/10/2020
+Programmer: Bitanu Chatterjee
+Date of Development: 22/10/2020
 This code has been developed according to the procedures mentioned in the following research article:
-"Mafarja, M., & Mirjalili, S. (2018). Whale optimization approaches for wrapper feature selection. 
-Applied Soft Computing, 62, 441-453."
+"Rashedi, Esmat, Hossein Nezamabadi-Pour, and Saeid Saryazdi. 
+'GSA: a gravitational search algorithm.'' Information sciences 179.13 (2009): 2232-2248"
 
 """
 
@@ -21,9 +22,9 @@ from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
 # from _transfer_functions import get_trans_function
 
 
-def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', save_conv_graph=False):
+def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', save_conv_graph=False):
 
-    # Whale Optimization Algorithm
+    # Gravitational Search Algorithm
     ############################### Parameters ####################################
     #                                                                             #
     #   num_agents: number of chromosomes                                         #
@@ -36,15 +37,14 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     #                                                                             #
     ###############################################################################
     
-    short_name = 'WOA'
-    agent_name = 'Whale'
+    agent_name = 'Particle'
+    short_name = 'GSA'
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
-    cross_limit = 5
     trans_function = get_trans_function(trans_function_shape)
 
-    # initialize whales and Leader (the agent with the max fitness)
-    whales = initialize(num_agents, num_features)
+    # initialize positions of particles and Leader (the agent with the max fitness)
+    position = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
     Leader_agent = np.zeros((1, num_features))
     Leader_fitness = float("-inf")
@@ -64,10 +64,20 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     solution.max_iter = max_iter
     solution.num_features = num_features
     solution.obj_function = obj_function
-
+    
+    # initializing parameters
+    eps = 0.00001
+    G_ini = 6
+    F = np.zeros((num_agents, num_agents, num_features))
+    R = np.zeros((num_agents, num_agents))
+    force = np.zeros((num_agents, num_features))
+    acc = np.zeros((num_agents, num_features))
+    velocity = np.zeros((num_agents, num_features))
+    kBest = range(5)
+    
     # rank initial population
-    whales, fitness = sort_agents(whales, obj_function, data)
-
+    position, fitness = sort_agents(position, obj_function, data)
+    
     # start timer
     start_time = time.time()
 
@@ -76,48 +86,56 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
         print('\n================================================================================')
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
-
-        a = 2 - iter_no * (2/max_iter)  # a decreases linearly fron 2 to 0
-        # update the position of each whale
+        
+        # updating value of G
+        G = G_ini - iter_no * (G_ini / max_iter) # Eq. (13)
+        
+        # finding mass of each particle
+        best_fitness = fitness[0]
+        worst_fitness = fitness[-1]
+        m = (fitness - worst_fitness) / (best_fitness - worst_fitness + eps) # Eq. (15)
+        sum_fitness = np.sum(m) 
+        mass = m / sum_fitness # Eq. (16)
+                      
+        # finding force acting between each pair of particles
         for i in range(num_agents):
-            # update the parameters
-            r = np.random.random() # r is a random number in [0, 1]
-            A = (2 * a * r) - a  # Eq. (3)
-            C = 2 * r  # Eq. (4)
-            l = -1 + (np.random.random() * 2)   # l is a random number in [-1, 1]
-            p = np.random.random()  # p is a random number in [0, 1]
-            b = 1  # defines shape of the spiral               
-            
-            if p<0.5:
-                # Shrinking Encircling mechanism
-                if abs(A)>=1:
-                    rand_agent_index = np.random.randint(0, num_agents)
-                    rand_agent = whales[rand_agent_index, :]
-                    mod_dist_rand_agent = abs(C * rand_agent - whales[i,:]) 
-                    whales[i,:] = rand_agent - (A * mod_dist_rand_agent)   # Eq. (9)
-                    
-                else:
-                    mod_dist_Leader = abs(C * Leader_agent - whales[i,:]) 
-                    whales[i,:] = Leader_agent - (A * mod_dist_Leader)  # Eq. (2)
-                
-            else:
-                # Spiral-Shaped Attack mechanism
-                dist_Leader = abs(Leader_agent - whales[i,:])
-                whales[i,:] = dist_Leader * np.exp(b * l) * np.cos(l * 2 * np.pi) + Leader_agent
-
-            # Apply transformation function on the updated whale
+            for j in range(num_agents):
+                for k in range(num_features):
+                    R[i][j] += abs(position[i][k] - position[j][k]) # Eq. (8)
+                F[i][j] = G * (mass[i] * mass[j]) / (R[i][j] + eps) * (position[j] - position[i]) # Eq. (7)
+        
+        # finding net force acting on each particle
+        for i in range(num_agents):
+            for j in kBest:
+                if i != j:
+                    force[i] += np.random.random() * F[i][j] # Eq. (9)
+        
+        # finding acceleration of each particle
+        for i in range(num_agents):
+            acc[i] = force[i] / (mass[i] + eps) # Eq. (10)
+               
+        # updating velocity of each particle
+        velocity = np.random.random() * velocity + acc # Eq. (11)
+        
+        # apply transformation function on the velocity
+        for i in range(num_agents):
             for j in range(num_features):
-                trans_value = trans_function(whales[i,j])
+                trans_value = trans_function(velocity[i][j])
                 if (np.random.random() < trans_value): 
-                    whales[i,j] = 1
+                    position[i][j] = 1
                 else:
-                    whales[i,j] = 0
-
+                    position[i][j] = 0
+            if np.sum(position[i]) == 0:
+                x = np.random.randint(0,num_features-1)
+                position[i][x] = 1
+                    
+        
+               
         # update final information
-        whales, fitness = sort_agents(whales, obj_function, data)
-        display(whales, fitness, agent_name)
-        if fitness[0]>Leader_fitness:
-            Leader_agent = whales[0].copy()
+        position, fitness = sort_agents(position, obj_function, data)
+        display(position, fitness, agent_name)
+        if fitness[0] > Leader_fitness:
+            Leader_agent = position[0].copy()
             Leader_fitness = fitness[0].copy()
         convergence_curve['fitness'][iter_no] = Leader_fitness
         convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
@@ -150,10 +168,9 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     solution.best_agent = Leader_agent
     solution.best_fitness = Leader_fitness
     solution.convergence_curve = convergence_curve
-    solution.final_population = whales
+    solution.final_population = position
     solution.final_fitness = fitness
     solution.execution_time = exec_time
-
     return solution
 
 
@@ -164,5 +181,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    WOA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
+    GSA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
 ############# for testing purpose ################
+
+

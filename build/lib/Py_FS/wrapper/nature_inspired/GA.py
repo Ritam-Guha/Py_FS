@@ -10,13 +10,13 @@ import time
 import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
-from sklearn import datasets
+# from sklearn import datasets
 
-# from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 
 
-def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_cross=0.4, prob_mut=0.3):
+def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_cross=0.4, prob_mut=0.3, save_conv_graph=False):
 
     # Genetic Algorithm
     ############################### Parameters ####################################
@@ -28,9 +28,13 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     #   obj_function: the function to maximize while doing feature selection      #
     #   prob_cross: probability of crossover                                      #
     #   prob_mut: probability of mutation                                         #
+    #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
+
+    short_name = 'GA'
     agent_name = 'Chromosome'
+    train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     cross_limit = 5
 
@@ -49,7 +53,7 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     data = Data()
     data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=0.2)
 
-    # create a Solution object
+    # create a solution object
     solution = Solution()
     solution.num_agents = num_agents
     solution.max_iter = max_iter
@@ -99,7 +103,9 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     axes[1].set_xlabel('Iteration')
     axes[1].set_ylabel('Number of Selected Features')
     axes[1].plot(iters, convergence_curve['feature_count'])
-
+    
+    if(save_conv_graph):
+        plt.savefig('convergence_graph_'+ short_name + '.jpg')
     plt.show()
 
     # update attributes of solution
@@ -198,5 +204,5 @@ def cross_mut(chromosomes, fitness, obj_function, data, prob_cross, cross_limit,
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    GA(10, 20, iris.data, iris.target, compute_accuracy)
+    GA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
 ############# for testing purpose ################
