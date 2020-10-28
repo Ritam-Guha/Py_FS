@@ -5,7 +5,7 @@ from Py_FS.wrapper.nature_inspired.GA import GA
 from Py_FS.wrapper.nature_inspired.GSA import GSA
 from Py_FS.wrapper.nature_inspired.GWO import GWO
 from Py_FS.wrapper.nature_inspired.HS import HS
-from Py_FS.wrapper.nature_inspired.MF import MF
+from Py_FS.wrapper.nature_inspired.MF import MA
 from Py_FS.wrapper.nature_inspired.PSO import PSO
 from Py_FS.wrapper.nature_inspired.RDA import RDA
 from Py_FS.wrapper.nature_inspired.SCA import SCA

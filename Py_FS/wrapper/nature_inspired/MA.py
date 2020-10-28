@@ -20,7 +20,7 @@ from sklearn import datasets
 from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
 from _transfer_functions import get_trans_function
 
-def MF(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_mut=0.2, trans_function_shape='s', save_conv_graph=False):
+def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_mut=0.2, trans_function_shape='s', save_conv_graph=False):
     
     # Mayfly Algorithm
     ############################### Parameters ####################################
@@ -305,4 +305,4 @@ def trans_function1(velocity):
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    MF(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
+    MA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
