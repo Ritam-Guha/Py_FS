@@ -1,7 +1,7 @@
 # Py_FS: A Python Package for Feature Selection
 
 <p align="center">  
-  <img src="https://github.com/Ritam-Guha/Py_FS/blob/master/Images/logo.jpg">
+  <img src="https://github.com/Ritam-Guha/Py_FS/blob/master/Images/logo.jpg" height="600" width="400">
 </p><br>
 
 Py_FS is a toolbox developed with complete focus on Feature Selection (FS) using Python as the underlying programming language. It comes with capabilities like nature-inspired evolutionary feature selection algorithms, filter methods and simple evaulation metrics to help with easy applications and comparisons among different feature selection algorithms over different datasets. It is still in the development phase. We wish to extend this package further to contain more extensive set of feature selection procedures and corresponding utilities.
