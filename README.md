@@ -7,14 +7,16 @@ Py_FS is a toolbox developed with complete focus on Feature Selection (FS) using
 
 ## Installation
 
+Please install the required utilities for the package by running this piece of code:
+
+    pip3 install -r requirements.txt
+
 The package is publicly avaliable at *PYPI: Python Package Index*.
 Anybody willing to use the package can install it by simply running:
     
     pip3 install Py_FS
 
-Please install the requirements for the package by running this piece of code before using:
 
-    pip3 install -r requirements.txt
 
 ## Structure
 
