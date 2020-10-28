@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[8]:
-
-
-
 """
 
 Programmer: Bitanu Chatterjee
@@ -303,4 +296,3 @@ if __name__ == '__main__':
     iris = datasets.load_iris()
     RDA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
 ############# for testing purpose ################
-
