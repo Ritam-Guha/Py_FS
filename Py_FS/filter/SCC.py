@@ -53,5 +53,5 @@ def compute_SCC(x, y):
     return SCC_val
 
 if __name__ == '__main__':
-    data = datasets.load_wine()
+    data = datasets.load_iris()
     SCC(data.data, data.target)

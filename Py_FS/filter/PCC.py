@@ -55,5 +55,5 @@ def compute_PCC(x, y):
 
 
 if __name__ == '__main__':
-    data = datasets.load_wine()
+    data = datasets.load_iris()
     PCC(data.data, data.target)

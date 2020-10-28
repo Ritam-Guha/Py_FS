@@ -4,8 +4,8 @@ from _utilities import normalize, Result
 from sklearn import datasets
 
 def Relief(data, target):
-    # function that assigns scores to features according to Spearman's Correlation Coefficient (SCC)
-    # the rankings should be done in increasing order of the SCC scores 
+    # function that assigns scores to features according to Relief algorithm
+    # the rankings should be done in increasing order of the Relief scores 
 
     # initialize the variables and result structure
     feature_values = np.array(data)
@@ -14,21 +14,22 @@ def Relief(data, target):
     result.features = feature_values
 
     # generate the ReliefF scores
-    relief = ReliefF(n_neighbors=1, n_features_to_keep=num_features)
+    relief = ReliefF(n_neighbors=50, n_features_to_keep=num_features)
     relief.fit_transform(data, target)
-    print(relief.top_features)
+    result.scores = normalize(relief.feature_scores)
+    result.ranks = np.argsort(np.argsort(-relief.feature_scores))
 
     # produce scores and ranks from the information matrix
-    SCC_scores = normalize(SCC_values)
-    SCC_ranks = np.argsort(-SCC_scores)
+    Relief_scores = normalize(relief.feature_scores)
+    Relief_ranks = np.argsort(np.argsort(-relief.feature_scores))
 
     # assign the results to the appropriate fields
-    result.scores = SCC_scores
-    result.ranks = SCC_ranks
-    result.ranked_features = feature_values[:, SCC_ranks]
+    result.scores = Relief_scores
+    result.ranks = Relief_ranks
+    result.ranked_features = feature_values[:, Relief_ranks]
 
     return result
 
 if __name__ == '__main__':
-    data = datasets.load_wine()
+    data = datasets.load_iris()
     Relief(data.data, data.target)

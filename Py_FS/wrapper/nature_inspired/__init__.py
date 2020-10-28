@@ -1,3 +1,4 @@
+from Py_FS.wrapper.nature_inspired.BBA import BBA
 from Py_FS.wrapper.nature_inspired.CS import CS
 from Py_FS.wrapper.nature_inspired.EO import EO
 from Py_FS.wrapper.nature_inspired.GA import GA
@@ -12,6 +13,7 @@ from Py_FS.wrapper.nature_inspired.WOA import WOA
 
 
 __all__ = [
+    'BBA',
     'CS',
     'EO',
     'GA',

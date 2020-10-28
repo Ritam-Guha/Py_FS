@@ -60,5 +60,5 @@ def compute_MI(x, y):
     return sum_mi
 
 if __name__ == '__main__':
-    data = datasets.load_wine()
+    data = datasets.load_iris()
     MI(data.data, data.target)
