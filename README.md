@@ -53,6 +53,9 @@ For example, if someone wants to use GA, it should be imported using the followi
 There are mainly three utilities in the current version of the package. The next part discusses these
 three parts in detail:
 
+## Quick User Guide
+For a quicl demonstration of the process of using Py_FS, please proceed to this link: [Py_FS: Demonstration](https://colab.research.google.com/drive/1PafNTmVgWv9Qz6j7bI41XqPT6CCCIb1T?usp=sharing).
+
 ## 1. Wrapper-based Nature-inpsired Feature Selection
 Wrapper-based Nature-inspired methods are very popular feature selection approaches due to their efficiency and simplicity. These methods progress by introducing random set of candidate solutions (agents which are natural elements like particles, whales, bats etc.) and improving these solutions gradually by using guidance mechanisms of fitter agents. In order to calculate the fitness of the candidate solutions, wrappers require some learning algorithm (like classifiers) to calculate the worth of a solution at every iteration. This makes wrapper methods extremely reliable but computationally expensive as well.
 
