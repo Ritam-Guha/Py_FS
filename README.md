@@ -1,5 +1,9 @@
 # Py_FS: A Python Package for Feature Selection
 
+<p align="center">  
+  <img src="https://github.com/Ritam-Guha/Py_FS/blob/master/Images/logo.jpg">
+</p><br>
+
 Py_FS is a toolbox developed with complete focus on Feature Selection (FS) using Python as the underlying programming language. It comes with capabilities like nature-inspired evolutionary feature selection algorithms, filter methods and simple evaulation metrics to help with easy applications and comparisons among different feature selection algorithms over different datasets. It is still in the development phase. We wish to extend this package further to contain more extensive set of feature selection procedures and corresponding utilities.
 
 ## Installation
@@ -50,7 +54,7 @@ three parts in detail:
 ## 1. Wrapper-based Nature-inpsired Feature Selection
 Wrapper-based Nature-inspired methods are very popular feature selection approaches due to their efficiency and simplicity. These methods progress by introducing random set of candidate solutions (agents which are natural elements like particles, whales, bats etc.) and improving these solutions gradually by using guidance mechanisms from fitter agents. In order to calculate the fitness of the candidate solutions, wrappers require some learning algorithm (like classifiers) to calculate the goodness of a solution at every iteration. This makes wrapper methods extremely reliable but computationally expensive as well.
 
-Py_FS currently supports the following 12 filter-based FS methods:
+Py_FS currently supports the following 12 wrapper-based FS methods:
 * Binary Bat Algorithm (BBA)
 * Cuckoo Search Algorithm (CS)
 * Equilibrium Optimizer (EO)
@@ -64,7 +68,7 @@ Py_FS currently supports the following 12 filter-based FS methods:
 * Sine Cosine Algorithm (SCA)
 * Whale Optimization Algorithm (WOA)
 
-These filter approached can be imported in your code using the following statements:
+These wrapper approached can be imported in your code using the following statements:
     
     import Py_FS.wrapper.nature_inspired.BBA
     import Py_FS.wrapper.nature_inspired.CS
