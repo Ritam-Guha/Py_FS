@@ -54,7 +54,7 @@ There are mainly three utilities in the current version of the package. The next
 three parts in detail:
 
 ## 1. Wrapper-based Nature-inpsired Feature Selection
-Wrapper-based Nature-inspired methods are very popular feature selection approaches due to their efficiency and simplicity. These methods progress by introducing random set of candidate solutions (agents which are natural elements like particles, whales, bats etc.) and improving these solutions gradually by using guidance mechanisms from fitter agents. In order to calculate the fitness of the candidate solutions, wrappers require some learning algorithm (like classifiers) to calculate the goodness of a solution at every iteration. This makes wrapper methods extremely reliable but computationally expensive as well.
+Wrapper-based Nature-inspired methods are very popular feature selection approaches due to their efficiency and simplicity. These methods progress by introducing random set of candidate solutions (agents which are natural elements like particles, whales, bats etc.) and improving these solutions gradually by using guidance mechanisms of fitter agents. In order to calculate the fitness of the candidate solutions, wrappers require some learning algorithm (like classifiers) to calculate the worth of a solution at every iteration. This makes wrapper methods extremely reliable but computationally expensive as well.
 
 Py_FS currently supports the following 12 wrapper-based FS methods:
 * Binary Bat Algorithm (BBA)
@@ -70,7 +70,7 @@ Py_FS currently supports the following 12 wrapper-based FS methods:
 * Sine Cosine Algorithm (SCA)
 * Whale Optimization Algorithm (WOA)
 
-These wrapper approached can be imported in your code using the following statements:
+These wrapper approaches can be imported in your code using the following statements:
     
     import Py_FS.wrapper.nature_inspired.BBA
     import Py_FS.wrapper.nature_inspired.CS
@@ -94,7 +94,7 @@ Py_FS currently supports the following 4 filter-based FS methods:
 * Relief
 * Mutual Information (MI)
 
-These filter approached can be imported in your code using the following statements:
+These filter approaches can be imported in your code using the following statements:
     
     import Py_FS.filter.PCC
     import Py_FS.filter.SCC
