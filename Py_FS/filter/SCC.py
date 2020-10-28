@@ -1,3 +1,10 @@
+"""
+
+Programmer: Ritam Guha
+Date of Development: 28/10/2020
+
+"""
+
 import numpy as np
 from _utilities import normalize, Result
 from sklearn import datasets

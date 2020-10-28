@@ -16,9 +16,3 @@ class Result():
         self.scores = None
         self.features = None
         self.ranked_features = None 
-        
-
-if __name__=='__main__':
-    a = np.array([1, 5, 6, 2, 7, 8])
-    vect = normalize(a)
-    print(vect)
