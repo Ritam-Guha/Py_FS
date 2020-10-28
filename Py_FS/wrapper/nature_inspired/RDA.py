@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[8]:
+
+
 
 """
 
@@ -33,7 +39,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   trans_function_shape: shape of the transfer function used                     #
+    #   trans_function_shape: shape of the transfer function used                 #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
@@ -191,26 +197,28 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                     else:
                         offspring[j] = 0
                 population_pool.append(list(offspring))
-        
-                # mating of commander with hinds in another harem
-                k = i 
-                while k == i:
-                    k = random.choice(range(num_coms))
-                    
-                num_mate = int(num_harems[k] * beta) # Eq. (13)
                 
-                np.random.shuffle(harem[k])
-                for j in range(num_mate):
-                    r = np.random.random() # r is a random number in [0, 1]
-                    offspring = (coms[i] + harem[k][j]) / 2 + (UB - LB) * r 
-                    # apply transformation function on offspring
-                    for j in range(num_features):
-                        trans_value = trans_function(offspring[j])
-                        if (np.random.random() < trans_value): 
-                            offspring[j] = 1
-                        else:
-                            offspring[j] = 0
-                    population_pool.append(list(offspring))
+                # if number of commanders is greater than 1, inter-harem mating takes place
+                if num_coms > 1:
+                    # mating of commander with hinds in another harem
+                    k = i 
+                    while k == i:
+                        k = random.choice(range(num_coms))
+
+                    num_mate = int(num_harems[k] * beta) # Eq. (13)
+
+                    np.random.shuffle(harem[k])
+                    for j in range(num_mate):
+                        r = np.random.random() # r is a random number in [0, 1]
+                        offspring = (coms[i] + harem[k][j]) / 2 + (UB - LB) * r 
+                        # apply transformation function on offspring
+                        for j in range(num_features):
+                            trans_value = trans_function(offspring[j])
+                            if (np.random.random() < trans_value): 
+                                offspring[j] = 1
+                            else:
+                                offspring[j] = 0
+                        population_pool.append(list(offspring))
         
         # mating of stag with nearest hind
         for stag in stags:
@@ -295,3 +303,4 @@ if __name__ == '__main__':
     iris = datasets.load_iris()
     RDA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
 ############# for testing purpose ################
+
