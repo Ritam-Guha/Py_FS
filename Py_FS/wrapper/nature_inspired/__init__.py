@@ -20,7 +20,7 @@ __all__ = [
     'GSA',
     'GWO',
     'HS',
-    'MF',
+    'MA',
     'PSO',
     'RDA',
     'SCA',
