@@ -16,23 +16,23 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
 # from _transfer_functions import get_trans_function
 
 
-def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', save_conv_graph=False):
+def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', save_conv_graph=False):
 
     # Gravitational Search Algorithm
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: number of chromosomes                                         #
+    #   num_agents: number of particles                                           #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
-    #   trans_function_shape: shape of the transfer function used                     #
+    #   trans_function_shape: shape of the transfer function used                 #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
@@ -43,11 +43,13 @@ def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
 
-    # initialize positions of particles and Leader (the agent with the max fitness)
-    position = initialize(num_agents, num_features)
+    # initialize positionss of particles and Leader (the agent with the max fitness)
+    positions = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
+    accuracy = np.zeros(num_agents)
     Leader_agent = np.zeros((1, num_features))
     Leader_fitness = float("-inf")
+    Leader_accuracy = float("-inf")
 
     # initialize convergence curves
     convergence_curve = {}
@@ -76,7 +78,7 @@ def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     kBest = range(5)
     
     # rank initial population
-    position, fitness = sort_agents(position, obj_function, data)
+    positions, fitness = sort_agents(positions, obj_function, data)
     
     # start timer
     start_time = time.time()
@@ -101,8 +103,8 @@ def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
         for i in range(num_agents):
             for j in range(num_agents):
                 for k in range(num_features):
-                    R[i][j] += abs(position[i][k] - position[j][k]) # Eq. (8)
-                F[i][j] = G * (mass[i] * mass[j]) / (R[i][j] + eps) * (position[j] - position[i]) # Eq. (7)
+                    R[i][j] += abs(positions[i][k] - positions[j][k]) # Eq. (8)
+                F[i][j] = G * (mass[i] * mass[j]) / (R[i][j] + eps) * (positions[j] - positions[i]) # Eq. (7)
         
         # finding net force acting on each particle
         for i in range(num_agents):
@@ -122,23 +124,35 @@ def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
             for j in range(num_features):
                 trans_value = trans_function(velocity[i][j])
                 if (np.random.random() < trans_value): 
-                    position[i][j] = 1
+                    positions[i][j] = 1
                 else:
-                    position[i][j] = 0
-            if np.sum(position[i]) == 0:
+                    positions[i][j] = 0
+            if np.sum(positions[i]) == 0:
                 x = np.random.randint(0,num_features-1)
-                position[i][x] = 1
+                positions[i][x] = 1
                     
         
                
         # update final information
-        position, fitness = sort_agents(position, obj_function, data)
-        display(position, fitness, agent_name)
+        positions, fitness = sort_agents(positions, obj_function, data)
+        display(positions, fitness, agent_name)
         if fitness[0] > Leader_fitness:
-            Leader_agent = position[0].copy()
+            Leader_agent = positions[0].copy()
             Leader_fitness = fitness[0].copy()
         convergence_curve['fitness'][iter_no] = Leader_fitness
         convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
+
+    # compute final accuracy
+    Leader_agent, Leader_accuracy = sort_agents(Leader_agent, compute_accuracy, data)
+    positions, accuracy = sort_agents(positions, compute_accuracy, data)
+
+    print('\n================================================================================')
+    print('                                    Final Result                                  ')
+    print('================================================================================\n')
+    print('Leader ' + agent_name + ' Dimension : {}'.format(int(np.sum(Leader_agent))))
+    print('Leader ' + agent_name + ' Fitness : {}'.format(Leader_fitness))
+    print('Leader ' + agent_name + ' Classification Accuracy : {}'.format(Leader_accuracy))
+    print('\n================================================================================\n')
 
     # stop timer
     end_time = time.time()
@@ -167,9 +181,11 @@ def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     # update attributes of solution
     solution.best_agent = Leader_agent
     solution.best_fitness = Leader_fitness
+    solution.best_accuracy = Leader_accuracy
     solution.convergence_curve = convergence_curve
-    solution.final_population = position
+    solution.final_population = positions
     solution.final_fitness = fitness
+    solution.final_accuracy = accuracy
     solution.execution_time = exec_time
     return solution
 
@@ -181,7 +197,7 @@ def GSA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    GSA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
+    GSA(10, 20, iris.data, iris.target, save_conv_graph=True)
 ############# for testing purpose ################
 
 

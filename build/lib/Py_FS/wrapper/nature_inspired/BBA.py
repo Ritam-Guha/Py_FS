@@ -12,19 +12,19 @@ import matplotlib.pyplot as plt
 import time
 
 from sklearn.model_selection import train_test_split
-# from sklearn import datasets
+from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
-from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
-# from _transfer_functions import get_trans_function
+# from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+# from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
+from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+from _transfer_functions import get_trans_function
 
-def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', constantLoudness = True, save_conv_graph = False):
+def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', constantLoudness = True, save_conv_graph = False):
     
     # Binary Bat Algorithm (BBA)
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: number of chromosomes                                         #
+    #   num_agents: number of bats                                                #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
@@ -40,12 +40,14 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
 
-    # initialize positions of particles and Leader (the agent with the max fitness)
-    position = initialize(num_agents, num_features)
+    # initialize batss of bats and Leader (the agent with the max fitness)
+    bats = initialize(num_agents, num_features)
     velocity = np.zeros([num_agents, num_features])
     fitness = np.zeros(num_agents)
     Leader_agent = np.zeros((1, num_features))
     Leader_fitness = float("-inf")
+    Leader_accuracy = float("-inf")
+    accuracy = np.zeros(num_agents)
 
     # initialize some important parameters
     minFrequency = 0    # min freq, const if constantLoudness  == True
@@ -72,9 +74,9 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     # start timer
     start_time = time.time()
 
-    position, fitness = sort_agents(position, obj_function, data)
+    bats, fitness = sort_agents(bats, obj_function, data)
 
-    Leader_agent = position[0, :]
+    Leader_agent = bats[0, :]
     Leader_fitness = fitness[0]
 
     alpha = 0.95
@@ -95,20 +97,20 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
             fi = minFrequency + (maxFrequency - minFrequency)*np.random.rand() # frequency for i-th agent or bat
 
             # update velocity equation number 1 in paper
-            velocity[agentNumber, :] = velocity[agentNumber, :] + (position[agentNumber, :] - Leader_agent)*fi
+            velocity[agentNumber, :] = velocity[agentNumber, :] + (bats[agentNumber, :] - Leader_agent)*fi
 
 
-            # updating the position for bat number = agentNumber
+            # updating the bats for bat number = agentNumber
             newPos = np.zeros([1, num_features])
 
             for featureNumber in range(num_features):
                 transferValue = trans_function(velocity[agentNumber, featureNumber])
 
-                # change complement position value at dimension number = featureNumber 
+                # change complement bats value at dimension number = featureNumber 
                 if np.random.rand() < transferValue:
-                    newPos[0, featureNumber] = 1 - position[agentNumber, featureNumber]
+                    newPos[0, featureNumber] = 1 - bats[agentNumber, featureNumber]
                 else:
-                    newPos[0, featureNumber] = position[agentNumber, featureNumber]
+                    newPos[0, featureNumber] = bats[agentNumber, featureNumber]
 
 
                 # considering the current pulse rate
@@ -116,28 +118,40 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
                     newPos[0, featureNumber] = Leader_agent[featureNumber]
 
 
-            ## calculate fitness for new position
+            ## calculate fitness for new bats
             newFit = obj_function(newPos, data.train_X, data.val_X, data.train_Y, data.val_Y)
 
 
             ## update better solution for indivisual bat
             if fitness[agentNumber] <= newFit and np.random.rand() <= A_t:
                 fitness[agentNumber] = newFit
-                position[agentNumber, :] = newPos[0, :]
+                bats[agentNumber, :] = newPos[0, :]
 
-            ## update (global) best solution for all bats
-            if newFit >= Leader_fitness:
-                Leader_fitness = newFit
-                Leader_agent = newPos[0, :]
+        bats, fitness = sort_agents(bats, obj_function, data)
+
+        ## update (global) best solution for all bats
+        if fitness[0] > Leader_fitness:
+            Leader_fitness = fitness[0]
+            Leader_agent = bats[0, :]
 
         
         convergence_curve['fitness'][iterCount] = Leader_fitness
         convergence_curve['feature_count'][iterCount] = int(np.sum(Leader_agent))
 
         # display current agents
-        display(position, fitness, agent_name)
+        display(bats, fitness, agent_name)
 
+    # compute final accuracy
+    Leader_agent, Leader_accuracy = sort_agents(Leader_agent, compute_accuracy, data)
+    bats, accuracy = sort_agents(bats, compute_accuracy, data)
 
+    print('\n================================================================================')
+    print('                                    Final Result                                  ')
+    print('================================================================================\n')
+    print('Leader ' + agent_name + ' Dimension : {}'.format(int(np.sum(Leader_agent))))
+    print('Leader ' + agent_name + ' Fitness : {}'.format(Leader_fitness))
+    print('Leader ' + agent_name + ' Classification Accuracy : {}'.format(Leader_accuracy))
+    print('\n================================================================================\n')
 
     # stop timer
     end_time = time.time()
@@ -166,9 +180,11 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
 
     solution.best_agent = Leader_agent
     solution.best_fitness = Leader_fitness
+    solution.best_accuracy = Leader_accuracy
     solution.convergence_curve = convergence_curve
-    solution.final_population = position
+    solution.final_population = bats
     solution.final_fitness = fitness
+    solution.final_accuracy = accuracy
     solution.execution_time = exec_time
 
 
@@ -178,7 +194,7 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
 if __name__ == '__main__':
 
     iris = datasets.load_iris()
-    BBA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
+    BBA(10, 20, iris.data, iris.target, save_conv_graph=True)
 
 
 

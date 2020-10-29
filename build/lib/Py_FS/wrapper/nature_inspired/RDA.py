@@ -16,18 +16,18 @@ import random, math
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
 # from _transfer_functions import get_trans_function
 
 
-def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, trans_function_shape='s', save_conv_graph=False):
+def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', save_conv_graph=False):
 
     # Red Deer Algorithm
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: number of chromosomes                                         #
+    #   num_agents: number of red deers                                           #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
@@ -46,8 +46,10 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     # initialize red deers and Leader (the agent with the max fitness)
     deer = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
+    accuracy = np.zeros(num_agents)
     Leader_agent = np.zeros((1, num_features))
     Leader_fitness = float("-inf")
+    Leader_accuracy = float("-inf")
 
     # initialize convergence curves
     convergence_curve = {}
@@ -253,6 +255,18 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
         convergence_curve['fitness'][iter_no] = Leader_fitness
         convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
 
+    # compute final accuracy
+    Leader_agent, Leader_accuracy = sort_agents(Leader_agent, compute_accuracy, data)
+    deer, accuracy = sort_agents(deer, compute_accuracy, data)
+
+    print('\n================================================================================')
+    print('                                    Final Result                                  ')
+    print('================================================================================\n')
+    print('Leader ' + agent_name + ' Dimension : {}'.format(int(np.sum(Leader_agent))))
+    print('Leader ' + agent_name + ' Fitness : {}'.format(Leader_fitness))
+    print('Leader ' + agent_name + ' Classification Accuracy : {}'.format(Leader_accuracy))
+    print('\n================================================================================\n')
+
     # stop timer
     end_time = time.time()
     exec_time = end_time - start_time
@@ -280,9 +294,11 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
     # update attributes of solution
     solution.best_agent = Leader_agent
     solution.best_fitness = Leader_fitness
+    solution.best_accuracy = Leader_accuracy
     solution.convergence_curve = convergence_curve
     solution.final_population = deer
     solution.final_fitness = fitness
+    solution.final_accuracy = accuracy
     solution.execution_time = exec_time
     return solution
 
@@ -294,5 +310,5 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_accu
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    RDA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
+    RDA(10, 20, iris.data, iris.target, save_conv_graph=True)
 ############# for testing purpose ################
