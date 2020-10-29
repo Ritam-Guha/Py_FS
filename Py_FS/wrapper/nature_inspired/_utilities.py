@@ -4,16 +4,18 @@ from sklearn.neighbors import KNeighborsClassifier as KNN
 class Solution():    
     #structure of the solution 
     def __init__(self):
-        self.num_features = 0
-        self.num_agents = 0
-        self.max_iter = 0
+        self.num_features = None
+        self.num_agents = None
+        self.max_iter = None
         self.obj_function = None
-        self.execution_time = 0
+        self.execution_time = None
         self.convergence_curve = {}
         self.best_agent = None
-        self.best_fitness = 0
+        self.best_fitness = None
+        self.best_accuracy = None
         self.final_population = None
         self.final_fitness = None
+        self.final_accuracy = None
 
 
 class Data():
@@ -51,14 +53,23 @@ def initialize(num_agents, num_features):
 
 def sort_agents(agents, obj_function, data):
     # sort the agents according to fitness
-    num_agents = agents.shape[0]
-    fitness = np.zeros(num_agents)
     train_X, val_X, train_Y, val_Y = data.train_X, data.val_X, data.train_Y, data.val_Y
-    for id, agent in enumerate(agents):
-        fitness[id] = obj_function(agent, train_X, val_X, train_Y, val_Y)
-    idx = np.argsort(-fitness)
-    sorted_agents = agents[idx].copy()
-    sorted_fitness = fitness[idx].copy()
+
+    # if there is only one agent
+    if len(agents.shape) == 1:
+        num_agents = 1
+        fitness = obj_function(agents, train_X, val_X, train_Y, val_Y)
+        return agents, fitness
+
+    # for multiple agents
+    else:
+        num_agents = agents.shape[0]
+        fitness = np.zeros(num_agents)
+        for id, agent in enumerate(agents):
+            fitness[id] = obj_function(agent, train_X, val_X, train_Y, val_Y)
+        idx = np.argsort(-fitness)
+        sorted_agents = agents[idx].copy()
+        sorted_fitness = fitness[idx].copy()
 
     return sorted_agents, sorted_fitness
 
@@ -96,3 +107,16 @@ def compute_accuracy(agent, train_X, test_X, train_Y, test_Y):
 
     return acc
         
+
+def compute_fitness(agent, train_X, test_X, train_Y, test_Y):
+    # compute a basic fitness measure
+    weight_acc = 0.7
+    weight_feat = 0.3
+    num_features = agent.shape[0]
+    
+    acc = compute_accuracy(agent, train_X, test_X, train_Y, test_Y)
+    feat = (num_features - np.sum(agent))/num_features
+
+    fitness = weight_acc * acc + weight_feat * feat
+    
+    return fitness

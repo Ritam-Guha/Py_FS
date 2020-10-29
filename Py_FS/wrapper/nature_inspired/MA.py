@@ -15,23 +15,23 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_accuracy
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
 # from _transfer_functions import get_trans_function
 
-def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_accuracy, prob_mut=0.2, trans_function_shape='s', save_conv_graph=False):
+def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, prob_mut=0.2, trans_function_shape='s', save_conv_graph=False):
     
     # Mayfly Algorithm
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: number of chromosomes                                         #
+    #   num_agents: number of mayflies                                            #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #                
     #   obj_function: the function to maximize while doing feature selection      #
     #   prob_mut: probability of mutation                                         #
-    #   trans_function_shape: shape of the transfer function used                     #
+    #   trans_function_shape: shape of the transfer function used                 #
     #   save_conv_graph: boolean value for saving convergence graph               #
     #                                                                             #
     ###############################################################################
@@ -57,9 +57,11 @@ def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     male_vel = np.random.uniform(low = -1, high = -1, size = (num_agents, num_features))
     female_vel = np.random.uniform(low = -1, high = -1, size = (num_agents, num_features))
     male_fitness = np.zeros((num_agents))
+    male_accuracy = np.zeros(num_agents)
     female_fitness = np.zeros((num_agents))
     Leader_agent = np.zeros((num_features))
     Leader_fitness = float("-inf")
+    Leader_accuracy = float("-inf")
     male_personal_best = np.zeros((num_agents, num_features))
     male_offspring = np.zeros((num_agents, num_features))
     female_offspring = np.zeros((num_agents, num_features))
@@ -156,7 +158,19 @@ def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
             Leader_fitness = male_fitness[0].copy()
         convergence_curve['fitness'][iter_no] = Leader_fitness
         convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
-        
+    
+    # compute final accuracy
+    Leader_agent, Leader_accuracy = sort_agents(Leader_agent, compute_accuracy, data)
+    male_pos, accuracy = sort_agents(male_pos, compute_accuracy, data)
+
+    print('\n================================================================================')
+    print('                                    Final Result                                  ')
+    print('================================================================================\n')
+    print('Leader ' + agent_name + ' Dimension : {}'.format(int(np.sum(Leader_agent))))
+    print('Leader ' + agent_name + ' Fitness : {}'.format(Leader_fitness))
+    print('Leader ' + agent_name + ' Classification Accuracy : {}'.format(Leader_accuracy))
+    print('\n================================================================================\n')
+
     # stop timer
     end_time = time.time()
     exec_time = end_time - start_time
@@ -185,9 +199,11 @@ def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     # update attributes of solution
     solution.best_agent = Leader_agent
     solution.best_fitness = Leader_fitness
+    solution.best_accuracy = Leader_accuracy
     solution.convergence_curve = convergence_curve
     solution.final_population = male_pos
     solution.final_fitness = male_fitness
+    solution.final_accuracy = male_accuracy
     solution.execution_time = exec_time
 
     return solution
@@ -305,4 +321,4 @@ def trans_function1(velocity):
 
 if __name__ == '__main__':
     iris = datasets.load_iris()
-    MA(10, 20, iris.data, iris.target, compute_accuracy, save_conv_graph=True)
+    MA(10, 20, iris.data, iris.target, save_conv_graph=True)
