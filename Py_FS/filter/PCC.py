@@ -46,7 +46,6 @@ def PCC(data, target):
     result.ranks = PCC_ranks
     result.ranked_features = feature_values[:, np.argsort(-PCC_scores)]
 
-    print(PCC_ranks)
     return result
 
 

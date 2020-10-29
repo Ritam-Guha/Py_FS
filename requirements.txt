@@ -1,4 +1,4 @@
 ReliefF
-NumPy 
+numpy 
 matplotlib
 sklearn

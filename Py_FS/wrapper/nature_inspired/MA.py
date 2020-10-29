@@ -36,7 +36,7 @@ def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_accur
     #                                                                             #
     ###############################################################################
 
-    short_name = 'MF'
+    short_name = 'MA'
     agent_name = 'Mayfly'
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]

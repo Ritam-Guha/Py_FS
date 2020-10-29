@@ -44,7 +44,6 @@ def SCC(data, target):
     result.ranks = SCC_ranks
     result.ranked_features = feature_values[:, np.argsort(-SCC_scores)]
 
-    print(SCC_ranks)
     return result
 
 def compute_SCC(x, y):

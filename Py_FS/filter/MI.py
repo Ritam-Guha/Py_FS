@@ -44,7 +44,6 @@ def MI(data, target):
     result.ranks = MI_ranks
     result.ranked_features = feature_values[:, np.argsort(-MI_scores)]
 
-    print(MI_ranks)
     return result  
 
 def compute_MI(x, y):
