@@ -5,6 +5,7 @@ LICENSE
 README.md
 requirements.txt
 setup.py
+upload.sh
 Images/logo.jpg
 Py_FS/.DS_Store
 Py_FS/__init__.py
