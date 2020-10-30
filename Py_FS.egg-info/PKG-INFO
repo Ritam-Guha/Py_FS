@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Py-FS
-Version: 0.0.5.2
+Version: 0.0.5.4
 Summary: A Python Package for Feature Selection
 Home-page: https://github.com/Ritam-Guha/Py_FS
 Author: Ritam Guha
@@ -126,7 +126,7 @@ Description: # Py_FS: A Python Package for Feature Selection
         
         The evaulation capabilities can be imported in your code using the following statement:
             
-            from Py_FS.evaulation import evaluate
+            from Py_FS.evaluation import evaluate
         
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
