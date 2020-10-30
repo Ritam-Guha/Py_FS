@@ -49,3 +49,5 @@ Py_FS/wrapper/nature_inspired/__pycache__/__init__.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/_transfer_functions.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/_transformation_functions.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/_utilities.cpython-38.pyc
+dist/Py_FS-0.0.5.1-py3-none-any.whl
+dist/Py_FS-0.0.5.1.tar.gz

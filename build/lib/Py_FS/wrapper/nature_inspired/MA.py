@@ -161,7 +161,7 @@ def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
     
     # compute final accuracy
     Leader_agent, Leader_accuracy = sort_agents(Leader_agent, compute_accuracy, data)
-    male_pos, accuracy = sort_agents(male_pos, compute_accuracy, data)
+    male_pos, male_accuracy = sort_agents(male_pos, compute_accuracy, data)
 
     print('\n================================================================================')
     print('                                    Final Result                                  ')
