@@ -1,9 +1,9 @@
 import Py_FS.filter
 import Py_FS.wrapper
-from Py_FS.evaluation import Metric, evaluate
+import Py_FS.evaluation
 
 __all__ = [
-    'evaluate',
+    'evaluation',
     'filter',
     'Metric',
     'wrapper'

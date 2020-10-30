@@ -9,13 +9,16 @@ upload.sh
 Images/logo.jpg
 Py_FS/.DS_Store
 Py_FS/__init__.py
-Py_FS/evaluation.py
 Py_FS.egg-info/PKG-INFO
 Py_FS.egg-info/SOURCES.txt
 Py_FS.egg-info/dependency_links.txt
 Py_FS.egg-info/top_level.txt
 Py_FS/__pycache__/__init__.cpython-38.pyc
 Py_FS/__pycache__/evaluation.cpython-38.pyc
+Py_FS/evaluation/__init__.py
+Py_FS/evaluation/_utilities.py
+Py_FS/evaluation/evaluate.py
+Py_FS/evaluation/__pycache__/_utilities.cpython-38.pyc
 Py_FS/filter/MI.py
 Py_FS/filter/PCC.py
 Py_FS/filter/Relief.py
