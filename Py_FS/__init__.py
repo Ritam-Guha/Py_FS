@@ -1,3 +1,3 @@
 import Py_FS.filter
 import Py_FS.wrapper
-from Py_FS.evaluation import evaluate
+import Py_FS.evaluation
