@@ -1,12 +1,10 @@
 from sklearn.neighbors import KNeighborsClassifier as KNN
 from sklearn.ensemble import RandomForestClassifier as RF
 from sklearn.svm import SVC as SVM
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_score, recall_score, f1_score, plot_confusion_matrix, confusion_matrix
-from sklearn import datasets
 
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 
 class Metric():
     # class for defining the evaluation metrics
@@ -87,15 +85,3 @@ class Metric():
             plt.savefig('confusion_matrix.jpg')
         plt.title('Confusion Matrix')
         plt.show()
-
-
-def evaluate(train_X, test_X, train_Y, test_Y, agent=None, classifier='knn', save_conf_mat=False):
-    # driver function
-    metric = Metric(train_X, test_X, train_Y, test_Y, agent, classifier, save_conf_mat)
-    return metric
-
-
-if __name__ == "__main__":
-    iris = datasets.load_iris()
-    train_X, test_X, train_Y, test_Y = train_test_split(iris.data, iris.target, stratify=iris.target, test_size=0.2)
-    evaluate(train_X, test_X, train_Y, test_Y, save_conf_mat=True)
