@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Py-FS
-Version: 0.0.5.9
+Version: 0.0.5.10
 Summary: A Python Package for Feature Selection
 Home-page: https://github.com/Ritam-Guha/Py_FS
 Author: Ritam Guha
@@ -63,6 +63,70 @@ Description: # Py_FS: A Python Package for Feature Selection
         
         ## Quick User Guide
         For a quicl demonstration of the process of using Py_FS, please proceed to this Colab link: [Py_FS: Demonstration](https://colab.research.google.com/drive/1PafNTmVgWv9Qz6j7bI41XqPT6CCCIb1T?usp=sharing).
+        
+        ## References
+        This toolbox has been developed by a team of students from [Computer Science and Engineering department, Jadavpur University](http://www.jaduniv.edu.in/view_department.php?deptid=59) supervised by [Prof. Ram Sarkar](http://www.jaduniv.edu.in/profile.php?uid=686). This team has participated in many research activities related to engineering optimization, feature selection and image processing. We request the users of Py_FS to cite the relevant articles from our group. It will mean a lot to us. The articles produced by this team are mentioned below:
+        
+        ### Wrappers
+        
+        #### BBA
+        
+        #### CS
+        
+        #### EO
+        
+        #### GA
+        
+        * Guha, R., Ghosh, M., Kapri, S., Shaw, S., Mutsuddi, S., Bhateja, V., & Sarkar, R. (2019). Deluge based Genetic Algorithm for feature selection. Evolutionary intelligence, 1-11.
+        
+        * Ghosh, M., Guha, R., Mondal, R., Singh, P. K., Sarkar, R., & Nasipuri, M. (2018). Feature selection using histogram-based multi-objective GA for handwritten Devanagari numeral recognition. In Intelligent engineering informatics (pp. 471-479). Springer, Singapore.
+        
+        * Guha, R., Ghosh, M., Singh, P. K., Sarkar, R., & Nasipuri, M. (2019). M-HMOGA: a new multi-objective feature selection algorithm for handwritten numeral classification. Journal of Intelligent Systems, 29(1), 1453-1467.
+        
+        * Ghosh, M., Guha, R., Singh, P. K., Bhateja, V., & Sarkar, R. (2019). A histogram based fuzzy ensemble technique for feature selection. Evolutionary Intelligence, 12(4), 713-724.
+        
+        * Ghosh, M., Guha, R., Alam, I., Lohariwal, P., Jalan, D., & Sarkar, R. (2019). Binary Genetic Swarm Optimization: A Combination of GA and PSO for Feature Selection. Journal of Intelligent Systems, 29(1), 1598-1610.
+        
+        * Guha, R., Khan, A.H., Singh, P.K. et al. CGA: a new feature selection model for visual human action recognition. Neural Comput & Applic (2020). https://doi.org/10.1007/s00521-020-05297-5
+        
+        #### GSA
+        
+        * Guha, R., Ghosh, M., Chakrabarti, A., Sarkar, R., & Mirjalili, S. (2020). Introducing clustering based population in Binary Gravitational Search Algorithm for Feature Selection. Applied Soft Computing, 106341.
+        
+        #### GWO
+        
+        #### HS
+        
+        #### MA
+        
+        #### PSO
+        
+        * Ghosh, M., Guha, R., Singh, P. K., Bhateja, V., & Sarkar, R. (2019). A histogram based fuzzy ensemble technique for feature selection. Evolutionary Intelligence, 12(4), 713-724.
+        
+        * Ghosh, M., Guha, R., Alam, I., Lohariwal, P., Jalan, D., & Sarkar, R. (2019). Binary Genetic Swarm Optimization: A Combination of GA and PSO for Feature Selection. Journal of Intelligent Systems, 29(1), 1598-1610.
+        
+        #### RDA
+        
+        #### SCA
+        
+        #### WOA
+        
+        * Guha, R., Ghosh, M., Mutsuddi, S., Sarkar, R., & Mirjalili, S. (2020). Embedded chaotic whale survival algorithm for filter-wrapper feature selection. arXiv preprint arXiv:2005.04593.
+        
+        ### Filters
+        
+        #### PCC
+        
+        * Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.
+        
+        #### SCC
+        
+        #### MI
+        
+        * Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.
+        
+        #### Relief
+        
         
         ## 1. Wrapper-based Nature-inpsired Feature Selection
         Wrapper-based Nature-inspired methods are very popular feature selection approaches due to their efficiency and simplicity. These methods progress by introducing random set of candidate solutions (agents which are natural elements like particles, whales, bats etc.) and improving these solutions gradually by using guidance mechanisms of fitter agents. In order to calculate the fitness of the candidate solutions, wrappers require some learning algorithm (like classifiers) to calculate the worth of a solution at every iteration. This makes wrapper methods extremely reliable but computationally expensive as well.
