@@ -89,7 +89,11 @@ This toolbox has been developed by a team of students from [Computer Science and
 
 #### HS
 
+* T. Bhattacharyya, B. Chatterjee, P. K. Singh, J. H. Yoon, Z. W. Geem and R. Sarkar, "Mayfly in Harmony: A New Hybrid Meta-heuristic Feature Selection Algorithm," in IEEE Access, doi: 10.1109/ACCESS.2020.3031718
+
 #### MA
+
+* T. Bhattacharyya, B. Chatterjee, P. K. Singh, J. H. Yoon, Z. W. Geem and R. Sarkar, "Mayfly in Harmony: A New Hybrid Meta-heuristic Feature Selection Algorithm," in IEEE Access, doi: 10.1109/ACCESS.2020.3031718
 
 #### PSO
 
