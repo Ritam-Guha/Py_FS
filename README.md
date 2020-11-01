@@ -57,7 +57,7 @@ three parts in detail:
 For a quicl demonstration of the process of using Py_FS, please proceed to this Colab link: [Py_FS: Demonstration](https://colab.research.google.com/drive/1PafNTmVgWv9Qz6j7bI41XqPT6CCCIb1T?usp=sharing).
 
 ## References
-This toolbox has been developed by a team of students from (Computer Science and Engineering department, Jadavpur University) [http://www.jaduniv.edu.in/view_department.php?deptid=59] supervised by (Prof. Ram Sarkar) [http://www.jaduniv.edu.in/profile.php?uid=686]. This team has participated in many research activities related to engineering optimization, feature selection and image processing. We request the users of Py_FS to cite the relevant articles from our group. It will mean a lot to us. The articles produced by this team are mentioned below:
+This toolbox has been developed by a team of students from [Computer Science and Engineering department, Jadavpur University](http://www.jaduniv.edu.in/view_department.php?deptid=59) supervised by [Prof. Ram Sarkar](http://www.jaduniv.edu.in/profile.php?uid=686). This team has participated in many research activities related to engineering optimization, feature selection and image processing. We request the users of Py_FS to cite the relevant articles from our group. It will mean a lot to us. The articles produced by this team are mentioned below:
 
 ### Wrappers
 
