@@ -59,15 +59,15 @@ For a quicl demonstration of the process of using Py_FS, please proceed to this 
 ## References
 This toolbox has been developed by a team of students from (Computer Science and Engineering department, Jadavpur University) [http://www.jaduniv.edu.in/view_department.php?deptid=59] supervised by (Prof. Ram Sarkar) [http://www.jaduniv.edu.in/profile.php?uid=686]. This team has participated in many research activities related to engineering optimization, feature selection and image processing. We request the users of Py_FS to cite the relevant articles from our group. It will mean a lot to us. The articles produced by this team are mentioned below:
 
-### **Wrappers**
+### Wrappers
 
-### BBA
+#### BBA
 
-### CS
+#### CS
 
-### EO
+#### EO
 
-### GA
+#### GA
 
 * Guha, R., Ghosh, M., Kapri, S., Shaw, S., Mutsuddi, S., Bhateja, V., & Sarkar, R. (2019). Deluge based Genetic Algorithm for feature selection. Evolutionary intelligence, 1-11.
 
@@ -81,43 +81,43 @@ This toolbox has been developed by a team of students from (Computer Science and
 
 * Guha, R., Khan, A.H., Singh, P.K. et al. CGA: a new feature selection model for visual human action recognition. Neural Comput & Applic (2020). https://doi.org/10.1007/s00521-020-05297-5
 
-### GSA
+#### GSA
 
 * Guha, R., Ghosh, M., Chakrabarti, A., Sarkar, R., & Mirjalili, S. (2020). Introducing clustering based population in Binary Gravitational Search Algorithm for Feature Selection. Applied Soft Computing, 106341.
 
-### GWO
+#### GWO
 
-### HS
+#### HS
 
-### MA
+#### MA
 
-### PSO
+#### PSO
 
 * Ghosh, M., Guha, R., Singh, P. K., Bhateja, V., & Sarkar, R. (2019). A histogram based fuzzy ensemble technique for feature selection. Evolutionary Intelligence, 12(4), 713-724.
 
 * Ghosh, M., Guha, R., Alam, I., Lohariwal, P., Jalan, D., & Sarkar, R. (2019). Binary Genetic Swarm Optimization: A Combination of GA and PSO for Feature Selection. Journal of Intelligent Systems, 29(1), 1598-1610.
 
-### RDA
+#### RDA
 
-### SCA
+#### SCA
 
-### WOA
+#### WOA
 
 * Guha, R., Ghosh, M., Mutsuddi, S., Sarkar, R., & Mirjalili, S. (2020). Embedded chaotic whale survival algorithm for filter-wrapper feature selection. arXiv preprint arXiv:2005.04593.
 
-### **Filters**
+### Filters
 
-### PCC
-
-* Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.
-
-### SCC
-
-### MI
+#### PCC
 
 * Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.
 
-### Relief
+#### SCC
+
+#### MI
+
+* Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.
+
+#### Relief
 
 
 ## 1. Wrapper-based Nature-inpsired Feature Selection
