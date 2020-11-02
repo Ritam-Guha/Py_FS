@@ -91,6 +91,8 @@ This toolbox has been developed by a team of students from [Computer Science and
 
 #### MA
 
+* T. Bhattacharyya, B. Chatterjee, P. K. Singh, J. H. Yoon, Z. W. Geem, R. Sarkar, “Mayfly in Harmony: A New Hybrid Meta-heuristic Feature Selection Algorithm”, IEEE Access, 2020.
+
 #### PSO
 
 * Ghosh, M., Guha, R., Singh, P. K., Bhateja, V., & Sarkar, R. (2019). A histogram based fuzzy ensemble technique for feature selection. Evolutionary Intelligence, 12(4), 713-724.
@@ -103,7 +105,7 @@ This toolbox has been developed by a team of students from [Computer Science and
 
 #### WOA
 
-* Guha, R., Ghosh, M., Mutsuddi, S., Sarkar, R., & Mirjalili, S. (2020). Embedded chaotic whale survival algorithm for filter-wrapper feature selection. arXiv preprint arXiv:2005.04593.
+* Guha, R., Ghosh, M., Mutsuddi, S. et al. Embedded chaotic whale survival algorithm for filter–wrapper feature selection. Soft Comput 24, 12821–12843 (2020). https://doi.org/10.1007/s00500-020-05183-1.
 
 ### Filters
 
@@ -120,7 +122,7 @@ This toolbox has been developed by a team of students from [Computer Science and
 #### Relief
 
 
-## 1. Wrapper-based Nature-inpsired Feature Selection
+## 1. Wrapper-based Nature-inspired Feature Selection
 Wrapper-based Nature-inspired methods are very popular feature selection approaches due to their efficiency and simplicity. These methods progress by introducing random set of candidate solutions (agents which are natural elements like particles, whales, bats etc.) and improving these solutions gradually by using guidance mechanisms of fitter agents. In order to calculate the fitness of the candidate solutions, wrappers require some learning algorithm (like classifiers) to calculate the worth of a solution at every iteration. This makes wrapper methods extremely reliable but computationally expensive as well.
 
 Py_FS currently supports the following 12 wrapper-based FS methods:

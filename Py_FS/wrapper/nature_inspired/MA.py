@@ -20,7 +20,7 @@ from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
 # from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
 # from _transfer_functions import get_trans_function
 
-def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, prob_mut=0.2, trans_function_shape='s', save_conv_graph=False):
+def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s',  prob_mut=0.2,  save_conv_graph=False):
     
     # Mayfly Algorithm
     ############################### Parameters ####################################

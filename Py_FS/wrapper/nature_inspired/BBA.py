@@ -19,7 +19,7 @@ from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
 # from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
 # from _transfer_functions import get_trans_function
 
-def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', constantLoudness = True, save_conv_graph = False):
+def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', constantLoudness=True, save_conv_graph=False):
     
     # Binary Bat Algorithm (BBA)
     ############################### Parameters ####################################
