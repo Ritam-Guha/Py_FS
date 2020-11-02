@@ -7,7 +7,8 @@ Date of Development: 28/10/2020
 
 import numpy as np
 from Py_FS.filter._utilities import normalize, Result
-# from sklearn import datasets
+# _utilities import normalize, Result
+from sklearn import datasets
 
 def SCC(data, target):
     # function that assigns scores to features according to Spearman's Correlation Coefficient (SCC)
