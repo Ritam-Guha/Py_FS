@@ -61,12 +61,6 @@ This toolbox has been developed by a team of students from [Computer Science and
 
 ### Wrappers
 
-#### BBA
-
-#### CS
-
-#### EO
-
 #### GA
 
 * Guha, R., Ghosh, M., Kapri, S., Shaw, S., Mutsuddi, S., Bhateja, V., & Sarkar, R. (2019). Deluge based Genetic Algorithm for feature selection. Evolutionary intelligence, 1-11.
@@ -87,7 +81,7 @@ This toolbox has been developed by a team of students from [Computer Science and
 
 #### GWO
 
-#### HS
+* Dhargupta, S., Ghosh, M., Mirjalili, S., & Sarkar, R. (2020). Selective opposition based grey wolf optimization. Expert Systems with Applications, 113389.
 
 #### MA
 
@@ -99,10 +93,6 @@ This toolbox has been developed by a team of students from [Computer Science and
 
 * Ghosh, M., Guha, R., Alam, I., Lohariwal, P., Jalan, D., & Sarkar, R. (2019). Binary Genetic Swarm Optimization: A Combination of GA and PSO for Feature Selection. Journal of Intelligent Systems, 29(1), 1598-1610.
 
-#### RDA
-
-#### SCA
-
 #### WOA
 
 * Guha, R., Ghosh, M., Mutsuddi, S. et al. Embedded chaotic whale survival algorithm for filter–wrapper feature selection. Soft Comput 24, 12821–12843 (2020). https://doi.org/10.1007/s00500-020-05183-1.
@@ -113,14 +103,9 @@ This toolbox has been developed by a team of students from [Computer Science and
 
 * Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.
 
-#### SCC
-
 #### MI
 
-* Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.
-
-#### Relief
-
+* Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.  
 
 ## 1. Wrapper-based Nature-inspired Feature Selection
 Wrapper-based Nature-inspired methods are very popular feature selection approaches due to their efficiency and simplicity. These methods progress by introducing random set of candidate solutions (agents which are natural elements like particles, whales, bats etc.) and improving these solutions gradually by using guidance mechanisms of fitter agents. In order to calculate the fitness of the candidate solutions, wrappers require some learning algorithm (like classifiers) to calculate the worth of a solution at every iteration. This makes wrapper methods extremely reliable but computationally expensive as well.

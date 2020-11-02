@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Py-FS
-Version: 0.0.5.11
+Version: 0.0.6.0
 Summary: A Python Package for Feature Selection
 Home-page: https://github.com/Ritam-Guha/Py_FS
 Author: Ritam Guha
@@ -69,12 +69,6 @@ Description: # Py_FS: A Python Package for Feature Selection
         
         ### Wrappers
         
-        #### BBA
-        
-        #### CS
-        
-        #### EO
-        
         #### GA
         
         * Guha, R., Ghosh, M., Kapri, S., Shaw, S., Mutsuddi, S., Bhateja, V., & Sarkar, R. (2019). Deluge based Genetic Algorithm for feature selection. Evolutionary intelligence, 1-11.
@@ -95,9 +89,11 @@ Description: # Py_FS: A Python Package for Feature Selection
         
         #### GWO
         
-        #### HS
+        * Dhargupta, S., Ghosh, M., Mirjalili, S., & Sarkar, R. (2020). Selective opposition based grey wolf optimization. Expert Systems with Applications, 113389.
         
         #### MA
+        
+        * T. Bhattacharyya, B. Chatterjee, P. K. Singh, J. H. Yoon, Z. W. Geem, R. Sarkar, “Mayfly in Harmony: A New Hybrid Meta-heuristic Feature Selection Algorithm”, IEEE Access, 2020.
         
         #### PSO
         
@@ -105,13 +101,9 @@ Description: # Py_FS: A Python Package for Feature Selection
         
         * Ghosh, M., Guha, R., Alam, I., Lohariwal, P., Jalan, D., & Sarkar, R. (2019). Binary Genetic Swarm Optimization: A Combination of GA and PSO for Feature Selection. Journal of Intelligent Systems, 29(1), 1598-1610.
         
-        #### RDA
-        
-        #### SCA
-        
         #### WOA
         
-        * Guha, R., Ghosh, M., Mutsuddi, S., Sarkar, R., & Mirjalili, S. (2020). Embedded chaotic whale survival algorithm for filter-wrapper feature selection. arXiv preprint arXiv:2005.04593.
+        * Guha, R., Ghosh, M., Mutsuddi, S. et al. Embedded chaotic whale survival algorithm for filter–wrapper feature selection. Soft Comput 24, 12821–12843 (2020). https://doi.org/10.1007/s00500-020-05183-1.
         
         ### Filters
         
@@ -119,16 +111,11 @@ Description: # Py_FS: A Python Package for Feature Selection
         
         * Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.
         
-        #### SCC
-        
         #### MI
         
-        * Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.
+        * Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.  
         
-        #### Relief
-        
-        
-        ## 1. Wrapper-based Nature-inpsired Feature Selection
+        ## 1. Wrapper-based Nature-inspired Feature Selection
         Wrapper-based Nature-inspired methods are very popular feature selection approaches due to their efficiency and simplicity. These methods progress by introducing random set of candidate solutions (agents which are natural elements like particles, whales, bats etc.) and improving these solutions gradually by using guidance mechanisms of fitter agents. In order to calculate the fitness of the candidate solutions, wrappers require some learning algorithm (like classifiers) to calculate the worth of a solution at every iteration. This makes wrapper methods extremely reliable but computationally expensive as well.
         
         Py_FS currently supports the following 12 wrapper-based FS methods:
