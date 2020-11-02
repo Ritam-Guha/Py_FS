@@ -83,7 +83,6 @@ This toolbox has been developed by a team of students from [Computer Science and
 
 * Dhargupta, S., Ghosh, M., Mirjalili, S., & Sarkar, R. (2020). Selective opposition based grey wolf optimization. Expert Systems with Applications, 113389.
 
-* T. Bhattacharyya, B. Chatterjee, P. K. Singh, J. H. Yoon, Z. W. Geem and R. Sarkar, "Mayfly in Harmony: A New Hybrid Meta-heuristic Feature Selection Algorithm," in IEEE Access, doi: 10.1109/ACCESS.2020.3031718
 
 #### MA
 
