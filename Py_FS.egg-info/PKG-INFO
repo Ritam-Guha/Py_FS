@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Py-FS
-Version: 0.0.6.2
+Version: 0.0.6.3
 Summary: A Python Package for Feature Selection
 Home-page: https://github.com/Ritam-Guha/Py_FS
 Author: Ritam Guha
@@ -24,7 +24,9 @@ Description: # Py_FS: A Python Package for Feature Selection
             
             pip3 install Py-FS
         
+        ## Note
         
+        Py_FS uses numpy arrays of numbers to process the datasets. So, please convert the datasets to numpy arrays and exclude any kind of string (like table headings) before using Py_FS for feature selection. In future, we may add a preprocessing stage before feeding the dataset to Py_FS modules to allow data frames and other formats to make it easier for the users. But, currently Py_FS provides no such support. 
         
         ## Structure
         
