@@ -39,14 +39,13 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     agent_name = 'Agent'
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
-    num_agents = num_nests
 
     # initializing cuckoo and host nests
     levy_flight = np.random.uniform(low=-2, high=2, size=(num_features))
     cuckoo = np.random.randint(low=0, high=2, size=(num_features))
-    nest = initialize(num_nests, num_features)
-    nest_fitness = np.zeros(num_nests)
-    nest_accuracy = np.zeros(num_nests)
+    nest = initialize(num_agents, num_features)
+    nest_fitness = np.zeros(num_agents)
+    nest_accuracy = np.zeros(num_agents)
     cuckoo_fitness = float("-inf")
     Leader_agent = np.zeros((num_features))
     Leader_fitness = float("-inf")
@@ -94,7 +93,7 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                 cuckoo[j]=0
 
         # check if a nest needs to be replaced
-        j = np.random.randint(0,num_nests)
+        j = np.random.randint(0,num_agents)
         if cuckoo_fitness > nest_fitness[j]:
             nest[j] = cuckoo.copy()
             nest_fitness[j] = cuckoo_fitness

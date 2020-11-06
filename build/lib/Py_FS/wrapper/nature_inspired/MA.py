@@ -15,10 +15,10 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
-from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
-# from _transfer_functions import get_trans_function
+# from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+# from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
+from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+from _transfer_functions import get_trans_function
 
 def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s',  prob_mut=0.2,  save_conv_graph=False):
     
@@ -266,44 +266,50 @@ def cross_mut(m_pos, f_pos):
     tot_features = len(m_pos)
     offspring1 = np.zeros((tot_features))
     offspring2 = np.zeros((tot_features))
-    #partition defines the midpoint of the crossover
-    partition=np.random.randint(tot_features//4,np.floor((3*tot_features//4)+1))
-    #starting crossover
+    # partition defines the midpoint of the crossover
+    partition = np.random.randint(tot_features//4, np.floor((3*tot_features//4)+1))
+
+    # starting crossover
     for i in range(partition):
-        offspring1 = m_pos[i]
-        offspring2 = f_pos[i]
-    for i in  range(partition,tot_features):
-        offspring1 = f_pos[i]
-        offspring2 = m_pos[i]
-    #crossover ended
+        offspring1[i] = m_pos[i]
+        offspring2[i] = f_pos[i]
+
+    for i in  range(partition, tot_features):
+        offspring1[i] = f_pos[i]
+        offspring2[i] = m_pos[i]
+    # crossover ended
+
+
+    # starting mutation
+    percent = 0.2
+    numChange = int(tot_features*percent)
+    pos = np.random.randint(0,tot_features-1,numChange)
     
-    #starting mutation
-    percent=0.2
-    numChange=int(tot_features*percent)
-    pos=np.random.randint(0,tot_features-1,numChange)
     for j in pos:
         offspring1[j] = 1-offspring1[j]
     pos=np.random.randint(0,tot_features-1,numChange)
     for j in pos:
         offspring2[j] = 1-offspring2[j]
-    #mutation ended
+
+    # mutation ended
     
     if np.random.random() >= 0.5:
         return (offspring1, offspring2)
     else:
         return (offspring2, offspring1)
 
+
 def compare_and_replace(pos, off, fit, data, obj_function):
     agents, features = pos.shape
     newfit = np.zeros((agents))
     temp_pos = np.zeros((agents, features))
     pos, fit = sort_agents(pos, obj_function, data)
-    #finding fitnesses of offsprings
+    # finding fitnesses of offsprings
     off, newfit = sort_agents(off, obj_function, data)
     i=0
     j=0
     cnt=0
-    #merging offsprings and parents and finding the next generation of mayflies
+    # merging offsprings and parents and finding the next generation of mayflies
     while(cnt < agents):
         if fit[i] > newfit[j]:
             temp_pos[cnt] = pos[i].copy()
@@ -313,10 +319,6 @@ def compare_and_replace(pos, off, fit, data, obj_function):
             j+=1
         cnt+=1
     return temp_pos
-
-def trans_function1(velocity):
-    t = abs(velocity/(np.sqrt(1+velocity*velocity)))
-    return t
 
 
 if __name__ == '__main__':
