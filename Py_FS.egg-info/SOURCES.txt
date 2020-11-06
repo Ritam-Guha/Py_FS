@@ -2,6 +2,7 @@
 .gitignore
 .pypirc
 LICENSE
+Py_FS User Manual.pdf
 README.md
 requirements.txt
 setup.py
