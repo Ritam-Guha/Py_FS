@@ -173,3 +173,7 @@ Py_FS currently supports the following evaluation metrics:
 The evaulation capabilities can be imported in your code using the following statement:
     
     import Py_FS.evaluation.evaluate
+
+
+## User Manual
+For detailed user guidelines, please access this user manual: [Py_FS User Manual](https://drive.google.com/file/d/1vUNnKt8wbyccBDOpGEOJMLh1q8jw-jhB/view?usp=sharing)
