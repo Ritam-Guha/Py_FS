@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Py-FS
-Version: 0.0.6.8
+Version: 0.0.6.9
 Summary: A Python Package for Feature Selection
 Home-page: https://github.com/Ritam-Guha/Py_FS
 Author: Ritam Guha
@@ -137,18 +137,18 @@ Description: # Py_FS: A Python Package for Feature Selection
         
         These wrapper approaches can be imported in your code using the following statements:
             
-            import Py_FS.wrapper.nature_inspired.BBA
-            import Py_FS.wrapper.nature_inspired.CS
-            import Py_FS.wrapper.nature_inspired.EO
-            import Py_FS.wrapper.nature_inspired.GA
-            import Py_FS.wrapper.nature_inspired.GSA
-            import Py_FS.wrapper.nature_inspired.GWO
-            import Py_FS.wrapper.nature_inspired.HS
-            import Py_FS.wrapper.nature_inspired.MA
-            import Py_FS.wrapper.nature_inspired.PSO
-            import Py_FS.wrapper.nature_inspired.RDA
-            import Py_FS.wrapper.nature_inspired.SCA
-            import Py_FS.wrapper.nature_inspired.WOA
+            from Py_FS.wrapper.nature_inspired import BBA
+            from Py_FS.wrapper.nature_inspired import CS
+            from Py_FS.wrapper.nature_inspired import EO
+            from Py_FS.wrapper.nature_inspired import GA
+            from Py_FS.wrapper.nature_inspired import GSA
+            from Py_FS.wrapper.nature_inspired import GWO
+            from Py_FS.wrapper.nature_inspired import HS
+            from Py_FS.wrapper.nature_inspired import MA
+            from Py_FS.wrapper.nature_inspired import PSO
+            from Py_FS.wrapper.nature_inspired import RDA
+            from Py_FS.wrapper.nature_inspired import SCA
+            from Py_FS.wrapper.nature_inspired import WOA
         
         ## 2. Filter-based Feature Selection
         Filter methods do not use any intermediate learning algorithm to verify the strength of the generated solutions. Instead, they use statistical measures to identify the importance of different features in the context. So, finally every feature gets a rank according to their relevance in the dataset. The top features can then be used for classification. 
@@ -161,10 +161,10 @@ Description: # Py_FS: A Python Package for Feature Selection
         
         These filter approaches can be imported in your code using the following statements:
             
-            import Py_FS.filter.PCC
-            import Py_FS.filter.SCC
-            import Py_FS.filter.Relief
-            import Py_FS.filter.MI
+            from Py_FS.filter import PCC
+            from Py_FS.filter import SCC
+            from Py_FS.filter import Relief
+            from Py_FS.filter import MI
         
         ## 3. Evaluation Metrics
         The package comes with tools to evaluate features before or after FS. This helps to easily compare and analyze 
@@ -180,7 +180,7 @@ Description: # Py_FS: A Python Package for Feature Selection
         
         The evaulation capabilities can be imported in your code using the following statement:
             
-            import Py_FS.evaluation.evaluate
+            from Py_FS.evaluation import evaluate
         
         
         ## User Manual
