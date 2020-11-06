@@ -2,7 +2,7 @@
 Py_FS is a toolbox developed with complete focus on Feature Selection (FS) using Python as the underlying programming language. It comes with capabilities like nature-inspired evolutionary feature selection algorithms, filter methods and simple evaulation metrics to help with easy applications and comparisons among different feature selection algorithms over different datasets. It is still in the development phase. We wish to extend this package further to contain more extensive set of feature selection procedures and corresponding utilities.
 
 <p align="center">  
-  <img src="https://github.com/Ritam-Guha/Py_FS/blob/master/Images/logo.jpg" height="300" width="300">
+  <img src="https://raw.githubusercontent.com/Ritam-Guha/Py_FS/master/Images/logo.jpg" height="300" width="300">
 </p><br>
 
 ## Installation
@@ -14,7 +14,7 @@ Please install the required utilities for the package by running this piece of c
 The package is publicly avaliable at **PYPI: Python Package Index**.
 Anybody willing to use the package can install it by simply running:
     
-    pip3 install Py_FS
+    pip3 install Py-FS
 
 
 
@@ -51,7 +51,7 @@ For example, if someone wants to use GA, it should be imported using the followi
     import Py_FS.wrapper.nature_inspired.GA
 
 There are mainly three utilities in the current version of the package. The next part discusses these
-three parts in detail:
+three sections in detail:
 
 ## Quick User Guide
 For a quick demonstration of the process of using Py_FS, please proceed to this Colab link: [Py_FS: Demonstration](https://colab.research.google.com/drive/1PafNTmVgWv9Qz6j7bI41XqPT6CCCIb1T?usp=sharing).
