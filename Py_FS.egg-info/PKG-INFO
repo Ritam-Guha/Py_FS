@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Py-FS
-Version: 0.0.6.9
+Version: 0.0.6.10
 Summary: A Python Package for Feature Selection
 Home-page: https://github.com/Ritam-Guha/Py_FS
 Author: Ritam Guha
@@ -58,7 +58,7 @@ Description: # Py_FS: A Python Package for Feature Selection
         
         For example, if someone wants to use GA, it should be imported using the following statement:
         
-            import Py_FS.wrapper.nature_inspired.GA
+            from Py_FS.wrapper.nature_inspired import GA
         
         There are mainly three utilities in the current version of the package. The next part discusses these
         three sections in detail:
