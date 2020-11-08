@@ -50,7 +50,7 @@ The current structure of the package is mentioned below. Depending on the level 
 
 For example, if someone wants to use GA, it should be imported using the following statement:
 
-    import Py_FS.wrapper.nature_inspired.GA
+    from Py_FS.wrapper.nature_inspired import GA
 
 There are mainly three utilities in the current version of the package. The next part discusses these
 three sections in detail:
