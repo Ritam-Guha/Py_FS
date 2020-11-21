@@ -12,6 +12,7 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 import random, math
+import sys
 
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
@@ -37,6 +38,11 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     #                                                                             #
     ###############################################################################
     
+    # Number of agents must be at least 8
+    if num_agents < 8:
+        print("The parameter num_agents must be at least 8", file=sys.stderr)
+        sys.exit()
+        
     short_name = 'RDA'
     agent_name = 'RedDeer'
     train_data, train_label = np.array(train_data), np.array(train_label)
