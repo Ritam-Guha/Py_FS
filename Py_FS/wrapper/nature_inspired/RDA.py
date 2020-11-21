@@ -40,8 +40,8 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     
     # Number of agents must be at least 8
     if num_agents < 8:
-        print("The parameter num_agents must be at least 8", file=sys.stderr)
-        sys.exit()
+        print("[Error!] The value of the parameter num_agents must be at least 8", file=sys.stderr)
+        sys.exit(1)
         
     short_name = 'RDA'
     agent_name = 'RedDeer'
