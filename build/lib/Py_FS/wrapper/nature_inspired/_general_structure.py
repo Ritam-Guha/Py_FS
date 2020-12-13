@@ -41,6 +41,13 @@ def Name_of_the_wrapper(num_agents, max_iter, train_data, train_label, obj_funct
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_func_shape)
 
+    # setting up the objectives
+    weight_acc = None
+    if(obj_function==compute_fitness):
+        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
+    obj = (obj_function, weight_acc)
+    compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
+
     # initialize agents and Leader (the agent with the max fitness)
     agents = initialize(num_agents, num_features)
     fitness = np.zeros(num_agents)
@@ -67,7 +74,7 @@ def Name_of_the_wrapper(num_agents, max_iter, train_data, train_label, obj_funct
     solution.obj_function = obj_function
 
     # rank initial agents
-    agents, fitness = sort_agents(agents, obj_function, data)
+    agents, fitness = sort_agents(agents, obj, data)
 
     # start timer
     start_time = time.time()
@@ -85,7 +92,7 @@ def Name_of_the_wrapper(num_agents, max_iter, train_data, train_label, obj_funct
         ###########################################################################
 
         # update final information
-        agents, fitness = sort_agents(agents, obj_function, data)
+        agents, fitness = sort_agents(agents, obj, data)
         display(agents, fitness, agent_name)
         
         # update Leader (best agent)

@@ -109,10 +109,10 @@ def compute_accuracy(agent, train_X, test_X, train_Y, test_Y):
     return acc
         
 
-def compute_fitness(agent, train_X, test_X, train_Y, test_Y, weight_acc=1):
+def compute_fitness(agent, train_X, test_X, train_Y, test_Y, weight_acc=0.9):
     # compute a basic fitness measure
     if(weight_acc == None):
-        weight_acc = 1
+        weight_acc = 0.9
 
     weight_feat = 1 - weight_acc
     num_features = agent.shape[0]
