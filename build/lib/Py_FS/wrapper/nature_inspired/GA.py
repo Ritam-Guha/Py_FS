@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 
 
 def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, prob_cross=0.4, prob_mut=0.3, save_conv_graph=False):
@@ -37,6 +37,13 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     cross_limit = 5
+
+    # setting up the objectives
+    weight_acc = None
+    if(obj_function==compute_fitness):
+        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
+    obj = (obj_function, weight_acc)
+    compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
 
     # initialize chromosomes and Leader (the agent with the max fitness)
     chromosomes = initialize(num_agents, num_features)
@@ -63,7 +70,7 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
     solution.obj_function = obj_function
 
     # rank initial population
-    chromosomes, fitness = sort_agents(chromosomes, obj_function, data)
+    chromosomes, fitness = sort_agents(chromosomes, obj, data)
 
     # start timer
     start_time = time.time()
@@ -78,7 +85,7 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
         cross_mut(chromosomes, fitness, obj_function, data, prob_cross, cross_limit, prob_mut)
 
         # update final information
-        chromosomes, fitness = sort_agents(chromosomes, obj_function, data)
+        chromosomes, fitness = sort_agents(chromosomes, obj, data)
         display(chromosomes, fitness, agent_name)
         if fitness[0]>Leader_fitness:
             Leader_agent = chromosomes[0].copy()

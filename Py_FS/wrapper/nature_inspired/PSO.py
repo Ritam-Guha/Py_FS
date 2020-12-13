@@ -16,9 +16,9 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 # from _transfer_functions import get_trans_function
 
 
@@ -42,6 +42,13 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_func_shape)
+    
+    # setting up the objectives
+    weight_acc = None
+    if(obj_function==compute_fitness):
+        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
+    obj = (obj_function, weight_acc)
+    compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
 
     # initialize particles and Leader (the agent with the max fitness)
     particles = initialize(num_agents, num_features)
@@ -68,7 +75,7 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     solution.obj_function = obj_function
 
     # rank initial particles
-    particles, fitness = sort_agents(particles, obj_function, data)
+    particles, fitness = sort_agents(particles, obj, data)
 
     # start timer
     start_time = time.time()
@@ -107,7 +114,7 @@ def PSO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                     particles[i][j] = 0
                  
         # updating fitness of particles
-        particles, fitness = sort_agents(particles, obj_function, data)
+        particles, fitness = sort_agents(particles, obj, data)
         display(particles, fitness, agent_name)
         
         

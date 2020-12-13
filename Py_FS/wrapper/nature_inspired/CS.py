@@ -15,10 +15,9 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
-from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
-# from _transfer_functions import get_trans_function
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
+from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 
 def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', save_conv_graph=False):
     
@@ -39,6 +38,13 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     agent_name = 'Agent'
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
+
+    # setting up the objectives
+    weight_acc = None
+    if(obj_function==compute_fitness):
+        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
+    obj = (obj_function, weight_acc)
+    compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
 
     # initializing cuckoo and host nests
     levy_flight = np.random.uniform(low=-2, high=2, size=(num_features))
@@ -68,7 +74,7 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     solution.obj_function = obj_function
 
     # rank initial nests
-    nest, nest_fitness = sort_agents(nest, obj_function, data)
+    nest, nest_fitness = sort_agents(nest, obj, data)
 
     # start timer
     start_time = time.time()
@@ -98,12 +104,12 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
             nest[j] = cuckoo.copy()
             nest_fitness[j] = cuckoo_fitness
 
-        nest, nest_fitness = sort_agents(nest, obj_function, data)
+        nest, nest_fitness = sort_agents(nest, obj, data)
 
         # eliminate worse nests and generate new ones
         nest = replace_worst(nest, p_a)
 
-        nest, nest_fitness = sort_agents(nest, obj_function, data)
+        nest, nest_fitness = sort_agents(nest, obj, data)
 
         # update final information
         display(nest, nest_fitness, agent_name)

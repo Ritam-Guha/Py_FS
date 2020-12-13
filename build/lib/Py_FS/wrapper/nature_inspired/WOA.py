@@ -15,9 +15,9 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 # from _transfer_functions import get_trans_function
 
 
@@ -42,6 +42,13 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     num_features = train_data.shape[1]
     cross_limit = 5
     trans_function = get_trans_function(trans_function_shape)
+
+    # setting up the objectives
+    weight_acc = None
+    if(obj_function==compute_fitness):
+        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
+    obj = (obj_function, weight_acc)
+    compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
 
     # initialize whales and Leader (the agent with the max fitness)
     whales = initialize(num_agents, num_features)
@@ -68,7 +75,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     solution.obj_function = obj_function
 
     # rank initial population
-    whales, fitness = sort_agents(whales, obj_function, data)
+    whales, fitness = sort_agents(whales, obj, data)
 
     # start timer
     start_time = time.time()
@@ -116,7 +123,7 @@ def WOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                     whales[i,j] = 0
 
         # update final information
-        whales, fitness = sort_agents(whales, obj_function, data)
+        whales, fitness = sort_agents(whales, obj, data)
         display(whales, fitness, agent_name)
         if fitness[0]>Leader_fitness:
             Leader_agent = whales[0].copy()

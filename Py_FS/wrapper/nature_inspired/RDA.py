@@ -17,9 +17,9 @@ import sys
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 # from _transfer_functions import get_trans_function
 
 
@@ -48,6 +48,13 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
+
+    # setting up the objectives
+    weight_acc = None
+    if(obj_function==compute_fitness):
+        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
+    obj = (obj_function, weight_acc)
+    compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
 
     # initialize red deers and Leader (the agent with the max fitness)
     deer = initialize(num_agents, num_features)
@@ -89,7 +96,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
         print('                          Iteration - {}'.format(iter_no+1))
         print('================================================================================\n')
         
-        deer, fitness = sort_agents(deer, obj_function, data)
+        deer, fitness = sort_agents(deer, obj, data)
         num_males = int(0.25 * num_agents)
         num_hinds = num_agents - num_males
         males = deer[:num_males,:]
@@ -165,7 +172,7 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                 coms[i] = new_male_2.copy()
 
         # formation of harems
-        coms, fitness = sort_agents(coms, obj_function, data)
+        coms, fitness = sort_agents(coms, obj, data)
         norm = np.linalg.norm(fitness)
         normal_fit = fitness / norm
         total = np.sum(normal_fit)
@@ -246,14 +253,14 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
         
         # selection of the next generation
         population_pool = np.array(population_pool)            
-        population_pool, fitness = sort_agents(population_pool, obj_function, data)
+        population_pool, fitness = sort_agents(population_pool, obj, data)
         maximum = sum([f for f in fitness])
         selection_probs = [f/maximum for f in fitness]
         indices = np.random.choice(len(population_pool), size=num_agents, replace=True, p=selection_probs)          
         deer = population_pool[indices]
         
         # update final information
-        deer, fitness = sort_agents(deer, obj_function, data)
+        deer, fitness = sort_agents(deer, obj, data)
         display(deer, fitness, agent_name)
         if fitness[0] > Leader_fitness:
             Leader_agent = deer[0].copy()

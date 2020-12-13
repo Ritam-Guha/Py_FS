@@ -51,14 +51,15 @@ def initialize(num_agents, num_features):
 
 
 
-def sort_agents(agents, obj_function, data):
+def sort_agents(agents, obj, data):
     # sort the agents according to fitness
     train_X, val_X, train_Y, val_Y = data.train_X, data.val_X, data.train_Y, data.val_Y
+    (obj_function, weight_acc) = obj
 
     # if there is only one agent
     if len(agents.shape) == 1:
         num_agents = 1
-        fitness = obj_function(agents, train_X, val_X, train_Y, val_Y)
+        fitness = obj_function(agents, train_X, val_X, train_Y, val_Y, weight_acc)
         return agents, fitness
 
     # for multiple agents
@@ -66,7 +67,7 @@ def sort_agents(agents, obj_function, data):
         num_agents = agents.shape[0]
         fitness = np.zeros(num_agents)
         for id, agent in enumerate(agents):
-            fitness[id] = obj_function(agent, train_X, val_X, train_Y, val_Y)
+            fitness[id] = obj_function(agent, train_X, val_X, train_Y, val_Y, weight_acc)
         idx = np.argsort(-fitness)
         sorted_agents = agents[idx].copy()
         sorted_fitness = fitness[idx].copy()
@@ -108,10 +109,12 @@ def compute_accuracy(agent, train_X, test_X, train_Y, test_Y):
     return acc
         
 
-def compute_fitness(agent, train_X, test_X, train_Y, test_Y):
+def compute_fitness(agent, train_X, test_X, train_Y, test_Y, weight_acc=1):
     # compute a basic fitness measure
-    weight_acc = 0.7
-    weight_feat = 0.3
+    if(weight_acc == None):
+        weight_acc = 1
+
+    weight_feat = 1 - weight_acc
     num_features = agent.shape[0]
     
     acc = compute_accuracy(agent, train_X, test_X, train_Y, test_Y)

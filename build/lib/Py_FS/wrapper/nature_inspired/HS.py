@@ -16,8 +16,8 @@ import math, time, sys, random
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 
 def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fitness, save_conv_graph = False):
     
@@ -44,6 +44,13 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fit
     agent_name = 'Harmony'
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
+
+    # setting up the objectives
+    weight_acc = None
+    if(obj_function==compute_fitness):
+        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
+    obj = (obj_function, weight_acc)
+    compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
 
     # intialize the harmonies and Leader (the agent with the max fitness)
     harmonyMemory = initialize(num_agents, num_features)
@@ -74,7 +81,7 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fit
     start_time = time.time()
 
     # calculate initial fitess and sort the harmony memory and rank them
-    harmonyMemory, fitness = sort_agents(harmonyMemory, obj_function, data)
+    harmonyMemory, fitness = sort_agents(harmonyMemory, obj, data)
 
     # create new harmonies in each iteration
     for iterCount in range(max_iter):
@@ -103,7 +110,7 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fit
             fitness[num_agents-1] = fitnessHarmony
 
         # sort harmony memory
-        harmonyMemory, fitness = sort_agents(harmonyMemory, obj_function, data)
+        harmonyMemory, fitness = sort_agents(harmonyMemory, obj, data)
         if fitness[0] > Leader_fitness:
             Leader_agent = harmonyMemory[0].copy()
             Leader_fitness = fitness[0].copy()

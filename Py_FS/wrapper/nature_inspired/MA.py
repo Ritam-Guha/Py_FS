@@ -15,9 +15,9 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
-from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function,sigmoid
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
+from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 # from _transfer_functions import get_trans_function
 
 def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s',  prob_mut=0.2,  save_conv_graph=False):
@@ -41,6 +41,13 @@ def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
+
+    # setting up the objectives
+    weight_acc = None
+    if(obj_function==compute_fitness):
+        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
+    obj = (obj_function, weight_acc)
+    compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
     
     # control parameters
     a1 = 1
@@ -84,8 +91,8 @@ def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
     solution.obj_function = obj_function
     
     # rank initial population
-    male_pos, male_fitness = sort_agents(male_pos, obj_function, data)
-    female_pos, female_fitness = sort_agents(female_pos, obj_function, data)
+    male_pos, male_fitness = sort_agents(male_pos, obj, data)
+    female_pos, female_fitness = sort_agents(female_pos, obj, data)
     
     # start timer
     start_time = time.time()
@@ -131,8 +138,8 @@ def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
                     female_pos[agent][j]=0
         
         #sorting 
-        male_pos, male_fitness = sort_agents(male_pos, obj_function, data)
-        female_pos, female_fitness = sort_agents(female_pos, obj_function, data)
+        male_pos, male_fitness = sort_agents(male_pos, obj, data)
+        female_pos, female_fitness = sort_agents(female_pos, obj, data)
         
         for agent in range(num_agents):
             
@@ -140,12 +147,12 @@ def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
             male_offspring[agent], female_offspring[agent] = cross_mut(male_pos[agent], female_pos[agent])
             
         #comparing parents and offsprings and replacing parents wherever necessary
-        male_pos = compare_and_replace(male_pos, male_offspring, male_fitness, data, obj_function)
-        female_pos = compare_and_replace(female_pos, female_offspring, female_fitness, data, obj_function)
+        male_pos = compare_and_replace(male_pos, male_offspring, male_fitness, data, obj)
+        female_pos = compare_and_replace(female_pos, female_offspring, female_fitness, data, obj)
         
         #updating fitness values
-        male_pos, male_fitness = sort_agents(male_pos, obj_function, data)
-        female_pos, female_fitness = sort_agents(female_pos, obj_function, data)
+        male_pos, male_fitness = sort_agents(male_pos, obj, data)
+        female_pos, female_fitness = sort_agents(female_pos, obj, data)
         
         #updating values of nuptial dance
         d = d * delta
@@ -299,13 +306,13 @@ def cross_mut(m_pos, f_pos):
         return (offspring2, offspring1)
 
 
-def compare_and_replace(pos, off, fit, data, obj_function):
+def compare_and_replace(pos, off, fit, data, obj):
     agents, features = pos.shape
     newfit = np.zeros((agents))
     temp_pos = np.zeros((agents, features))
-    pos, fit = sort_agents(pos, obj_function, data)
+    pos, fit = sort_agents(pos, obj, data)
     # finding fitnesses of offsprings
-    off, newfit = sort_agents(off, obj_function, data)
+    off, newfit = sort_agents(off, obj, data)
     i=0
     j=0
     cnt=0

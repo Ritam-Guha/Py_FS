@@ -15,9 +15,9 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 # from _transfer_functions import get_trans_function
 
 
@@ -41,6 +41,13 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     train_data, train_label = np.array(train_data), np.array(train_label)
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_func_shape)
+
+    # setting up the objectives
+    weight_acc = None
+    if(obj_function==compute_fitness):
+        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
+    obj = (obj_function, weight_acc)
+    compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
 
     # initialize greywolves and Leader (the agent with the max fitness)
     greywolves = initialize(num_agents, num_features)
@@ -68,7 +75,7 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     solution.obj_function = obj_function
 
     # rank initial greywolves
-    greywolves, fitness = sort_agents(greywolves, obj_function, data)
+    greywolves, fitness = sort_agents(greywolves, obj, data)
 
     # start timer
     start_time = time.time()
@@ -148,7 +155,7 @@ def GWO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                     greywolves[i,j] = 0
 
         # update final information
-        greywolves, fitness = sort_agents(greywolves, obj_function, data)
+        greywolves, fitness = sort_agents(greywolves, obj, data)
         display(greywolves, fitness, agent_name)
         
         # update Leader (best agent)

@@ -14,9 +14,9 @@ import time
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 # from _transfer_functions import get_trans_function
 
 def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', constantLoudness=True, save_conv_graph=False):
@@ -40,7 +40,15 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     num_features = train_data.shape[1]
     trans_function = get_trans_function(trans_function_shape)
 
-    # initialize batss of bats and Leader (the agent with the max fitness)
+    # setting up the objectives
+    weight_acc = None
+    if(obj_function==compute_fitness):
+        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
+    obj = (obj_function, weight_acc)
+    compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
+    
+
+    # initialize bats and Leader (the agent with the max fitness)
     bats = initialize(num_agents, num_features)
     velocity = np.zeros([num_agents, num_features])
     fitness = np.zeros(num_agents)
@@ -74,7 +82,7 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     # start timer
     start_time = time.time()
 
-    bats, fitness = sort_agents(bats, obj_function, data)
+    bats, fitness = sort_agents(bats, obj, data)
 
     Leader_agent = bats[0, :]
     Leader_fitness = fitness[0]
@@ -119,7 +127,7 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
 
 
             ## calculate fitness for new bats
-            newFit = obj_function(newPos, data.train_X, data.val_X, data.train_Y, data.val_Y)
+            newFit = obj_function(newPos, data.train_X, data.val_X, data.train_Y, data.val_Y, weight_acc)
 
 
             ## update better solution for indivisual bat
@@ -127,7 +135,7 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                 fitness[agentNumber] = newFit
                 bats[agentNumber, :] = newPos[0, :]
 
-        bats, fitness = sort_agents(bats, obj_function, data)
+        bats, fitness = sort_agents(bats, obj, data)
 
         ## update (global) best solution for all bats
         if fitness[0] > Leader_fitness:
