@@ -22,7 +22,7 @@ def Relief(data, target):
     result.features = feature_values
 
     # generate the ReliefF scores
-    relief = ReliefF(n_neighbors=50, n_features_to_keep=num_features)
+    relief = ReliefF(n_neighbors=5, n_features_to_keep=num_features)
     relief.fit_transform(data, target)
     result.scores = normalize(relief.feature_scores)
     result.ranks = np.argsort(np.argsort(-relief.feature_scores))
