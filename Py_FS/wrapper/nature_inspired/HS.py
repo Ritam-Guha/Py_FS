@@ -66,9 +66,10 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fit
     convergence_curve['fitness'] = np.zeros(max_iter)
     convergence_curve['feature_count'] = np.zeros(max_iter)
 
-    # format the data
+    # initialize data class
     data = Data()
-    data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=0.2)
+    val_size = float(input('Enter the percentage of data wanted for valdiation [0, 100]: '))/100
+    data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(train_data, train_label, stratify=train_label, test_size=val_size)
 
     # create a solution object
     solution = Solution()

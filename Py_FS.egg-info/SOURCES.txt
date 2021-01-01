@@ -48,7 +48,6 @@ Py_FS/wrapper/nature_inspired/MA.py
 Py_FS/wrapper/nature_inspired/PSO.py
 Py_FS/wrapper/nature_inspired/RDA.py
 Py_FS/wrapper/nature_inspired/SCA.py
-Py_FS/wrapper/nature_inspired/WOA.py
 Py_FS/wrapper/nature_inspired/__init__.py
 Py_FS/wrapper/nature_inspired/_general_structure.py
 Py_FS/wrapper/nature_inspired/_transfer_functions.py
