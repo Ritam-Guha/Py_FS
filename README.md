@@ -4,7 +4,7 @@ Py_FS is a toolbox developed with complete focus on Feature Selection (FS) using
 <span style="color:red">
 ** Recent Updates ** <br>
 R. Guha, B. Chatterjee, K. H. Sk, S. Ahmed, T. Bhattacharya, R. Sarkar, “Py_FS: A Python Package for Feature Selection using Meta-heuristic Optimization Algorithms”, accepted for publication in Springer AISC series of 3rd International Conference on Computational Intelligence in Pattern Recognition (CIPR-2021) to be held on 24-25 April, 2021, Kolkata, India.
-</span>
+</span><br>
 
 <p align="center">  
   <img src="https://raw.githubusercontent.com/Ritam-Guha/Py_FS/master/Images/logo.jpg" height="300" width="300">
