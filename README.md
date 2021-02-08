@@ -106,6 +106,9 @@ This toolbox has been developed by a team of students from [Computer Science and
 
 ### Filters
 
+#### Overall
+* Ghosh, K. K., Begum, S., Sardar, A., Adhikary, S., Ghosh, M., Kumar, M., & Sarkar, R. (2021). Theoretical and empirical analysis of filter ranking methods: Experimental study on benchmark DNA microarray data. Expert Systems with Applications, 169, 114485.
+
 #### PCC
 
 * Guha, R., Ghosh, K. K., Bhowmik, S., & Sarkar, R. (2020, February). Mutually Informed Correlation Coefficient (MICC)-a New Filter Based Feature Selection Method. In 2020 IEEE Calcutta Conference (CALCON) (pp. 54-58). IEEE.
