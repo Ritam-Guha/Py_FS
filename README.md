@@ -44,7 +44,7 @@ The current structure of the package is mentioned below. Depending on the level 
     * [GSA.py](./Py_FS/wrapper/nature_inspired/GSA.py)
     * [GWO.py](./Py_FS/wrapper/nature_inspired/GWO.py)
     * [HS.py](./Py_FS/wrapper/nature_inspired/HS.py)
-    * [MF.py](./Py_FS/wrapper/nature_inspired/MF.py)
+    * [MA.py](./Py_FS/wrapper/nature_inspired/MA.py)
     * [PSO.py](./Py_FS/wrapper/nature_inspired/PSO.py)
     * [RDA.py](./Py_FS/wrapper/nature_inspired/RDA.py)
     * [SCA.py](./Py_FS/wrapper/nature_inspired/SCA.py)

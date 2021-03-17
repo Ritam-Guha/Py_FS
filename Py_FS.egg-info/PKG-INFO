@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Py-FS
-Version: 0.0.6.18
+Version: 0.0.6.19
 Summary: A Python Package for Feature Selection
 Home-page: https://github.com/Ritam-Guha/Py_FS
 Author: Ritam Guha
@@ -52,7 +52,7 @@ Description: # Py_FS: A Python Package for Feature Selection
             * [GSA.py](./Py_FS/wrapper/nature_inspired/GSA.py)
             * [GWO.py](./Py_FS/wrapper/nature_inspired/GWO.py)
             * [HS.py](./Py_FS/wrapper/nature_inspired/HS.py)
-            * [MF.py](./Py_FS/wrapper/nature_inspired/MF.py)
+            * [MA.py](./Py_FS/wrapper/nature_inspired/MA.py)
             * [PSO.py](./Py_FS/wrapper/nature_inspired/PSO.py)
             * [RDA.py](./Py_FS/wrapper/nature_inspired/RDA.py)
             * [SCA.py](./Py_FS/wrapper/nature_inspired/SCA.py)
