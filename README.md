@@ -22,7 +22,7 @@ Anybody willing to use the package can install it by simply running:
 
 ## Note
 
-Py_FS uses numpy arrays of numbers to process the datasets. So, please convert the datasets to numpy arrays and exclude any kind of string (like table headings) before using Py_FS for feature selection. In future, we may add a preprocessing stage before feeding the dataset to Py_FS modules to allow data frames and other formats to make it easier for the users. But, currently Py_FS provides no such support. 
+Py_FS uses numpy arrays of numbers to process the datasets. So, please convert the datasets to numpy arrays and exclude any kind of string (like table headings) before using Py_FS for feature selection. Please note that the best agent here is the one with the maximum fitness value. In future, we may add a preprocessing stage before feeding the dataset to Py_FS modules to allow data frames and other formats to make it easier for the users. But, currently Py_FS provides no such support. 
 
 ## Structure
 
