@@ -183,4 +183,4 @@ def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
 if __name__ == '__main__':
 
     iris = datasets.load_iris()
-    SCA(10, 20, iris.data, iris.target, save_conv_graph=True)
+    SCA(10, 20, iris.data, iris.target, save_conv_graph=False)
