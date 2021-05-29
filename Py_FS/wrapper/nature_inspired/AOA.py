@@ -79,10 +79,10 @@ def AOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     lower = 0.1
 
     # initializing agent attributes
-    position = np.random.rand(num_agents, num_features)
-    volume = np.random.rand(num_agents, num_features)
-    density = np.random.rand(num_agents, num_features)
-    acceleration = np.random.rand(num_agents, num_features)
+    position = np.random.rand(num_agents, num_features)     # Eq. (4)
+    volume = np.random.rand(num_agents, num_features)       # Eq. (5)
+    density = np.random.rand(num_agents, num_features)      # Eq. (5)
+    acceleration = np.random.rand(num_agents, num_features) # Eq. (6)
 
     # initializing leader agent attributes
     Leader_position = np.zeros((1, num_features))
@@ -91,7 +91,7 @@ def AOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     Leader_acceleration = np.zeros((1, num_features))
 
     # rank initial agents
-    agents, position, volume, density, acceleration, fitness = sort_agents_(agents, position, volume, density,
+    agents, position, volume, density, acceleration, fitness = sort_agents_attr(agents, position, volume, density,
                                                                                acceleration, obj, data)
     Leader_agent = agents[0].copy()
     Leader_fitness = fitness[0].copy()
@@ -109,12 +109,13 @@ def AOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
         print('================================================================================\n')
 
         # weight factors
-        Tf = np.exp((iter_no - max_iter) / max_iter)
-        Df = np.exp((max_iter - iter_no) / max_iter) - (iter_no / max_iter)
+        Tf = np.exp((iter_no - max_iter) / max_iter)                            # Eq. (8)
+        Df = np.exp((max_iter - iter_no) / max_iter) - (iter_no / max_iter)     # Eq. (9)
 
         # updating densities and volumes
         for i in range(num_agents):
             for j in range(num_features):
+                # Eq. (7)
                 r1, r2 = np.random.random(2)
                 # update density
                 density[i][j] = density[i][j] + r1 * (Leader_density[j] - density[i][j])
@@ -123,6 +124,7 @@ def AOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
 
         # Exploration phase
         if Tf <= 0.5:
+            # Eq. (10)
             for i in range(num_agents):
                 for j in range(num_features):
                     # update acceleration
@@ -130,10 +132,12 @@ def AOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                     acceleration[i][j] = (rand_density + rand_vol * rand_accn) / (density[i][j] * volume[i][j])
                     # update position
                     r1, rand_pos = np.random.random(2)
+                    # Eq. (13)
                     position[i][j] = position[i][j] + C1 * r1 * Df * (rand_pos - position[i][j])
 
         # Exploitation phase
         else:
+            # Eq. (11)
             for i in range(num_agents):
                 for j in range(num_features):
                     # update acceleration
@@ -143,7 +147,9 @@ def AOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                     r2, r3 = np.random.random(2)
                     T_ = C3 * Tf
                     P = 2 * r3 - C4
+                    # Eq. (15)
                     F = 1 if P <= 0.5 else -1
+                    # Eq. (14)
                     position[i][j] = position[i][j] + F * C2 * r2 * acceleration[i][j] * Df * (
                                 (T_ * Leader_position[j]) - position[i][j])
 
@@ -152,12 +158,13 @@ def AOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
             max_accn = np.amax(acceleration[i])
             min_accn = np.amin(acceleration[i])
             for j in range(num_features):
+                # Eq. (12)
                 acceleration[i][j] = lower + (acceleration[i][j] - min_accn) / (max_accn - min_accn) * upper
 
         # Convert to binary: lower acceleration => closer to equilibrium
         for i in range(num_agents):
             for j in range(num_features):
-                if np.random.random() < trans_function(acceleration[i][j]):
+                if trans_function(acceleration[i][j]) < np.random.random():
                     agents[i][j] = 1
                 else:
                     agents[i][j] = 0
@@ -165,7 +172,7 @@ def AOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
         ###########################################################################
 
         # update final information
-        agents, position, volume, density, acceleration, fitness = sort_agents_(agents, position, volume, density, acceleration, obj, data)
+        agents, position, volume, density, acceleration, fitness = sort_agents_attr(agents, position, volume, density, acceleration, obj, data)
         display(agents, fitness, agent_name)
 
         # update Leader (best agent)
@@ -228,7 +235,7 @@ def AOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
 
     return solution
 
-def sort_agents_(agents, position, volume, density, acceleration, obj, data):
+def sort_agents_attr(agents, position, volume, density, acceleration, obj, data):
     # sort the agents according to fitness
     train_X, val_X, train_Y, val_Y = data.train_X, data.val_X, data.train_Y, data.val_Y
     (obj_function, weight_acc) = obj
