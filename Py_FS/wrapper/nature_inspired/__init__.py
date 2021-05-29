@@ -9,8 +9,8 @@ from Py_FS.wrapper.nature_inspired.MA import MA
 from Py_FS.wrapper.nature_inspired.PSO import PSO
 from Py_FS.wrapper.nature_inspired.RDA import RDA
 from Py_FS.wrapper.nature_inspired.SCA import SCA
-from Py_FS.wrapper.nature_inspired.WOA import WOA
-
+from Py_FS.wrapper.nature_inspired.AOA import AOA
+from Py_FS.wrapper.nature_inspired.AMOA import AMOA
 
 __all__ = [
     'BBA',
@@ -24,5 +24,6 @@ __all__ = [
     'PSO',
     'RDA',
     'SCA',
-    'WOA'
+    'AOA',
+    'AMOA'
 ]
