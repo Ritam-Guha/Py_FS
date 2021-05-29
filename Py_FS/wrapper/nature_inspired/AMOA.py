@@ -92,9 +92,10 @@ def AMOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fit
         print('                          Iteration - {}'.format(iter_no + 1))
         print('================================================================================\n')
 
-        ################ write your main position update code here ################
-
+        # Eq. (2)
         MoA = moa(lb, ub, max_iter, iter_no)
+
+        # Eq. (4)
         MoP = mop(max_iter, iter_no, alpha)
 
         for i in range(num_agents):
@@ -104,32 +105,27 @@ def AMOA(num_agents, max_iter, train_data, train_label, obj_function=compute_fit
 
                 # Exploration phase (M,D)
                 if r1 > MoA:
+                    # Eq. (3)
                     r2 = np.random.random()
                     if r2 >= 0.5:
-                        # Multiplication
                         agents[i,j] = Leader_agent[j] * (MoP + eps) * ((ub-lb) * mu + lb)
                     else:
-                        # Division
                         agents[i,j] = Leader_agent[j] / (MoP + eps) * ((ub - lb) * mu + lb)
 
                 # Exploitation phase (A,S)
                 else:
+                    # Eq. (5)
                     r3 = np.random.random()
                     if r3 >= 0.5:
-                        # Addition
                         agents[i,j] = Leader_agent[j] + MoP * ((ub - lb) * mu + lb)
                     else:
-                        # Subtraction
                         agents[i,j] = Leader_agent[j] - MoP * ((ub - lb) * mu + lb)
 
-                # convert to binary
+                # convert to binary using transformation function
                 if np.random.random() < trans_function(agents[i][j]):
                     agents[i,j] = 1
                 else:
                     agents[i,j] = 0
-
-
-        ###########################################################################
 
         # update final information
         agents, fitness = sort_agents(agents, obj, data)
