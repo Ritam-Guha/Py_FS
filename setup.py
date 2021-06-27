@@ -1,6 +1,6 @@
 import setuptools
 
-version = '0.0.6.19'
+version = '0.0.8'
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -13,7 +13,7 @@ setuptools.setup(
      description="A Python Package for Feature Selection",
      long_description=long_description,
      long_description_content_type="text/markdown",
-     url="https://github.com/Ritam-Guha/Py_FS",
+     url="https://github.com/CMATER-JUCS/Py-FS",
      packages=setuptools.find_packages(),
      classifiers=[
          "Programming Language :: Python :: 3",

@@ -16,7 +16,7 @@ import math, time, sys, random
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
+from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
 # from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
 
 def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fitness, save_conv_graph = False):
@@ -143,22 +143,8 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fit
     end_time = time.time()
     exec_time = end_time - start_time
 
-    # plot convergence curves
-    iters = np.arange(max_iter)+1
-    fig, axes = plt.subplots(2, 1)
-    fig.tight_layout(pad=5)
-    fig.suptitle('Convergence Curves')
-
-    axes[0].set_title('Convergence of Fitness over Iterations')
-    axes[0].set_xlabel('Iteration')
-    axes[0].set_ylabel('Fitness')
-    axes[0].plot(iters, convergence_curve['fitness'])
-
-    axes[1].set_title('Convergence of Feature Count over Iterations')
-    axes[1].set_xlabel('Iteration')
-    axes[1].set_ylabel('Number of Selected Features')
-    axes[1].plot(iters, convergence_curve['feature_count'])
-
+    # Plot
+    fig, axes = Conv_plot(convergence_curve)
     if(save_conv_graph):
         plt.savefig('convergence_graph_'+ short_name + '.jpg')
     plt.show()
