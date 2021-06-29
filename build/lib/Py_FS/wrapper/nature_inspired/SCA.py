@@ -147,7 +147,7 @@ def SCA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     end_time = time.time()
     exec_time = end_time - start_time
 
-    # Plot
+    # plot convergence graph
     fig, axes = Conv_plot(convergence_curve)
     if(save_conv_graph):
         plt.savefig('convergence_graph_'+ short_name + '.jpg')
