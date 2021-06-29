@@ -58,7 +58,6 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
     # initialize convergence curves
     convergence_curve = {}
     convergence_curve['fitness'] = np.zeros(max_iter)
-    convergence_curve['feature_count'] = np.zeros(max_iter)
 
     # initialize data class
     data = Data()
@@ -95,10 +94,7 @@ def GA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
             Leader_agent = chromosomes[0].copy()
             Leader_fitness = fitness[0].copy()
 
-        convergence_curve['fitness'][iter_no] = Leader_fitness
-        convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
-        # convergence_curve['fitness'][iter_no] = np.mean(fitness)
-        # convergence_curve['feature_count'][iter_no] = np.mean(np.sum(chromosomes,axis=1))
+        convergence_curve['fitness'][iter_no] = np.mean(fitness)
 
     # compute final accuracy
     Leader_agent, Leader_accuracy = sort_agents(Leader_agent, compute_accuracy, data)
@@ -188,7 +184,6 @@ def cross_mut(chromosomes, fitness, obj, data, prob_cross, cross_limit, prob_mut
             child, child_fitness = sort_agents(child, obj, data)
 
             for i in range(2):
-                print(fitness[0])
                 for j in range(num_agents):
                     if(child_fitness[i] > fitness[j]):
                         print('child {} replaced with chromosome having id {}'.format(i+1, j+1))
@@ -210,6 +205,6 @@ def cross_mut(chromosomes, fitness, obj, data, prob_cross, cross_limit, prob_mut
 ############# for testing purpose ################
 
 if __name__ == '__main__':
-    iris = datasets.load_wine()
-    GA(20, 10, iris.data, iris.target, save_conv_graph=True)
+    data = datasets.load_digits()
+    GA(20, 100, data.data, data.target, save_conv_graph=True)
 ############# for testing purpose ################

@@ -17,7 +17,7 @@ from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
 from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
 
 def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fitness, save_conv_graph = False):
     
@@ -64,7 +64,6 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fit
     # initialize convergence curves
     convergence_curve = {}
     convergence_curve['fitness'] = np.zeros(max_iter)
-    convergence_curve['feature_count'] = np.zeros(max_iter)
 
     # initialize data class
     data = Data()
@@ -85,9 +84,9 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fit
     harmonyMemory, fitness = sort_agents(harmonyMemory, obj, data)
 
     # create new harmonies in each iteration
-    for iterCount in range(max_iter):
+    for iter_no in range(max_iter):
         print('\n================================================================================')
-        print('                          Iteration - {}'.format(iterCount + 1))
+        print('                          Iteration - {}'.format(iter_no + 1))
         print('================================================================================\n')
         HMCR_randValue = np.random.rand()
         newHarmony = np.zeros([1, num_features])
@@ -112,14 +111,13 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fit
 
         # sort harmony memory
         harmonyMemory, fitness = sort_agents(harmonyMemory, obj, data)
+        
         if fitness[0] > Leader_fitness:
             Leader_agent = harmonyMemory[0].copy()
             Leader_fitness = fitness[0].copy()
 
         # update 
-        convergence_curve['fitness'][iterCount] = Leader_fitness
-        convergence_curve['feature_count'][iterCount] = int(np.sum(Leader_agent))
-
+        convergence_curve['fitness'][iter_no] = np.mean(fitness)
         display(harmonyMemory, fitness, agent_name)
     
     # compute final accuracy
@@ -137,7 +135,6 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fit
     # leader agent and leader fitneess
     Leader_fitness = fitness[0]
     Leader_agent = harmonyMemory[0].copy()
-
 
     # stop timer
     end_time = time.time()
@@ -165,8 +162,8 @@ def HS(num_agents, max_iter, train_data, train_label, obj_function = compute_fit
 
 if __name__ == '__main__':
 
-    iris = datasets.load_iris()
-    HS(10, 20, iris.data, iris.target, save_conv_graph=True)
+    data = datasets.load_digits()
+    HS(20, 100, data.data, data.target, save_conv_graph=True)
 
 
 

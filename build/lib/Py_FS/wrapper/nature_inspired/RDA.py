@@ -19,7 +19,7 @@ from sklearn import datasets
 
 from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
 # from _transfer_functions import get_trans_function
 
 
@@ -67,7 +67,6 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     # initialize convergence curves
     convergence_curve = {}
     convergence_curve['fitness'] = np.zeros(max_iter)
-    convergence_curve['feature_count'] = np.zeros(max_iter)
 
     # initialize data class
     data = Data()
@@ -266,8 +265,8 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
         if fitness[0] > Leader_fitness:
             Leader_agent = deer[0].copy()
             Leader_fitness = fitness[0].copy()
-        convergence_curve['fitness'][iter_no] = Leader_fitness
-        convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
+
+        convergence_curve['fitness'][iter_no] = np.mean(fitness)
 
     # compute final accuracy
     Leader_agent, Leader_accuracy = sort_agents(Leader_agent, compute_accuracy, data)
@@ -309,6 +308,6 @@ def RDA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
 ############# for testing purpose ################
 
 if __name__ == '__main__':
-    iris = datasets.load_iris()
-    RDA(10, 20, iris.data, iris.target, save_conv_graph=True)
+    data = datasets.load_digits()
+    RDA(20, 100, data.data, data.target, save_conv_graph=True)
 ############# for testing purpose ################

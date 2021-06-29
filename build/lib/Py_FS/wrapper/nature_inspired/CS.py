@@ -17,7 +17,8 @@ from sklearn import datasets
 
 from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
+# from _transfer_functions import get_trans_function
 
 def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', save_conv_graph=False):
     
@@ -50,7 +51,7 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     levy_flight = np.random.uniform(low=-2, high=2, size=(num_features))
     cuckoo = np.random.randint(low=0, high=2, size=(num_features))
     nest = initialize(num_agents, num_features)
-    nest_fitness = np.zeros(num_agents)
+    fitness = np.zeros(num_agents)
     nest_accuracy = np.zeros(num_agents)
     cuckoo_fitness = float("-inf")
     Leader_agent = np.zeros((num_features))
@@ -61,7 +62,6 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     # initialize convergence curves
     convergence_curve = {}
     convergence_curve['fitness'] = np.zeros(max_iter)
-    convergence_curve['feature_count'] = np.zeros(max_iter)
 
     # initialize data class
     data = Data()
@@ -76,7 +76,7 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     solution.obj_function = obj_function
 
     # rank initial nests
-    nest, nest_fitness = sort_agents(nest, obj, data)
+    nest, fitness = sort_agents(nest, obj, data)
 
     # start timer
     start_time = time.time()
@@ -88,9 +88,9 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
         print('================================================================================\n')
 
         # updating leader nest
-        if nest_fitness[0] > Leader_fitness:
+        if fitness[0] > Leader_fitness:
             Leader_agent = nest[0].copy()
-            Leader_fitness = nest_fitness[0]
+            Leader_fitness = fitness[0]
 
         # get new cuckoo
         levy_flight = get_cuckoo(levy_flight)
@@ -102,26 +102,25 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
 
         # check if a nest needs to be replaced
         j = np.random.randint(0,num_agents)
-        if cuckoo_fitness > nest_fitness[j]:
+        if cuckoo_fitness > fitness[j]:
             nest[j] = cuckoo.copy()
-            nest_fitness[j] = cuckoo_fitness
+            fitness[j] = cuckoo_fitness
 
-        nest, nest_fitness = sort_agents(nest, obj, data)
+        nest, fitness = sort_agents(nest, obj, data)
 
         # eliminate worse nests and generate new ones
         nest = replace_worst(nest, p_a)
 
-        nest, nest_fitness = sort_agents(nest, obj, data)
+        nest, fitness = sort_agents(nest, obj, data)
 
         # update final information
-        display(nest, nest_fitness, agent_name)
+        display(nest, fitness, agent_name)
 
-        if nest_fitness[0]>Leader_fitness:
+        if fitness[0]>Leader_fitness:
             Leader_agent = nest[0].copy()
-            Leader_fitness = nest_fitness[0].copy()
+            Leader_fitness = fitness[0].copy()
 
-        convergence_curve['fitness'][iter_no] = Leader_fitness
-        convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
+        convergence_curve['fitness'][iter_no] = np.mean(fitness)
 
     # compute final accuracy
     Leader_agent, Leader_accuracy = sort_agents(Leader_agent, compute_accuracy, data)
@@ -152,7 +151,7 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     solution.best_accuracy = Leader_accuracy
     solution.convergence_curve = convergence_curve
     solution.final_population = nest
-    solution.final_fitness = nest_fitness
+    solution.final_fitness = fitness
     solution.final_accuracy = nest_accuracy
     solution.execution_time = exec_time
 
@@ -180,5 +179,5 @@ def replace_worst(agent, fraction):
     return agent
 
 if __name__ == '__main__':
-    iris = datasets.load_iris()
-    CS(10, 20, iris.data, iris.target, save_conv_graph=True)
+    data = datasets.load_digits()
+    CS(20, 100, data.data, data.target, save_conv_graph=True)

@@ -16,7 +16,7 @@ from sklearn import datasets
 
 from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
 # from _transfer_functions import get_trans_function
 
 def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s', constantLoudness=True, save_conv_graph=False):
@@ -66,7 +66,6 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     # initialize convergence curves
     convergence_curve = {}
     convergence_curve['fitness'] = np.zeros(max_iter)
-    convergence_curve['feature_count'] = np.zeros(max_iter)
 
     # initialize data class
     data = Data()
@@ -93,14 +92,14 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
     A_t = A
     r_t = r
 
-    for iterCount in range(max_iter):
+    for iter_no in range(max_iter):
         print('\n================================================================================')
-        print('                          Iteration - {}'.format(iterCount + 1))
+        print('                          Iteration - {}'.format(iter_no + 1))
         print('================================================================================\n')
 
         if constantLoudness == False:
             A_t *= alpha
-            r_t = r*(1 - np.exp(-1*gamma*iterCount))
+            r_t = r*(1 - np.exp(-1*gamma*iter_no))
 
         for agentNumber in range(num_agents):
             fi = minFrequency + (maxFrequency - minFrequency)*np.random.rand() # frequency for i-th agent or bat
@@ -143,9 +142,7 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
             Leader_fitness = fitness[0]
             Leader_agent = bats[0, :]
 
-        
-        convergence_curve['fitness'][iterCount] = Leader_fitness
-        convergence_curve['feature_count'][iterCount] = int(np.sum(Leader_agent))
+        convergence_curve['fitness'][iter_no] = np.mean(fitness)
 
         # display current agents
         display(bats, fitness, agent_name)
@@ -188,8 +185,8 @@ def BBA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
 
 if __name__ == '__main__':
 
-    iris = datasets.load_iris()
-    BBA(10, 20, iris.data, iris.target, save_conv_graph=True)
+    data = datasets.load_digits()
+    BBA(20, 100, data.data, data.target, save_conv_graph=True)
 
 
 
