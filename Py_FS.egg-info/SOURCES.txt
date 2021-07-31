@@ -41,6 +41,7 @@ Py_FS/wrapper/nature_inspired/BBA.py
 Py_FS/wrapper/nature_inspired/CS.py
 Py_FS/wrapper/nature_inspired/EO.py
 Py_FS/wrapper/nature_inspired/GA.py
+Py_FS/wrapper/nature_inspired/GA_test.py
 Py_FS/wrapper/nature_inspired/GSA.py
 Py_FS/wrapper/nature_inspired/GWO.py
 Py_FS/wrapper/nature_inspired/HS.py
@@ -53,6 +54,8 @@ Py_FS/wrapper/nature_inspired/__init__.py
 Py_FS/wrapper/nature_inspired/_general_structure.py
 Py_FS/wrapper/nature_inspired/_transfer_functions.py
 Py_FS/wrapper/nature_inspired/_utilities.py
+Py_FS/wrapper/nature_inspired/_utilities_test.py
+Py_FS/wrapper/nature_inspired/algorithm.py
 Py_FS/wrapper/nature_inspired/__pycache__/BBA.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/CS.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/EO.cpython-38.pyc
