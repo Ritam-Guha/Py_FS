@@ -17,7 +17,7 @@ from sklearn import datasets
 
 from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
 from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness
+# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
 # from _transfer_functions import get_trans_function
 
 
@@ -65,7 +65,6 @@ def EO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
     # initialize convergence curves
     convergence_curve = {}
     convergence_curve['fitness'] = np.zeros(max_iter)
-    convergence_curve['feature_count'] = np.zeros(max_iter)
 
     # initialize data class
     data = Data()
@@ -158,8 +157,7 @@ def EO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
             Leader_agent = particles[0].copy()
             Leader_fitness = fitness[0].copy()
 
-        convergence_curve['fitness'][iter_no] = Leader_fitness
-        convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
+        convergence_curve['fitness'][iter_no] = np.mean(fitness)
 
     # compute final accuracy
     Leader_agent, Leader_accuracy = sort_agents(Leader_agent, compute_accuracy, data)
@@ -177,7 +175,7 @@ def EO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
     end_time = time.time()
     exec_time = end_time - start_time
 
-    # Plot
+    # plot convergence graph
     fig, axes = Conv_plot(convergence_curve)
     if(save_conv_graph):
         plt.savefig('convergence_graph_'+ short_name + '.jpg')
@@ -188,7 +186,7 @@ def EO(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
     solution.best_fitness = Leader_fitness
     solution.best_accuracy = Leader_accuracy
     solution.convergence_curve = convergence_curve
-    solution.final_particles = particles
+    solution.final_population = particles
     solution.final_fitness = fitness
     solution.final_accuracy = accuracy
     solution.execution_time = exec_time
@@ -211,5 +209,5 @@ def sign_func(x):
 
 if __name__ == '__main__':
 
-    iris = datasets.load_iris()
-    EO(10, 20, iris.data, iris.target, save_conv_graph=True)
+    data = datasets.load_digits()
+    EO(20, 100, data.data, data.target, save_conv_graph=True)

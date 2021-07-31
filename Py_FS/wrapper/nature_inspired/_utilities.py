@@ -131,18 +131,13 @@ def Conv_plot(convergence_curve):
     # plot convergence curves
     num_iter = len(convergence_curve['fitness'])
     iters = np.arange(num_iter) + 1
-    fig, axes = plt.subplots(2, 1)
+    fig, axes = plt.subplots(1)
     fig.tight_layout(pad = 5) 
     fig.suptitle('Convergence Curves')
     
-    axes[0].set_title('Convergence of Fitness over Iterations')
-    axes[0].set_xlabel('Iteration')
-    axes[0].set_ylabel('Fitness')
-    axes[0].plot(iters, convergence_curve['fitness'])
-
-    axes[1].set_title('Convergence of Feature Count over Iterations')
-    axes[1].set_xlabel('Iteration')
-    axes[1].set_ylabel('Number of Selected Features')
-    axes[1].plot(iters, convergence_curve['feature_count'])
+    axes.set_title('Convergence of Fitness over Iterations')
+    axes.set_xlabel('Iteration')
+    axes.set_ylabel('Avg. Fitness')
+    axes.plot(iters, convergence_curve['fitness'])
 
     return fig, axes

@@ -1,8 +1,8 @@
 Metadata-Version: 2.1
 Name: Py-FS
-Version: 0.0.6.19
+Version: 0.0.12
 Summary: A Python Package for Feature Selection
-Home-page: https://github.com/Ritam-Guha/Py_FS
+Home-page: https://github.com/CMATER-JUCS/Py-FS
 Author: Ritam Guha
 Author-email: ritamguha16@gmail.com
 License: UNKNOWN
@@ -11,7 +11,7 @@ Description: # Py_FS: A Python Package for Feature Selection
         
         ## Please cite this paper if you are using Py_FS:
         
-        R. Guha, B. Chatterjee, K. H. Sk, S. Ahmed, T. Bhattacharya, R. Sarkar, “Py_FS: A Python Package for Feature Selection using Meta-heuristic Optimization Algorithms”, accepted for publication in Springer AISC series of 3rd International Conference on Computational Intelligence in Pattern Recognition (CIPR-2021) to be held on 24-25 April, 2021, Kolkata, India.
+        R. Guha, B. Chatterjee, K. H. Sk, S. Ahmed, T. Bhattacharya, R. Sarkar, “Py_FS: A Python Package for Feature Selection using Meta-heuristic Optimization Algorithms”, Springer AISC series of 3rd International Conference on Computational Intelligence in Pattern Recognition (CIPR-2021), 24-25 April, 2021, Kolkata, India.
         
         <p align="center">  
           <img src="https://raw.githubusercontent.com/Ritam-Guha/Py_FS/master/Images/logo.jpg" height="300" width="300">

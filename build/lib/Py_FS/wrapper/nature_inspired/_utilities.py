@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier as KNN
+import matplotlib.pyplot as plt
 
 class Solution():    
     #structure of the solution 
@@ -51,26 +52,28 @@ def initialize(num_agents, num_features):
 
 
 
-def sort_agents(agents, obj, data):
+def sort_agents(agents, obj, data, fitness=None):
     # sort the agents according to fitness
     train_X, val_X, train_Y, val_Y = data.train_X, data.val_X, data.train_Y, data.val_Y
     (obj_function, weight_acc) = obj
+   
+    if fitness is None:
+        # if there is only one agent
+        if len(agents.shape) == 1:
+            num_agents = 1
+            fitness = obj_function(agents, train_X, val_X, train_Y, val_Y, weight_acc)
+            return agents, fitness
 
-    # if there is only one agent
-    if len(agents.shape) == 1:
-        num_agents = 1
-        fitness = obj_function(agents, train_X, val_X, train_Y, val_Y, weight_acc)
-        return agents, fitness
+        # for multiple agents
+        else:
+            num_agents = agents.shape[0]
+            fitness = np.zeros(num_agents)
+            for id, agent in enumerate(agents):
+                fitness[id] = obj_function(agent, train_X, val_X, train_Y, val_Y, weight_acc)
 
-    # for multiple agents
-    else:
-        num_agents = agents.shape[0]
-        fitness = np.zeros(num_agents)
-        for id, agent in enumerate(agents):
-            fitness[id] = obj_function(agent, train_X, val_X, train_Y, val_Y, weight_acc)
-        idx = np.argsort(-fitness)
-        sorted_agents = agents[idx].copy()
-        sorted_fitness = fitness[idx].copy()
+    idx = np.argsort(-fitness)
+    sorted_agents = agents[idx].copy()
+    sorted_fitness = fitness[idx].copy()
 
     return sorted_agents, sorted_fitness
 
@@ -121,5 +124,20 @@ def compute_fitness(agent, train_X, test_X, train_Y, test_Y, weight_acc=0.9):
     feat = (num_features - np.sum(agent))/num_features
 
     fitness = weight_acc * acc + weight_feat * feat
-    
     return fitness
+
+
+def Conv_plot(convergence_curve):
+    # plot convergence curves
+    num_iter = len(convergence_curve['fitness'])
+    iters = np.arange(num_iter) + 1
+    fig, axes = plt.subplots(1)
+    fig.tight_layout(pad = 5) 
+    fig.suptitle('Convergence Curves')
+    
+    axes.set_title('Convergence of Fitness over Iterations')
+    axes.set_xlabel('Iteration')
+    axes.set_ylabel('Avg. Fitness')
+    axes.plot(iters, convergence_curve['fitness'])
+
+    return fig, axes
