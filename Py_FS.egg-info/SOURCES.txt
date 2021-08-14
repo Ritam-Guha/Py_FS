@@ -16,6 +16,8 @@ Py_FS.egg-info/dependency_links.txt
 Py_FS.egg-info/top_level.txt
 Py_FS/__pycache__/__init__.cpython-38.pyc
 Py_FS/__pycache__/evaluation.cpython-38.pyc
+Py_FS/datasets/__init__.py
+Py_FS/datasets/get_dataset.py
 Py_FS/evaluation/__init__.py
 Py_FS/evaluation/_utilities.py
 Py_FS/evaluation/evaluate.py
@@ -50,6 +52,7 @@ Py_FS/wrapper/nature_inspired/PSO.py
 Py_FS/wrapper/nature_inspired/RDA.py
 Py_FS/wrapper/nature_inspired/SCA.py
 Py_FS/wrapper/nature_inspired/WOA.py
+Py_FS/wrapper/nature_inspired/WOA_test.py
 Py_FS/wrapper/nature_inspired/__init__.py
 Py_FS/wrapper/nature_inspired/_general_structure.py
 Py_FS/wrapper/nature_inspired/_transfer_functions.py
@@ -74,5 +77,3 @@ Py_FS/wrapper/nature_inspired/__pycache__/_transformation_functions.cpython-38.p
 Py_FS/wrapper/nature_inspired/__pycache__/_utilities.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/_utilities_test.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/algorithm.cpython-38.pyc
-dist/Py_FS-0.0.13-py3-none-any.whl
-dist/Py_FS-0.0.13.tar.gz

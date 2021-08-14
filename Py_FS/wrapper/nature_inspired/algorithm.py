@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
+from sklearn.preprocessing import LabelEncoder
+# from sklearn.preprocessing import OneHotEncoder
 
 from _utilities_test import Solution, Data, compute_accuracy, compute_fitness, initialize, sort_agents, display, call_counter
 
@@ -42,6 +44,7 @@ class Algorithm():
 
         # algorithm internal variables
         self.population = None
+        self.num_features = None
         self.fitness = None
         self.accuracy = None
         self.Leader_agent = None
@@ -67,6 +70,22 @@ class Algorithm():
     def next(self):
         pass
 
+    
+    def int_encoding(self, labels):
+        # converts the labels to one-hot-encoded vectors
+        labels_str = np.array([str(i) for i in labels])
+
+        # integer encode
+        label_encoder = LabelEncoder()
+        integer_encoded = label_encoder.fit_transform(labels_str)
+
+        # # binary encode
+        # onehot_encoder = OneHotEncoder(sparse=False)
+        # integer_encoded = integer_encoded.reshape(len(integer_encoded), 1)
+        # onehot_encoded = onehot_encoder.fit_transform(integer_encoded)
+        
+        return integer_encoded
+
 
     def initialize(self):
         # set the objective function
@@ -81,15 +100,16 @@ class Algorithm():
         # data preparation
         self.training_data = Data()
         self.train_data, self.train_label = np.array(self.train_data), np.array(self.train_label)
+        self.train_label = self.int_encoding(self.train_label)
         self.training_data.train_X, self.training_data.val_X, self.training_data.train_Y, self.training_data.val_Y = train_test_split(self.train_data, self.train_label, stratify=self.train_label, test_size=self.val_size)
 
         # create initial population
-        num_features = self.train_data.shape[1]
-        self.population = initialize(num_agents=self.num_agents, num_features=num_features)
+        self.num_features = self.train_data.shape[1]
+        self.population = initialize(num_agents=self.num_agents, num_features=self.num_features)
         self.fitness = self.obj_function(self.population, self.training_data)
         self.population, self.fitness = sort_agents(agents=self.population, fitness=self.fitness)
         self.accuracy = compute_accuracy(agents=self.population, data=self.training_data)
-
+        self.Leader_agent, self.Leader_fitness = self.population[0], self.fitness[0]
 
     def check_end(self):
         # checks if the algorithm has met the end criterion
@@ -130,6 +150,7 @@ class Algorithm():
     
     def post_processing(self):
         # post processing steps
+        self.fitness = self.obj_function(self.population, self.training_data)
         self.population, self.fitness = sort_agents(agents=self.population, fitness=self.fitness)
         self.accuracy = compute_accuracy(agents=self.population, data=self.training_data)
         
@@ -174,6 +195,7 @@ class Algorithm():
         self.exec_time = self.end_time - self.start_time
 
         if self.test_data:          # if there is a test data, test the final solution on that 
+            self.test_label = self.int_encoding(self.test_label)
             temp_data = Data()
             temp_data.train_X = self.train_data
             temp_data.train_Y = self.train_label
@@ -188,6 +210,11 @@ class Algorithm():
 
         if(self.save_conv_graph):
             fig.savefig('convergence_curve_' + self.algo_name + '.jpg')
+
+        print('\n------------- Leader Agent ---------------')
+        print('Fitness: {}'.format(self.Leader_fitness))
+        print('Number of Features: {}'.format(int(np.sum(self.Leader_agent))))
+        print('----------------------------------------\n')
 
         return self.solution
 

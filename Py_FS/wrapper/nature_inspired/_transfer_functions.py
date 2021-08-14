@@ -6,12 +6,14 @@ def sigmoid(val):
     else:
         return 1/(1 + np.exp(-val))
 
+
 def v_func(val):
-    return val/(np.sqrt(1 + val*val))
+    return abs(val/(np.sqrt(1 + val*val)))
+
 
 def u_func(val):
     alpha, beta = 2, 1.5
-    return alpha * np.power(abs(val), beta)
+    return abs(alpha * np.power(abs(val), beta))
 
 
 def get_trans_function(shape):

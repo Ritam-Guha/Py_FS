@@ -35,7 +35,26 @@ class Data():
 
 def initialize(num_agents, num_features):  
     # create the population
-    return np.random.randint(2, size=(num_agents, num_features))
+  
+    # define min and max number of features
+    min_features = int(0.3 * num_features)
+    max_features = int(0.6 * num_features)
+
+    # initialize the agents with zeros
+    agents = np.zeros((num_agents, num_features))
+
+    # select random features for each agent
+    for agent_no in range(num_agents):
+
+        # find random indices
+        cur_count = np.random.randint(min_features, max_features)
+        temp_vec = np.random.rand(1, num_features)
+        temp_idx = np.argsort(temp_vec)[0][0:cur_count]
+
+        # select the features with the ranom indices
+        agents[agent_no][temp_idx] = 1   
+
+    return agents
 
 
 
@@ -66,6 +85,10 @@ def display(agents, fitness, agent_name='Agent'):
 
 def compute_accuracy(agents, data): 
     # compute classification accuracy of the given agents
+    if len(agents.shape) == 1:
+        # handles with zero-rank arrays
+        agents = np.array([agents])
+
     (num_agents, num_features) = agents.shape
     acc = np.zeros(num_agents)   
     clf = KNN()
@@ -88,6 +111,11 @@ def compute_accuracy(agents, data):
 def compute_fitness(weight_acc):
     def _compute_fitness(agents, data):
         # compute a basic fitness measure
+        
+        if len(agents.shape) == 1:
+        # handles with zero-rank arrays
+            agents = np.array([agents])
+
         weight_feat = 1 - weight_acc
         (num_agents, num_features) = agents.shape
         fitness = np.zeros(num_agents)

@@ -10,19 +10,23 @@ from Py_FS.wrapper.nature_inspired.PSO import PSO
 from Py_FS.wrapper.nature_inspired.RDA import RDA
 from Py_FS.wrapper.nature_inspired.SCA import SCA
 from Py_FS.wrapper.nature_inspired.WOA import WOA
+import os,sys
 
+#  set the directory path
+dir_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, dir_path)
 
 __all__ = [
-    'BBA',
-    'CS',
-    'EO',
-    'GA',
-    'GSA',
-    'GWO',
-    'HS',
-    'MA',
-    'PSO',
-    'RDA',
-    'SCA',
-    'WOA'
+    "BBA",
+    "CS",
+    "EO",
+    "GA",
+    "GSA",
+    "GWO",
+    "HS",
+    "MA",
+    "PSO",
+    "RDA",
+    "SCA",
+    "WOA"
 ]
