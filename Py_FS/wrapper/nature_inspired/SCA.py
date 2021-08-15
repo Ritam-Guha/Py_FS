@@ -5,7 +5,6 @@ This code has been developed according to the procedures mentioned in the follow
 "Mirjalili, S. (2016). Sine Cosine Algorithm.
 Knowledge Based Systems, 96, 120-133."
 """
-
 import numpy as np
 import time
 import matplotlib.pyplot as plt
@@ -13,10 +12,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
-from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
-# from _utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
-# from _transfer_functions import get_trans_function
+from wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, Conv_plot
+from wrapper.nature_inspired._transfer_functions import get_trans_function
 
 
 

@@ -4,12 +4,10 @@ Programmer:
 Date of Development: 
 
 """
-
 import numpy as np
 from sklearn import datasets
 
-# from Py_FS.filter._utilities import normalize, Result
-from _utilities import normalize, Result
+from filter._utilities import normalize, Result
 
 def Name_of_the_filter(data, target):
     # function that assigns scores to features according to 'write the name of your filter method'

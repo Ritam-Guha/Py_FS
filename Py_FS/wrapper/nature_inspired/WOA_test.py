@@ -9,9 +9,8 @@ Applied Soft Computing, 62, 441-453."
 """
 
 import numpy as np
-from algorithm import Algorithm
-from _utilities_test import compute_fitness, sort_agents, compute_accuracy
-from _transfer_functions import get_trans_function
+from wrapper.nature_inspired.algorithm import Algorithm
+from wrapper.nature_inspired._transfer_functions import get_trans_function
 from sklearn import datasets
 
 class WOA(Algorithm):
@@ -108,7 +107,6 @@ class WOA(Algorithm):
 ############# for testing purpose ################
 
 if __name__ == '__main__':
-    import os, sys
     data = datasets.load_digits()
     algo = WOA(num_agents=20, max_iter=100, train_data=data.data, train_label=data.target, save_conv_graph=True)
     algo.run()

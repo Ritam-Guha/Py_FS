@@ -1,44 +1,49 @@
 import pandas as pd
 import numpy as np
-import os, glob, sys
+import glob, os
 from tabulate import tabulate
+import pkg_resources
+import sys
 
 class Data():
+    #  structure for the data
     def __init__(self):
         self.data = None
         self.target = None
 
-orig_filepaths = list(glob.iglob('Py_FS/datasets/database/*/*', recursive=True))
-list_datasets = [os.path.splitext(os.path.basename(filename))[0] for filename in orig_filepaths]
-list_subtypes = [os.path.basename(os.path.dirname(filename)) for filename in orig_filepaths]
-
 def get_dataset(dataset_name):
+    # function to retrieve the data
+    dir_name = os.path.dirname(os.path.abspath(__file__))
+    data_paths = pkg_resources.resource_listdir('Py_FS.datasets','database')
+    list_datasets = [os.path.splitext(os.path.basename(filename))[0] for filename in data_paths]
+
     if dataset_name not in list_datasets:
         print(f"[!Error] Py_FS currently does not have {dataset_name} in its database....")
         display = input("Enter 1 to see the available datasets: ") or 0
         if display:
-            display_datasets()
+            display_datasets(list_datasets)
+
+        sys.exit(1)
 
     else:
         data = Data()
-        index = list_datasets.index(dataset_name)
-        file_name = orig_filepaths[index]
-        df = pd.read_csv(file_name, header=None)
+        stream = pkg_resources.resource_stream(__name__, 'database/' + dataset_name + '.csv')
+        df = pd.read_csv(stream, header=None)
         data.data = np.array(df.iloc[:, 0:-1])
         data.target = np.array(df.iloc[:, -1])
 
-        print(data.data.shape)
-        print(data.target.shape)
+        return data
 
 
-def display_datasets():
+def display_datasets(list_datasets):
+    # inner function to display the available dataset
     print("\n=========== Available Datasets ===========\n")
     table_list = []
 
     for i, dataset in enumerate(list_datasets):
-        table_list.append([i+1, list_datasets[i], list_subtypes[i]])
+        table_list.append([i+1, list_datasets[i]])
 
-    print(tabulate(table_list, headers=["Index", "Dataset", "Subtype"]))
+    print(tabulate(table_list, headers=["Index", "Dataset"]))
 
 if __name__ == '__main__':
     get_dataset('Vow')

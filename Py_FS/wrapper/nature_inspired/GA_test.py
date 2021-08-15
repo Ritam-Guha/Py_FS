@@ -4,10 +4,8 @@ Programmer: Ritam Guha
 Date of Development: 6/10/2020
 
 """
-
 import numpy as np
-from algorithm import Algorithm
-from _utilities_test import compute_fitness, sort_agents, compute_accuracy
+from wrapper.nature_inspired.algorithm import Algorithm
 from sklearn import datasets
 
 class GA(Algorithm):

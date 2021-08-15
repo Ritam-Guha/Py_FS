@@ -1,6 +1,6 @@
 import setuptools
 
-version = '0.0.15'
+version = '0.0.39'
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -20,4 +20,6 @@ setuptools.setup(
          "License :: OSI Approved :: MIT License",
          "Operating System :: OS Independent",
      ],
+     include_package_data=True,
+      package_data={'': ['datasets/database/*.csv']},
  )

@@ -4,10 +4,8 @@ Programmer: Ritam Guha
 Date of Development: 28/10/2020
 
 """
-
 import numpy as np
-from Py_FS.filter._utilities import normalize, Result
-# _utilities import normalize, Result
+from filter._utilities import normalize, Result
 from sklearn import datasets
 
 def PCC(data, target):
@@ -56,11 +54,13 @@ def compute_PCC(x, y):
     mean_y = np.mean(y)
     numerator = np.sum((x - mean_x) * (y - mean_y))
     denominator = np.sqrt(np.sum(np.square(x - mean_x)) * np.sum(np.square(y - mean_y)))
+    if denominator == 0:
+        return 0
     PCC_val = numerator/denominator
 
     return PCC_val
 
 
 if __name__ == '__main__':
-    data = datasets.load_iris()
+    data = datasets.load_digits()
     PCC(data.data, data.target)

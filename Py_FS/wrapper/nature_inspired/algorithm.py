@@ -7,9 +7,8 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 from sklearn.preprocessing import LabelEncoder
-# from sklearn.preprocessing import OneHotEncoder
 
-from _utilities_test import Solution, Data, compute_accuracy, compute_fitness, initialize, sort_agents, display, call_counter
+from wrapper.nature_inspired._utilities_test import Solution, Data, compute_accuracy, compute_fitness, initialize, sort_agents, display, call_counter
 
 
 class Algorithm():

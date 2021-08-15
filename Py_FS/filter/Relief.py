@@ -4,11 +4,9 @@ Programmer: Ritam Guha
 Date of Development: 28/10/2020
 
 """
-
 from ReliefF import ReliefF
 import numpy as np
-from Py_FS.filter._utilities import normalize, Result
-# _utilities import normalize, Result
+from filter._utilities import normalize, Result
 from sklearn import datasets
 
 def Relief(data, target):
