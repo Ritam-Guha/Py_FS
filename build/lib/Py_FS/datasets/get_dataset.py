@@ -15,6 +15,7 @@ def get_dataset(dataset_name):
     # function to retrieve the data
     dir_name = os.path.dirname(os.path.abspath(__file__))
     data_paths = pkg_resources.resource_listdir('Py_FS.datasets','database')
+    data_paths = [path for path in data_paths if '.csv'in path]
     list_datasets = [os.path.splitext(os.path.basename(filename))[0] for filename in data_paths]
 
     if dataset_name not in list_datasets:
