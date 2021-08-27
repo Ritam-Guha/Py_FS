@@ -138,7 +138,7 @@ class MA(Algorithm):
         
         return (m_vel, f_vel)
 
-    def cross_mut(self,m_pos, f_pos):
+    def cross_mut(self,m_pos, f_pos,prob_mut):
         tot_features = len(m_pos)
         offspring1 = np.zeros((tot_features))
         offspring2 = np.zeros((tot_features))
@@ -157,15 +157,16 @@ class MA(Algorithm):
 
 
         # starting mutation
-        percent = 0.2
-        numChange = int(tot_features*percent)
-        pos = np.random.randint(0,tot_features-1,numChange)
-        
-        for j in pos:
-            offspring1[j] = 1-offspring1[j]
-        pos=np.random.randint(0,tot_features-1,numChange)
-        for j in pos:
-            offspring2[j] = 1-offspring2[j]
+        if np.random.random() <= prob_mut:
+            percent = 0.2
+            numChange = int(tot_features*percent)
+            pos = np.random.randint(0,tot_features-1,numChange)
+            
+            for j in pos:
+                offspring1[j] = 1-offspring1[j]
+            pos=np.random.randint(0,tot_features-1,numChange)
+            for j in pos:
+                offspring2[j] = 1-offspring2[j]
 
         # mutation ended
         
@@ -242,7 +243,7 @@ class MA(Algorithm):
         for agent in range(self.num_agents):
             
             #generation of offsprings by crossover and mutation between male and female parent mayflies
-            self.male_offspring[agent], self.female_offspring[agent] = self.cross_mut(self.male_pos[agent], self.female_pos[agent])
+            self.male_offspring[agent], self.female_offspring[agent] = self.cross_mut(self.male_pos[agent], self.female_pos[agent],self.algo_params['prob_mut'])
             
         #comparing parents and offsprings and replacing parents wherever necessary
         self.male_pos = self.compare_and_replace(self.male_pos, self.male_offspring, self.male_fitness)

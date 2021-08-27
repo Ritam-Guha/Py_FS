@@ -142,7 +142,7 @@ def MA(num_agents, max_iter, train_data, train_label, obj_function=compute_fitne
         for agent in range(num_agents):
             
             #generation of offsprings by crossover and mutation between male and female parent mayflies
-            male_offspring[agent], female_offspring[agent] = cross_mut(male_pos[agent], female_pos[agent])
+            male_offspring[agent], female_offspring[agent] = cross_mut(male_pos[agent], female_pos[agent],prob_mut)
             
         #comparing parents and offsprings and replacing parents wherever necessary
         male_pos = compare_and_replace(male_pos, male_offspring, male_fitness, data, obj)
@@ -252,7 +252,7 @@ def check_velocity_limits(m_vel, f_vel, vmax_m, vmax_f):
     
     return (m_vel, f_vel)
 
-def cross_mut(m_pos, f_pos):
+def cross_mut(m_pos, f_pos,prob_mut):
     tot_features = len(m_pos)
     offspring1 = np.zeros((tot_features))
     offspring2 = np.zeros((tot_features))
@@ -271,15 +271,16 @@ def cross_mut(m_pos, f_pos):
 
 
     # starting mutation
-    percent = 0.2
-    numChange = int(tot_features*percent)
-    pos = np.random.randint(0,tot_features-1,numChange)
-    
-    for j in pos:
-        offspring1[j] = 1-offspring1[j]
-    pos=np.random.randint(0,tot_features-1,numChange)
-    for j in pos:
-        offspring2[j] = 1-offspring2[j]
+    if np.random.random() <= prob_mut:
+        percent = 0.2
+        numChange = int(tot_features*percent)
+        pos = np.random.randint(0,tot_features-1,numChange)
+        
+        for j in pos:
+            offspring1[j] = 1-offspring1[j]
+        pos=np.random.randint(0,tot_features-1,numChange)
+        for j in pos:
+            offspring2[j] = 1-offspring2[j]
 
     # mutation ended
     
