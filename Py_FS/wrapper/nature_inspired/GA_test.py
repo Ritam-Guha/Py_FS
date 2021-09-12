@@ -5,7 +5,7 @@ Date of Development: 6/10/2020
 
 """
 import numpy as np
-from wrapper.nature_inspired.algorithm import Algorithm
+from Py_FS.wrapper.nature_inspired.algorithm import Algorithm
 from sklearn import datasets
 
 class GA(Algorithm):

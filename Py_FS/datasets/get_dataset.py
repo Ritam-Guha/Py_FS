@@ -32,6 +32,7 @@ def get_dataset(dataset_name):
         df = pd.read_csv(stream, header=None)
         data.data = np.array(df.iloc[:, 0:-1])
         data.target = np.array(df.iloc[:, -1])
+        print("Requested dataset found and loaded...")
 
         return data
 
@@ -47,4 +48,5 @@ def display_datasets(list_datasets):
     print(tabulate(table_list, headers=["Index", "Dataset"]))
 
 if __name__ == '__main__':
-    get_dataset('Vow')
+    data = get_dataset('Vowel')
+    

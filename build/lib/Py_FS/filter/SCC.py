@@ -5,7 +5,7 @@ Date of Development: 28/10/2020
 
 """
 import numpy as np
-from filter._utilities import normalize, Result
+from Py_FS.filter._utilities import normalize, Result
 from sklearn import datasets
 
 def SCC(data, target):

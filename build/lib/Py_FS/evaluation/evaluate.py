@@ -1,7 +1,7 @@
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
 
-from evaluation._utilities import Metric
+from Py_FS.evaluation._utilities import Metric
 
 import numpy as np
 
