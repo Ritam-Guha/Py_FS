@@ -41,16 +41,21 @@ class GA(Algorithm):
 
         self.algo_name = 'GA'
         self.agent_name = 'Chromosome'
-        self.algo_params = {}
-
 
     def user_input(self):
-        # accept the parameters as user inputs
-        self.algo_params['prob_cross'] = float(input('Probability of crossover [0-1]: ') or 0.7)
-        self.algo_params['prob_mut'] = float(input('Probability of mutation [0-1]: ') or 0.3)
-        self.algo_params['cross_limit'] = float(input('Max crossover in every Generation [5-10]: ') or 5)
-        
+        # first set the default values for the attributes
+        self.default_vals["prob_cross"] = 0.7
+        self.default_vals["prob_mut"] = 0.3
+        self.default_vals["cross_limit"] = 5
 
+        # accept the parameters as user inputs (if default_mode not set)
+        if self.default_mode:
+            self.set_default()
+        else:
+            self.algo_params['prob_cross'] = float(input(f'Probability of crossover [0-1] (default={self.default_vals["prob_cross"]}): ') or self.default_vals["prob_cross"])
+            self.algo_params['prob_mut'] = float(input(f'Probability of mutation [0-1] (default={self.default_vals["prob_mut"]}): ') or self.default_vals["prob_mut"])
+            self.algo_params['cross_limit'] = float(input(f'Max crossover in every Generation [5-10] (default={self.default_vals["cross_limit"]}): ') or self.default_vals["cross_limit"])
+        
     def crossover(self, parent_1, parent_2):
         # perform crossover with crossover probability prob_cross
         num_features = parent_1.shape[0]
@@ -64,7 +69,6 @@ class GA(Algorithm):
 
         return child_1, child_2
 
-
     def mutation(self, chromosome):
         # perform mutation with mutation probability prob_mut
         num_features = chromosome.shape[0]
@@ -76,13 +80,11 @@ class GA(Algorithm):
         
         return mut_chromosome
 
-
     def roulette_wheel(self, fitness):
         # perform roulette wheel selection
         maximum = sum([f for f in fitness])
         selection_probs = [f/maximum for f in fitness]
         return np.random.choice(len(fitness), p=selection_probs)
-
 
     def cross_mut(self):
         # perform crossover, mutation and replacement
@@ -117,7 +119,6 @@ class GA(Algorithm):
                 print('Crossover failed....')
                 print('Restarting crossover....\n')
 
-    
     def next(self):
         print('\n================================================================================')
         print('                          Iteration - {}'.format(self.cur_iter+1))
@@ -127,7 +128,6 @@ class GA(Algorithm):
         self.cross_mut()
 
         self.cur_iter += 1
-
 
 
 ############# for testing purpose ################

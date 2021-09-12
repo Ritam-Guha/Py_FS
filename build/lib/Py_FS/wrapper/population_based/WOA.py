@@ -8,9 +8,18 @@ Applied Soft Computing, 62, 441-453."
 
 """
 
+# set the directory path
+import os,sys
+import os.path as path
+abs_path_pkg =  path.abspath(path.join(__file__ ,"../../../../"))
+dir_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, abs_path_pkg)
+
+# import other libraries
 import numpy as np
-from Py_FS.wrapper.nature_inspired.algorithm import Algorithm
-from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
+from Py_FS.wrapper.population_based.algorithm import Algorithm
+from Py_FS.wrapper.population_based._transfer_functions import get_trans_function
+from Py_FS.datasets import get_dataset
 from sklearn import datasets
 
 class WOA(Algorithm):
@@ -34,26 +43,34 @@ class WOA(Algorithm):
                 train_data, 
                 train_label, 
                 save_conv_graph=False, 
-                seed=0):
+                seed=0,
+                default_mode=False,
+                verbose=True):
 
         super().__init__( num_agents=num_agents,
                         max_iter=max_iter,
                         train_data=train_data,
                         train_label=train_label,
                         save_conv_graph=save_conv_graph,
-                        seed=seed )
+                        seed=seed,
+                        default_mode=default_mode,
+                        verbose=verbose )
 
         self.algo_name = 'WOA'
         self.agent_name = 'Whale'
         self.trans_function = None
-        self.algo_params = {}
-
     
     def user_input(self):
-        # accept the parameters as user inputs
-        self.algo_params['trans_function'] = input('Shape of Transfer Function [s/v/u]: ') or 's'
-        self.trans_function = get_trans_function(self.algo_params['trans_function'])
+        # first set the default values for the attributes
+        self.default_vals["trans_function"] = 's'
 
+        # accept the parameters as user inputs (if default_mode not set)
+        if self.default_mode:
+            self.set_default()
+        else:
+            self.algo_params['trans_function'] = input('Shape of Transfer Function [s/v/u] (default=s): ') or 's'
+        
+        self.trans_function = get_trans_function(self.algo_params['trans_function'])
     
     def forage(self):
         a = 2 - self.cur_iter * (2/self.max_iter)  # a decreases linearly fron 2 to 0
@@ -92,12 +109,10 @@ class WOA(Algorithm):
                 else:
                     self.population[i, j] = 0
 
-
-    # main loop
     def next(self):
-        print('\n================================================================================')
-        print('                          Iteration - {}'.format(self.cur_iter+1))
-        print('================================================================================\n')
+        self.print('\n================================================================================')
+        self.print('                          Iteration - {}'.format(self.cur_iter+1))
+        self.print('================================================================================\n')
 
         # perform bubble-net foraging actions
         self.forage()
@@ -107,7 +122,7 @@ class WOA(Algorithm):
 ############# for testing purpose ################
 
 if __name__ == '__main__':
-    data = datasets.load_digits()
+    data = get_dataset("BreastCancer")
     algo = WOA(num_agents=20, max_iter=100, train_data=data.data, train_label=data.target, save_conv_graph=True)
     algo.run()
 ############# for testing purpose ################

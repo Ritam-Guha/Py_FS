@@ -1,3 +1,11 @@
+# set the directory path
+import os,sys
+import os.path as path
+abs_path_pkg =  path.abspath(path.join(__file__ ,"../../../../"))
+dir_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, abs_path_pkg)
+
+# import other libraries
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier as KNN
 import matplotlib.pyplot as plt
@@ -33,9 +41,10 @@ class Data():
 
 
 
-def initialize(num_agents, num_features):  
+def initialize(num_agents, num_features, seed=0):  
     # create the population
-  
+    np.random.seed(seed)
+    
     # define min and max number of features
     min_features = int(0.3 * num_features)
     max_features = int(0.6 * num_features)

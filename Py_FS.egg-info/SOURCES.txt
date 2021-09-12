@@ -76,6 +76,7 @@ Py_FS/wrapper/__init__.py
 Py_FS/wrapper/__pycache__/__init__.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/BBA.py
 Py_FS/wrapper/nature_inspired/CS.py
+Py_FS/wrapper/nature_inspired/CS_test.py
 Py_FS/wrapper/nature_inspired/EO.py
 Py_FS/wrapper/nature_inspired/GA.py
 Py_FS/wrapper/nature_inspired/GA_test.py
@@ -83,6 +84,7 @@ Py_FS/wrapper/nature_inspired/GSA.py
 Py_FS/wrapper/nature_inspired/GWO.py
 Py_FS/wrapper/nature_inspired/HS.py
 Py_FS/wrapper/nature_inspired/MA.py
+Py_FS/wrapper/nature_inspired/MA_test.py
 Py_FS/wrapper/nature_inspired/PSO.py
 Py_FS/wrapper/nature_inspired/RDA.py
 Py_FS/wrapper/nature_inspired/SCA.py
@@ -112,10 +114,15 @@ Py_FS/wrapper/nature_inspired/__pycache__/_transformation_functions.cpython-38.p
 Py_FS/wrapper/nature_inspired/__pycache__/_utilities.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/_utilities_test.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/algorithm.cpython-38.pyc
+Py_FS/wrapper/population_based/CS.py
 Py_FS/wrapper/population_based/GA.py
+Py_FS/wrapper/population_based/MA.py
 Py_FS/wrapper/population_based/WOA.py
 Py_FS/wrapper/population_based/__init__.py
 Py_FS/wrapper/population_based/_general_structure.py
+Py_FS/wrapper/population_based/_test.py
+Py_FS/wrapper/population_based/_transfer_functions.py
 Py_FS/wrapper/population_based/_utilities.py
 Py_FS/wrapper/population_based/algorithm.py
+Py_FS/wrapper/population_based/get_algorithm.py
 Py_FS/wrapper/single_solution_based/__init__.py

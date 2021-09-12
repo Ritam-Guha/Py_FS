@@ -8,14 +8,14 @@ December 2009, India. IEEE Publications, USA, pp. 210-214 (2009).
 
 """
 import numpy as np
-import time
 
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
+
 from Py_FS.datasets import get_dataset
-from wrapper.nature_inspired.algorithm import Algorithm
-from wrapper.nature_inspired._utilities_test import compute_accuracy, compute_fitness, initialize, sort_agents
-from wrapper.nature_inspired._transfer_functions import get_trans_function
+from Py_FS.wrapper.nature_inspired.algorithm import Algorithm
+from Py_FS.wrapper.nature_inspired._utilities_test import compute_accuracy, compute_fitness, initialize, sort_agents
+from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
 
 class CS(Algorithm):
     
@@ -32,20 +32,39 @@ class CS(Algorithm):
     #                                                                             #
     ###############################################################################
     
-    def __init__(self,num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s',  save_conv_graph=False, seed=0):
-        super().__init__(num_agents=num_agents,max_iter=max_iter,train_data=train_data,train_label=train_label,save_conv_graph=save_conv_graph,seed=seed)
+    def __init__(self,
+                num_agents, 
+                max_iter, 
+                train_data, 
+                train_label, 
+                save_conv_graph=False, 
+                seed=0):
+
+        super().__init__(num_agents=num_agents,
+                        max_iter=max_iter,
+                        train_data=train_data,
+                        train_label=train_label,
+                        save_conv_graph=save_conv_graph,
+                        seed=seed)
+
         self.algo_name='CS'
         self.agent_name='Cuckoo'
         self.trans_function=None
-        self.algo_params={}
         
     def user_input(self):
-        self.algo_params['trans_function'] = input('Shape of Transfer Function [s/v/u]: ') or 's'
-        self.trans_function = get_trans_function(self.algo_params['trans_function'])
-        self.algo_params['p_a'] = float(input('Fraction of nests to be replaced (0-1] (Optimal=0.25): ') or 0.25)
+        # first set the default values for the attributes
+        self.default_vals["trans_function"] = 's'
+        self.default_vals["p_a"] = 0.25
+
+        # accept the parameters as user inputs (if default_mode not set)
+        if self.default_mode:
+            self.set_default()
+        else:    
+            self.algo_params['trans_function'] = input(f'Shape of Transfer Function [s/v/u] (default={self.default_vals["trans_function"]}): ') or self.default_vals["trans_function"]
+            self.algo_params['p_a'] = float(input(f'Fraction of nests to be replaced (0-1] (default={self.default_vals["p_a"]}): ') or self.default_vals["p_a"])
+            self.trans_function = get_trans_function(self.algo_params['trans_function'])
         
     def initialize(self):
-        
         #call the base class function
         super().initialize()
         
@@ -79,7 +98,6 @@ class CS(Algorithm):
         return agent
         
     def next(self):
-    
         print('\n================================================================================')
         print('                          Iteration - {}'.format(self.cur_iter+1))
         print('================================================================================\n')
@@ -106,6 +124,7 @@ class CS(Algorithm):
         self.population = self.replace_worst(self.population, self.algo_params['p_a'])
         
         self.cur_iter += 1
+        
         
 if __name__ == '__main__':
     data = datasets.load_digits()

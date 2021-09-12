@@ -2,7 +2,7 @@
 Programmer: Trinav Bhattacharyya
 Date of Development: 18/10/2020
 This code has been developed according to the procedures mentioned in the following research article:
-X.-S. Yang, S. Deb, “Cuckoo search via L´evy flights”, in: Proc. of
+X.-S. Yang, S. Deb, “Cuckoo search via Levy flights”, in: Proc. of
 World Congress on Nature & Biologically Inspired Computing (NaBIC 2009),
 December 2009, India. IEEE Publications, USA, pp. 210-214 (2009).
 
@@ -74,6 +74,7 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
 
     # rank initial nests
     nest, fitness = sort_agents(nest, obj, data)
+    cuckoo,cuckoo_fitness = sort_agents(cuckoo,obj,data)
 
     # start timer
     start_time = time.time()
@@ -96,7 +97,8 @@ def CS (num_agents, max_iter, train_data, train_label, obj_function=compute_fitn
                 cuckoo[j]=1
             else:
                 cuckoo[j]=0
-
+        cuckoo,cuckoo_fitness = sort_agents(cuckoo,obj,data)
+        
         # check if a nest needs to be replaced
         j = np.random.randint(0,num_agents)
         if cuckoo_fitness > fitness[j]:

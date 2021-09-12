@@ -46,14 +46,17 @@ class WOA(Algorithm):
         self.algo_name = 'WOA'
         self.agent_name = 'Whale'
         self.trans_function = None
-        self.algo_params = {}
-
     
     def user_input(self):
-        # accept the parameters as user inputs
-        self.algo_params['trans_function'] = input('Shape of Transfer Function [s/v/u]: ') or 's'
-        self.trans_function = get_trans_function(self.algo_params['trans_function'])
+        # first set the default values for the attributes
+        self.default_vals["trans_function"] = 's'
 
+        # accept the parameters as user inputs (if default_mode not set)
+        if self.default_mode:
+            self.set_default()
+        else:
+            self.algo_params['trans_function'] = input('Shape of Transfer Function [s/v/u] (default=s): ') or 's'
+            self.trans_function = get_trans_function(self.algo_params['trans_function'])
     
     def forage(self):
         a = 2 - self.cur_iter * (2/self.max_iter)  # a decreases linearly fron 2 to 0
@@ -92,8 +95,6 @@ class WOA(Algorithm):
                 else:
                     self.population[i, j] = 0
 
-
-    # main loop
     def next(self):
         print('\n================================================================================')
         print('                          Iteration - {}'.format(self.cur_iter+1))

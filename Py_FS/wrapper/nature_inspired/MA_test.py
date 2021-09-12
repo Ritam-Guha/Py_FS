@@ -8,14 +8,14 @@ Industrial Engineering (2020)
 
 """
 import numpy as np
-import time
 
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
+
 from Py_FS.datasets import get_dataset
-from wrapper.nature_inspired.algorithm import Algorithm
-from wrapper.nature_inspired._utilities_test import compute_accuracy, compute_fitness, initialize, sort_agents
-from wrapper.nature_inspired._transfer_functions import get_trans_function
+from Py_FS.wrapper.nature_inspired.algorithm import Algorithm
+from Py_FS.wrapper.nature_inspired._utilities_test import compute_accuracy, compute_fitness, initialize, sort_agents
+from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
 
 class MA(Algorithm):
 
@@ -32,27 +32,53 @@ class MA(Algorithm):
     #                                                                             #
     ###############################################################################
     
-    def __init__(self,num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_function_shape='s',  prob_mut=0.2,  save_conv_graph=False, seed=0):
-        super().__init__(num_agents=num_agents,max_iter=max_iter,train_data=train_data,train_label=train_label,save_conv_graph=save_conv_graph,seed=seed)
+    def __init__(self,
+                num_agents, 
+                max_iter, 
+                train_data, 
+                train_label, 
+                save_conv_graph=False, 
+                seed=0):
+
+        super().__init__(num_agents=num_agents,
+                        max_iter=max_iter,
+                        train_data=train_data,
+                        train_label=train_label,
+                        save_conv_graph=save_conv_graph,
+                        seed=seed)
+
         self.algo_name='MA'
         self.agent_name='Mayfly'
         self.trans_function=None
-        self.algo_params={}
         
     def user_input(self):
-        self.algo_params['prob_mut'] = float(input('Probability of mutation [0-1]: ') or 0.3)
-        self.algo_params['trans_function'] = input('Shape of Transfer Function [s/v/u]: ') or 's'
-        self.algo_params['a1'] = float(input('Value of first attractive constant [1-3] (Optimal=1):') or 1)
-        self.algo_params['a2'] = float(input('Value of second attractive constant [1-3] (Optimal=1.5):') or 1.5)
-        self.algo_params['d'] = float(input('Value of nuptial dance coefficient [0-1] (Optimal=0.1):') or 0.1)
-        self.algo_params['fl'] = float(input('Value of random walk coefficient [0-1] (Optimal=0.1):') or 0.1)
-        self.algo_params['g'] = float(input('Value of gravity constant (0-1] (Optimal=0.8):') or 0.8)
-        self.algo_params['beta'] = float(input('Value of visibility coefficient [1-3] (Optimal=2):') or 2)
-        self.algo_params['delta'] = float(input('Value of delta [0-1] (Optimal=0.9):') or 0.9)
-        self.trans_function = get_trans_function(self.algo_params['trans_function'])
+        # first set the default values for the attributes
+        self.default_vals["prob_mut"] = 0.3
+        self.default_vals["trans_function"] = 's'
+        self.default_vals["a1"] = 1
+        self.default_vals["a2"] = 1.5
+        self.default_vals["d"] = 0.1
+        self.default_vals["fl"] = 0.1
+        self.default_vals["g"] = 0.8
+        self.default_vals["beta"] = 2
+        self.default_vals["delta"] = 0.9
+
+        # accept the parameters as user inputs (if default_mode not set)
+        if self.default_mode:
+            self.set_default()
+        else:
+            self.algo_params['prob_mut'] = float(input(f'Probability of mutation [0-1] (default={self.default_vals["prob_mut"]}): ') or self.default_vals["prob_mut"])
+            self.algo_params['trans_function'] = input(f'Shape of Transfer Function [s/v/u] (default={self.default_vals["trans_function"]}): ') or self.default_vals["trans_function"]
+            self.algo_params['a1'] = float(input(f'Value of first attractive constant [1-3] (default={self.default_vals["a1"]}): ') or self.default_vals["a1"])
+            self.algo_params['a2'] = float(input(f'Value of second attractive constant [1-3] (default={self.default_vals["a2"]}): ') or self.default_vals["a2"])
+            self.algo_params['d'] = float(input(f'Value of nuptial dance coefficient [0-1] (default={self.default_vals["d"]}): ') or self.default_vals["d"])
+            self.algo_params['fl'] = float(input(f'Value of random walk coefficient [0-1] (default={self.default_vals["fl"]}): ') or self.default_vals["fl"])
+            self.algo_params['g'] = float(input(f'Value of gravity constant (0-1] (default={self.default_vals["g"]}): ') or self.default_vals["g"])
+            self.algo_params['beta'] = float(input(f'Value of visibility coefficient [1-3] (default={self.default_vals["beta"]}): ') or self.default_vals["beta"])
+            self.algo_params['delta'] = float(input(f'Value of delta [0-1] (default={self.default_vals["delta"]}): ') or self.default_vals["delta"])
+            self.trans_function = get_trans_function(self.algo_params['trans_function'])
         
     def initialize(self):
-        
         #call the base class function
         super().initialize()
         
