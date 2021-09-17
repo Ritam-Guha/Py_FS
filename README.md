@@ -3,14 +3,13 @@ Py_FS is a toolbox developed with complete focus on Feature Selection (FS) using
 
 ## Please cite this paper if you are using Py_FS:
 Guha, R., Chatterjee, B., Khalid Hassan, S. K., Ahmed, S., Bhattacharyya, T., & Sarkar, R. (2022). Py_FS: A Python Package for Feature Selection using Meta-heuristic Optimization Algorithms. In Computational Intelligence in Pattern Recognition (pp. 495-504). Springer, Singapore.
-DOI: https://doi.org/10.1007/978-981-16-2543-5_42
+DOI: https://link.springer.com/chapter/10.1007/978-981-16-2543-5_42
 
 <p align="center">  
   <img src="https://raw.githubusercontent.com/Ritam-Guha/Py_FS/master/Images/logo.jpg" height="300" width="300">
 </p><br>
 
 ## Installation
-
 Please install the required utilities for the package by running this piece of code:
 
     pip3 install -r requirements.txt
@@ -19,6 +18,10 @@ The package is publicly avaliable at **PYPI: Python Package Index**.
 Anybody willing to use the package can install it by simply running:
     
     pip3 install Py-FS
+
+If you are using an older version of the package and want to update it, use:
+
+    pip3 install -U Py-FS
 
 ## Note
 

@@ -31,14 +31,14 @@ def PCC(data, target):
             PCC_mat[ind_1, ind_2] = PCC_mat[ind_2, ind_1] = compute_PCC(feature_values[:, ind_1], feature_values[:, ind_2])
 
     for ind in range(num_features):
-        PCC_values_feat[ind] = -np.sum(abs(PCC_mat[ind,:]))
+        PCC_values_feat[ind] = -np.sum(abs(PCC_mat[ind,:])) # -ve because we want to remove the corralation
         PCC_values_class[ind] = abs(compute_PCC(feature_values[:, ind], target))
 
     # produce scores and ranks from the information matrix
     PCC_values_feat = normalize(PCC_values_feat)
     PCC_values_class = normalize(PCC_values_class)
     PCC_scores = (weight_class * PCC_values_class) + (weight_feat * PCC_values_feat)
-    PCC_ranks = np.argsort(np.argsort(-PCC_scores))
+    PCC_ranks = np.argsort(np.argsort(-PCC_scores)) # ranks basically represents the rank of the original features
 
     # assign the results to the appropriate fields
     result.scores = PCC_scores
@@ -62,5 +62,6 @@ def compute_PCC(x, y):
 
 
 if __name__ == '__main__':
-    data = datasets.load_digits()
-    PCC(data.data, data.target)
+    from scipy.stats.stats import pearsonr
+    data = datasets.load_wine()
+    res = PCC(data.data, data.target)
