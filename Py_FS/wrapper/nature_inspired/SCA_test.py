@@ -37,18 +37,18 @@ class SCA(Algorithm):
 	def user_input(self):
         self.algo_params['trans_function'] = input('Shape of Transfer Function [s/v/u]: ') or 's'
         self.trans_function = get_trans_function(self.algo_params['trans_function'])
-		self.algo_params['a'] = float(input('Value of constant a: ') or 3)
+        self.algo_params['a'] = float(input('Value of constant a: ') or 3)
 	
 	def next(self):
 		
-		print('\n================================================================================')
+        print('\n================================================================================')
         print('                          Iteration - {}'.format(self.cur_iter+1))
         print('================================================================================\n')
 		
-		# Eq. (3.4)
+        # Eq. (3.4)
         r1 = self.algo_params['a'] * (1 - self.cur_iter / self.max_iter)  # r1 decreases linearly from a to 0
 		
-		# update the Position of search agents
+        # update the Position of search agents
         for i in range(self.num_agents):
             for j in range(self.num_features):
 
@@ -72,7 +72,7 @@ class SCA(Algorithm):
                     self.population[i, j] = 1
                 else:
                     self.population[i, j] = 0
-		
+                
         self.cur_iter += 1
 		
 if __name__ == '__main__':
