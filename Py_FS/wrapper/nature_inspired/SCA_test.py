@@ -73,7 +73,7 @@ class SCA(Algorithm):
                 else:
                     self.population[i, j] = 0
 		
-		self.cur_iter += 1
+        self.cur_iter += 1
 		
 if __name__ == '__main__':
     data = datasets.load_digits()
