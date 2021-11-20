@@ -1,11 +1,10 @@
 """
 
-Programmer: 
-Date of Development: 
-This code has been developed according to the procedures mentioned in the following research article:
-" "
+Programmer: Ritam Guha
+Date of Development: 6/10/2020
 
 """
+
 # set the directory path
 import os,sys
 import os.path as path
@@ -15,134 +14,85 @@ sys.path.insert(0, abs_path_pkg)
 
 # import other libraries
 import numpy as np
-import time
-import matplotlib.pyplot as plt
-
-from sklearn.model_selection import train_test_split
 from sklearn import datasets
+from sklearn.model_selection import train_test_split
 
-from Py_FS.wrapper.nature_inspired._utilities import Solution, Data, initialize, sort_agents, display, compute_fitness, compute_accuracy, Conv_plot
-from Py_FS.wrapper.nature_inspired._transfer_functions import get_trans_function
+from Py_FS.wrapper.population_based.algorithm import Algorithm
+from Py_FS.wrapper.population_based._utilities import Data, compute_fitness, initialize, sort_agents, compute_accuracy, call_counter
+from Py_FS.wrapper.population_based._transfer_functions import get_trans_function
 
-def Name_of_the_wrapper(num_agents, max_iter, train_data, train_label, obj_function=compute_fitness, trans_func_shape='s', save_conv_graph=False):
-    
-    # Name of the optimizer
+class NAME_OF_THE_ALGORITHM(Algorithm):
+    # Genetic Algorithm (GA)
     ############################### Parameters ####################################
     #                                                                             #
     #   num_agents: number of agents                                              #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
-    #   train_label: class labels for the training samples                        #                
-    #   obj_function: the function to maximize while doing feature selection      #
-    #   trans_function_shape: shape of the transfer function used                 #
-    #   save_conv_graph: boolean value for saving convergence graph               #
-    #                                                                             #
+    #   train_label: class labels for the training samples                        #
+    #   test_data (optional): test samples of data                                #
+    #   test_label (optional): class labels for the test samples                  #
+    #   save_conv_graph (optional): True to save conv graph, else False           #
+    #   seed (optional): seed for our random number generator                     #
+    #   default_mode (optional): True to use default values for every             #
+    #                            user input                                       #
+    #   verbose (optional): True to print simulation, else False                  #
     ###############################################################################
-    
-    short_name = ''
-    agent_name = ''
-    train_data, train_label = np.array(train_data), np.array(train_label)
-    num_features = train_data.shape[1]
-    trans_function = get_trans_function(trans_func_shape)
 
-    # setting up the objectives
-    weight_acc = None
-    if(obj_function==compute_fitness):
-        weight_acc = float(input('Weight for the classification accuracy [0-1]: '))
-    obj = (obj_function, weight_acc)
-    compute_accuracy = (compute_fitness, 1) # compute_accuracy is just compute_fitness with accuracy weight as 1
+    def __init__(self,
+                num_agents, 
+                max_iter, 
+                train_data, 
+                train_label, 
+                test_data=None,
+                test_label=None,
+                save_conv_graph=False, 
+                seed=0,
+                default_mode=False,
+                verbose=True):
 
-    # initialize agents and Leader (the agent with the max fitness)
-    agents = initialize(num_agents, num_features)
-    fitness = np.zeros(num_agents)
-    accuracy = np.zeros(num_agents)
-    Leader_agent = np.zeros((1, num_features))
-    Leader_fitness = float("-inf")
-    Leader_accuracy = float("-inf")
+        super().__init__(num_agents=num_agents,
+                        max_iter=max_iter,
+                        train_data=train_data,
+                        train_label=train_label,
+                        test_data=test_data,
+                        test_label=test_label,
+                        save_conv_graph=save_conv_graph,
+                        seed=seed,
+                        default_mode=default_mode,
+                        verbose=verbose)
 
-    # initialize convergence curves
-    convergence_curve = {}
-    convergence_curve['fitness'] = np.zeros(max_iter)
-    convergence_curve['feature_count'] = np.zeros(max_iter)
+        self.algo_name = ''
+        self.agent_name = ''
 
-    # format the data
-    data = Data()
-    data.train_X, data.val_X, data.train_Y, data.val_Y = train_test_split(
-        train_data, train_label, stratify=train_label, test_size=0.2)
+    def user_input(self):
+        # first set the default values for the attributes
+        self.default_vals["USER_INPUT"] = 0.3
 
-    # create a solution object
-    solution = Solution()
-    solution.num_agents = num_agents
-    solution.max_iter = max_iter
-    solution.num_features = num_features
-    solution.obj_function = obj_function
+        # accept the parameters as user inputs (if default_mode not set)
+        if self.default_mode:
+            self.set_default()
+        else:
+            self.algo_params['prob_cross'] = float(input(f'USER INPUT [RANGE OF THE INPUT] (default={self.default_vals["USER_INPUT"]}): ') or self.default_vals["USER_INPUT"])
 
-    # rank initial agents
-    agents, fitness = sort_agents(agents, obj, data)
+    def ALGORITHM_SPECIFIC_FUNCTIONS(self):
+        ##### define your algorithm specific functions #####
+            ### Like crossover, mutation for GA ###
+        ##### define your algorithm specific functions #####
+        pass
 
-    # start timer
-    start_time = time.time()
+    def next(self):
+        self.print('\n================================================================================')
+        self.print('                          Iteration - {}'.format(self.cur_iter+1))
+        self.print('================================================================================\n')
 
+        # CALL YOUR ALGO SPECIFIC OPERATIONS FOR EACH ITERATION
+        self.ALGORITHM_SPECIFIC_FUNCTIONS()
 
-    for iter_no in range(max_iter):
-        print('\n================================================================================')
-        print('                          Iteration - {}'.format(iter_no+1))
-        print('================================================================================\n')     
+        self.cur_iter += 1
 
-        ################ write your main position update code here ################
-
-
-
-        ###########################################################################
-
-        # update final information
-        agents, fitness = sort_agents(agents, obj, data)
-        display(agents, fitness, agent_name)
-        
-        # update Leader (best agent)
-        if fitness[0] > Leader_fitness:
-            Leader_agent = agents[0].copy()
-            Leader_fitness = fitness[0].copy()
-
-        convergence_curve['fitness'][iter_no] = Leader_fitness
-        convergence_curve['feature_count'][iter_no] = int(np.sum(Leader_agent))
-
-    # compute final accuracy
-    Leader_agent, Leader_accuracy = sort_agents(Leader_agent, compute_accuracy, data)
-    agents, accuracy = sort_agents(agents, compute_accuracy, data)
-
-    print('\n================================================================================')
-    print('                                    Final Result                                  ')
-    print('================================================================================\n')
-    print('Leader ' + agent_name + ' Dimension : {}'.format(int(np.sum(Leader_agent))))
-    print('Leader ' + agent_name + ' Fitness : {}'.format(Leader_fitness))
-    print('Leader ' + agent_name + ' Classification Accuracy : {}'.format(Leader_accuracy))
-    print('\n================================================================================\n')
-
-    # stop timer
-    end_time = time.time()
-    exec_time = end_time - start_time
-
-    # plot convergence graph
-    fig, axes = Conv_plot(convergence_curve)
-    if(save_conv_graph):
-        plt.savefig('convergence_graph_'+ short_name + '.jpg')
-    plt.show()
-
-    # update attributes of solution
-    solution.best_agent = Leader_agent
-    solution.best_fitness = Leader_fitness
-    solution.best_accuracy = Leader_accuracy
-    solution.convergence_curve = convergence_curve
-    solution.final_agents = agents
-    solution.final_fitness = fitness
-    solution.final_accuracy = accuracy
-    solution.execution_time = exec_time
-
-    return solution
-
-
+############# for testing purpose ################
 if __name__ == '__main__':
-
-    iris = datasets.load_iris()
-    Name_of_the_wrapper(10, 20, iris.data, iris.target, save_conv_graph=True)
+    data = datasets.load_digits()
+    algo = NAME_OF_THE_ALGORITHM(num_agents=20, max_iter=20, train_data=data.data, train_label=data.target, default_mode=True)
+    solution = algo.run()
+############# for testing purpose ################

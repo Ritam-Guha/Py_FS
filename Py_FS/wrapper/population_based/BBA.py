@@ -1,127 +1,107 @@
-# Programmer : Khalid Hassan
+"""
+Programmer: Khalid Hassan
+Date of Development: 20/10/2020
+This code has been developed according to the procedures mentioned in the following research article:
+Mirjalili, S., Mirjalili, S. M., & Yang, X. S. (2014). Binary bat algorithm. 
+Neural Computing and Applications, 25(3-4), 663-681.
 
-import random
-import time
+"""
+
+# set the directory path
+import os,sys
+import os.path as path
+abs_path_pkg =  path.abspath(path.join(__file__ ,"../../../../"))
+dir_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, abs_path_pkg)
+
+# import other libraries
 import numpy as np
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
 
-from Py_FS.wrapper.nature_inspired.algorithm import Algorithm
+from Py_FS.wrapper.population_based.algorithm import Algorithm
 from Py_FS.wrapper.population_based._utilities import Data, compute_fitness, initialize, sort_agents, compute_accuracy, call_counter
-
+from Py_FS.wrapper.population_based._transfer_functions import get_trans_function
 
 class BBA(Algorithm):
     # Binary Bat Algorithm (BBA)
     ############################### Parameters ####################################
     #                                                                             #
-    #   num_agents: number of bats                                                #
+    #   num_agents: number of agents                                              #
     #   max_iter: maximum number of generations                                   #
     #   train_data: training samples of data                                      #
     #   train_label: class labels for the training samples                        #
-    #   obj_function: the function to maximize while doing feature selection      #
-    #   trans_function_shape: shape of the transfer function used                 #
-    #   save_conv_graph: boolean value for saving convergence graph               #
-    #                                                                             #
+    #   test_data (optional): test samples of data                                #
+    #   test_label (optional): class labels for the test samples                  #
+    #   save_conv_graph (optional): True to save conv graph, else False           #
+    #   seed (optional): seed for our random number generator                     #
+    #   default_mode (optional): True to use default values for every             #
+    #                            user input                                       #
+    #   verbose (optional): True to print simulation, else False                  #
     ###############################################################################
 
     def __init__(self,
-                 num_agents,
-                 max_iter,
-                 train_data,
-                 train_label,
-                 save_conv_graph=False,
-                 seed=0):
+                num_agents, 
+                max_iter, 
+                train_data, 
+                train_label, 
+                test_data=None,
+                test_label=None,
+                save_conv_graph=False, 
+                seed=0,
+                default_mode=False,
+                verbose=True):
 
         super().__init__(num_agents=num_agents,
-                         max_iter=max_iter,
-                         train_data=train_data,
-                         train_label=train_label,
-                         save_conv_graph=save_conv_graph,
-                         seed=seed)
+                        max_iter=max_iter,
+                        train_data=train_data,
+                        train_label=train_label,
+                        test_data=test_data,
+                        test_label=test_label,
+                        save_conv_graph=save_conv_graph,
+                        seed=seed,
+                        default_mode=default_mode,
+                        verbose=verbose)
 
         self.algo_name = 'BBA'
         self.agent_name = 'Bat'
-        self.algo_params = {}
-
-        # self.num_features = self.population[0, :].shape[0]
-        # self.velocity = np.zeros([self.num_agents, self.num_features])
-
-    def trans_function(self, val, shape='s'):
-        if (shape.lower() == 's'):
-            if val < 0:
-                return 1 - 1/(1 + np.exp(val))
-            else:
-                return 1/(1 + np.exp(-val))
-
-        elif (shape.lower() == 'v'):
-            return abs(val/(np.sqrt(1 + val*val)))
-
-        elif(shape.lower() == 'u'):
-            alpha, beta = 2, 1.5
-            return abs(alpha * np.power(abs(val), beta))
-
-        else:
-            print(
-                '\n[Error!] We don\'t currently support {}-shaped transfer functions...\n'.format(shape))
-            exit(1)
+        self.trans_function=None
 
     def user_input(self):
-        self.algo_params['minFrequency'] = float(
-            input('Min Frequency : ') or 0)
-        self.algo_params['maxFrequency'] = float(
-            input('Max Frequency: ') or 2)
-        self.algo_params['loudness'] = float(input('Loudness: ') or 1.00)
-        self.algo_params['pulseEmissionRate'] = float(
-            input('Pulse emission rate : ') or 0.15)
+        # first set the default values for the attributes
+        self.default_vals["min_frequency"] = 0
+        self.default_vals["max_frequency"] = 2
+        self.default_vals["loudness"] = 1.0
+        self.default_vals["pulse_emission_rate"] = 0.15
+        self.default_vals["alpha"] = 0.95
+        self.default_vals["gamma"] = 0.5
+        self.default_vals["constant_loudness"] = True
+        self.default_vals["trans_function"] = 's'
 
-        self.algo_params['alpha'] = float(
-            input('Alpha value [0-1] : ') or 0.95)
-
-        self.algo_params['gamma'] = float(
-            input('Gamma value [0-1] : ') or 0.5)
-
-        self.algo_params['constantLoudness'] = (True if input(
-            "Constant Loudness (T/F): ").lower() == "t" else False)
-
-        # self.A_t = self.algo_params['loudness']
-        # self.r_t = self.algo_params['pulseEmissionRate']
+        # accept the parameters as user inputs (if default_mode not set)
+        if self.default_mode:
+            self.set_default()
+        else:   
+            self.algo_params["min_frequency"] = float(input(f"Min Frequency (default={self.default_vals['min_frequency']}): ") or self.default_vals['min_frequency'])
+            self.algo_params["max_frequency"] = float(input(f"Max Frequency (default={self.default_vals['max_frequency']}): ") or self.default_vals['max_frequency'])
+            self.algo_params["loudness"] = float(input(f"Loudness (default={self.default_vals['loudness']}): ") or self.default_vals['loudness'])
+            self.algo_params["pulse_emission_rate"] = float(input(f"Pulse emission rate (default={self.default_vals['pulse_emission_rate']}): ") or self.default_vals['pulse_emission_rate'])
+            self.algo_params["alpha"] = float(input(f"Alpha value [0-1] (default={self.default_vals['alpha']}): ") or self.default_vals['alpha'])
+            self.algo_params["gamma"] = float(input(f"Gamma value [0-1] (default={self.default_vals['gamma']}): ") or self.default_vals['gamma'])
+            self.algo_params["constant_loudness"] = (True if input(f"Constant Loudness (True/False) (default={self.default_vals['constant_loudness']}): ").lower() == "true" else False)
+            self.algo_params['trans_function'] = input(f'Shape of Transfer Function [s/v/u] (default={self.default_vals["trans_function"]}): ') or self.default_vals["trans_function"]
+        
+        self.trans_function = get_trans_function(self.algo_params['trans_function'])
 
     def initialize(self):
-        # set the objective function
-        self.val_size = float(
-            input('Percentage of data for valdiation [0-100]: ') or 30)/100
-        self.weight_acc = float(
-            input('Weight for the classification accuracy [0-1]: ') or 0.9)
-        self.obj_function = call_counter(compute_fitness(self.weight_acc))
-
-        # start timer
-        self.start_time = time.time()
-        np.random.seed(self.seed)
-
-        # data preparation
-        self.training_data = Data()
-        self.train_data, self.train_label = np.array(
-            self.train_data), np.array(self.train_label)
-        self.training_data.train_X, self.training_data.val_X, self.training_data.train_Y, self.training_data.val_Y = train_test_split(
-            self.train_data, self.train_label, stratify=self.train_label, test_size=self.val_size)
-
-        # create initial population
-        num_features = self.train_data.shape[1]
-        self.population = initialize(
-            num_agents=self.num_agents, num_features=num_features)
-        self.fitness = self.obj_function(self.population, self.training_data)
-        self.population, self.fitness = sort_agents(
-            agents=self.population, fitness=self.fitness)
-        self.accuracy = compute_accuracy(
-            agents=self.population, data=self.training_data)
+        super().initialize()        
 
         # Create velocity class
-        self.num_features = self.population[0, :].shape[0]
         self.velocity = np.zeros([self.num_agents, self.num_features])
 
         # Initialize other parameters
         self.A_t = self.algo_params['loudness']
-        self.r_t = self.algo_params['pulseEmissionRate']
+        self.r_t = self.algo_params['pulse_emission_rate']
 
         # Leader Agent Feature
         self.Leader_agent = self.population[0, :]
@@ -129,16 +109,16 @@ class BBA(Algorithm):
         self.Leader_accuracy = self.accuracy[0]
 
     def bat(self):
-        if self.algo_params['constantLoudness'] == False:
+        if self.algo_params['constant_loudness'] == False:
             self.A_t *= self.algo_params['alpha']
-            self.r_t = self.algo_params['pulseEmissionRate'] * \
+            self.r_t = self.algo_params['pulse_emission_rate'] * \
                 (1 - np.exp(-1*self.algo_params['gamma']*self.cur_iter))
 
         for agentNumber in range(self.num_agents):
             # frequency for i-th agent or bat
-            fi = self.algo_params['minFrequency'] + \
-                (self.algo_params['maxFrequency'] -
-                 self.algo_params['minFrequency'])*np.random.rand()
+            fi = self.algo_params['min_frequency'] + \
+                (self.algo_params['max_frequency'] -
+                 self.algo_params['min_frequency'])*np.random.rand()
 
             # update velocity equation number 1 in paper
             self.velocity[agentNumber, :] = self.velocity[agentNumber, :] + \
@@ -181,18 +161,18 @@ class BBA(Algorithm):
             self.Leader_agent = self.population[0, :]
 
     def next(self):
-        print('\n================================================================================')
-        print('                          Iteration - {}'.format(self.cur_iter+1))
-        print('================================================================================\n')
+        self.print('\n================================================================================')
+        self.print('                          Iteration - {}'.format(self.cur_iter+1))
+        self.print('================================================================================\n')
 
         # perform improvisation, replacement
         self.bat()
 
         self.cur_iter += 1
 
-
+############# for testing purpose ################
 if __name__ == '__main__':
     data = datasets.load_digits()
-    algo = BBA(num_agents=20, max_iter=5,
-               train_data=data.data, train_label=data.target)
+    algo = BBA(num_agents=20, max_iter=20, train_data=data.data, train_label=data.target, default_mode=True)
     solution = algo.run()
+############# for testing purpose ################
