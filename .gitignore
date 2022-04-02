@@ -4,3 +4,4 @@ test/
 security.txt
 .pypirc
 .idea
+.DS_Store
