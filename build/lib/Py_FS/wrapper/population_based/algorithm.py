@@ -115,7 +115,6 @@ class Algorithm():
             self.val_size = float(input(f'Percentage of data for valdiation [0-100] (default={self.default_vals["val_size"]}): ') or self.default_vals["val_size"])/100
             self.weight_acc = float(input(f'Weight for the classification accuracy [0-1] (default={self.default_vals["weight_acc"]}): ') or self.default_vals["weight_acc"])
         
-        self.print("here", self.default_mode)
         self.obj_function = call_counter(compute_fitness(self.weight_acc))
 
         # start timer

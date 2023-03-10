@@ -17,6 +17,7 @@ Py_FS.egg-info/dependency_links.txt
 Py_FS.egg-info/top_level.txt
 Py_FS/__pycache__/__init__.cpython-38.pyc
 Py_FS/__pycache__/evaluation.cpython-38.pyc
+Py_FS/datasets/.DS_Store
 Py_FS/datasets/__init__.py
 Py_FS/datasets/get_dataset.py
 Py_FS/datasets/__pycache__/__init__.cpython-38.pyc
@@ -58,12 +59,17 @@ Py_FS/evaluation/__pycache__/__init__.cpython-38.pyc
 Py_FS/evaluation/__pycache__/_utilities.cpython-38.pyc
 Py_FS/evaluation/__pycache__/evaluate.cpython-38.pyc
 Py_FS/filter/MI.py
+Py_FS/filter/MI_test.py
 Py_FS/filter/PCC.py
+Py_FS/filter/PCC_test.py
 Py_FS/filter/Relief.py
+Py_FS/filter/Relief_test.py
 Py_FS/filter/SCC.py
+Py_FS/filter/SCC_test.py
 Py_FS/filter/__init__.py
 Py_FS/filter/_general_structure.py
 Py_FS/filter/_utilities.py
+Py_FS/filter/algorithm.py
 Py_FS/filter/__pycache__/MI.cpython-38.pyc
 Py_FS/filter/__pycache__/PCC.cpython-38.pyc
 Py_FS/filter/__pycache__/Relief.cpython-38.pyc
@@ -71,30 +77,26 @@ Py_FS/filter/__pycache__/ReliefF.cpython-38.pyc
 Py_FS/filter/__pycache__/SCC.cpython-38.pyc
 Py_FS/filter/__pycache__/__init__.cpython-38.pyc
 Py_FS/filter/__pycache__/_utilities.cpython-38.pyc
+Py_FS/filter/__pycache__/algorithm.cpython-38.pyc
 Py_FS/wrapper/.DS_Store
 Py_FS/wrapper/__init__.py
 Py_FS/wrapper/__pycache__/__init__.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/BBA.py
 Py_FS/wrapper/nature_inspired/CS.py
-Py_FS/wrapper/nature_inspired/CS_test.py
 Py_FS/wrapper/nature_inspired/EO.py
 Py_FS/wrapper/nature_inspired/GA.py
-Py_FS/wrapper/nature_inspired/GA_test.py
 Py_FS/wrapper/nature_inspired/GSA.py
 Py_FS/wrapper/nature_inspired/GWO.py
 Py_FS/wrapper/nature_inspired/HS.py
 Py_FS/wrapper/nature_inspired/MA.py
-Py_FS/wrapper/nature_inspired/MA_test.py
 Py_FS/wrapper/nature_inspired/PSO.py
 Py_FS/wrapper/nature_inspired/RDA.py
 Py_FS/wrapper/nature_inspired/SCA.py
 Py_FS/wrapper/nature_inspired/WOA.py
-Py_FS/wrapper/nature_inspired/WOA_test.py
 Py_FS/wrapper/nature_inspired/__init__.py
 Py_FS/wrapper/nature_inspired/_general_structure.py
 Py_FS/wrapper/nature_inspired/_transfer_functions.py
 Py_FS/wrapper/nature_inspired/_utilities.py
-Py_FS/wrapper/nature_inspired/_utilities_test.py
 Py_FS/wrapper/nature_inspired/algorithm.py
 Py_FS/wrapper/nature_inspired/__pycache__/BBA.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/CS.cpython-38.pyc
@@ -114,9 +116,18 @@ Py_FS/wrapper/nature_inspired/__pycache__/_transformation_functions.cpython-38.p
 Py_FS/wrapper/nature_inspired/__pycache__/_utilities.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/_utilities_test.cpython-38.pyc
 Py_FS/wrapper/nature_inspired/__pycache__/algorithm.cpython-38.pyc
+Py_FS/wrapper/population_based/.DS_Store
+Py_FS/wrapper/population_based/BBA.py
 Py_FS/wrapper/population_based/CS.py
+Py_FS/wrapper/population_based/EO.py
 Py_FS/wrapper/population_based/GA.py
+Py_FS/wrapper/population_based/GSA.py
+Py_FS/wrapper/population_based/GWO.py
+Py_FS/wrapper/population_based/HS.py
 Py_FS/wrapper/population_based/MA.py
+Py_FS/wrapper/population_based/PSO.py
+Py_FS/wrapper/population_based/RDA.py
+Py_FS/wrapper/population_based/SCA.py
 Py_FS/wrapper/population_based/WOA.py
 Py_FS/wrapper/population_based/__init__.py
 Py_FS/wrapper/population_based/_general_structure.py
@@ -125,13 +136,82 @@ Py_FS/wrapper/population_based/_transfer_functions.py
 Py_FS/wrapper/population_based/_utilities.py
 Py_FS/wrapper/population_based/algorithm.py
 Py_FS/wrapper/population_based/get_algorithm.py
+Py_FS/wrapper/population_based/__pycache__/BBA.cpython-38.pyc
 Py_FS/wrapper/population_based/__pycache__/CS.cpython-38.pyc
+Py_FS/wrapper/population_based/__pycache__/EO.cpython-38.pyc
 Py_FS/wrapper/population_based/__pycache__/GA.cpython-38.pyc
+Py_FS/wrapper/population_based/__pycache__/GSA.cpython-38.pyc
+Py_FS/wrapper/population_based/__pycache__/GWO.cpython-38.pyc
+Py_FS/wrapper/population_based/__pycache__/HS.cpython-38.pyc
 Py_FS/wrapper/population_based/__pycache__/MA.cpython-38.pyc
+Py_FS/wrapper/population_based/__pycache__/PSO.cpython-38.pyc
+Py_FS/wrapper/population_based/__pycache__/RDA.cpython-38.pyc
+Py_FS/wrapper/population_based/__pycache__/SCA.cpython-38.pyc
 Py_FS/wrapper/population_based/__pycache__/WOA.cpython-38.pyc
 Py_FS/wrapper/population_based/__pycache__/__init__.cpython-38.pyc
 Py_FS/wrapper/population_based/__pycache__/_transfer_functions.cpython-38.pyc
 Py_FS/wrapper/population_based/__pycache__/_utilities.cpython-38.pyc
 Py_FS/wrapper/population_based/__pycache__/algorithm.cpython-38.pyc
 Py_FS/wrapper/population_based/__pycache__/get_algorithm.cpython-38.pyc
+Py_FS/wrapper/population_based/test_results/test_Arrhythmia.jpg
+Py_FS/wrapper/population_based/test_results/test_BreastCancer.jpg
+Py_FS/wrapper/population_based/test_results/test_BreastEW.jpg
+Py_FS/wrapper/population_based/test_results/test_CongressEW.jpg
+Py_FS/wrapper/population_based/test_results/test_Digits.jpg
+Py_FS/wrapper/population_based/test_results/test_Exactly.jpg
+Py_FS/wrapper/population_based/test_results/test_Exactly2.jpg
+Py_FS/wrapper/population_based/test_results/test_Glass.jpg
+Py_FS/wrapper/population_based/test_results/test_HeartEW.jpg
+Py_FS/wrapper/population_based/test_results/test_Hill-valley.jpg
+Py_FS/wrapper/population_based/test_results/test_Horse.jpg
+Py_FS/wrapper/population_based/test_results/test_Ionosphere.jpg
+Py_FS/wrapper/population_based/test_results/test_Iris.jpg
+Py_FS/wrapper/population_based/test_results/test_KrVsKpEW.jpg
+Py_FS/wrapper/population_based/test_results/test_Lymphography.jpg
+Py_FS/wrapper/population_based/test_results/test_M-of-n.jpg
+Py_FS/wrapper/population_based/test_results/test_Madelon.jpg
+Py_FS/wrapper/population_based/test_results/test_Monk1.jpg
+Py_FS/wrapper/population_based/test_results/test_Monk2.jpg
+Py_FS/wrapper/population_based/test_results/test_Monk3.jpg
+Py_FS/wrapper/population_based/test_results/test_PenglungEW.jpg
+Py_FS/wrapper/population_based/test_results/test_Sonar.jpg
+Py_FS/wrapper/population_based/test_results/test_Soybean-small.jpg
+Py_FS/wrapper/population_based/test_results/test_SpectEW.jpg
+Py_FS/wrapper/population_based/test_results/test_Tic-tac-toe.jpg
+Py_FS/wrapper/population_based/test_results/test_Vote.jpg
+Py_FS/wrapper/population_based/test_results/test_Vowel.jpg
+Py_FS/wrapper/population_based/test_results/test_WaveformEW.jpg
+Py_FS/wrapper/population_based/test_results/test_Wine.jpg
+Py_FS/wrapper/population_based/test_results/test_Zoo.jpg
 Py_FS/wrapper/single_solution_based/__init__.py
+Py_FS/wrapper/single_solution_based/__pycache__/__init__.cpython-38.pyc
+Test Plots/test_Arrhythmia.jpg
+Test Plots/test_BreastCancer.jpg
+Test Plots/test_BreastEW.jpg
+Test Plots/test_CongressEW.jpg
+Test Plots/test_Digits.jpg
+Test Plots/test_Exactly.jpg
+Test Plots/test_Exactly2.jpg
+Test Plots/test_Glass.jpg
+Test Plots/test_HeartEW.jpg
+Test Plots/test_Hill-valley.jpg
+Test Plots/test_Horse.jpg
+Test Plots/test_Ionosphere.jpg
+Test Plots/test_Iris.jpg
+Test Plots/test_KrVsKpEW.jpg
+Test Plots/test_Lymphography.jpg
+Test Plots/test_M-of-n.jpg
+Test Plots/test_Madelon.jpg
+Test Plots/test_Monk1.jpg
+Test Plots/test_Monk2.jpg
+Test Plots/test_Monk3.jpg
+Test Plots/test_PenglungEW.jpg
+Test Plots/test_Sonar.jpg
+Test Plots/test_Soybean-small.jpg
+Test Plots/test_SpectEW.jpg
+Test Plots/test_Tic-tac-toe.jpg
+Test Plots/test_Vote.jpg
+Test Plots/test_Vowel.jpg
+Test Plots/test_WaveformEW.jpg
+Test Plots/test_Wine.jpg
+Test Plots/test_Zoo.jpg

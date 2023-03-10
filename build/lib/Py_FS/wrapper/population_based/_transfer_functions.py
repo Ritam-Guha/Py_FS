@@ -11,8 +11,7 @@ def v_func(val):
     return abs(val/(np.sqrt(1 + val*val)))
 
 
-def u_func(val):
-    alpha, beta = 2, 1.5
+def u_func(val, alpha=2, beta=1.5):
     return abs(alpha * np.power(abs(val), beta))
 
 

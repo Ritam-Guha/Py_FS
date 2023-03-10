@@ -2,6 +2,5 @@
 /*.jpg
 test/
 security.txt
-.pypirc
-.idea
-.DS_Store
+upload.sh
+starter_code.sh
