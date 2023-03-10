@@ -4,66 +4,87 @@ Programmer: Ritam Guha
 Date of Development: 28/10/2020
 
 """
+# set the directory path
+import os,sys
+import os.path as path
+abs_path_pkg =  path.abspath(path.join(__file__ ,"../../../"))
+dir_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, abs_path_pkg)
+
+# import other libraries
 import numpy as np
 from Py_FS.filter._utilities import normalize, Result
+from Py_FS.filter.algorithm import Algorithm
 from sklearn import datasets
 
-def MI(data, target):
-    # function that assigns scores to features according to Mutual Information (MI)
-    # the rankings should be done in increasing order of the MI scores 
+class PCC(Algorithm):
+    def __init__(self, 
+                data, 
+                target,
+                default_mode=False,
+                verbose=True):
+        
+        super().__init__(
+            data=data,
+            target=target,
+            default_mode=default_mode,
+            verbose=verbose
+        )
     
-    # initialize the variables and result structure
-    feature_values = np.array(data)
-    num_features = feature_values.shape[1]
-    MI_mat = np.zeros((num_features, num_features))
-    MI_values_feat = np.zeros(num_features)
-    MI_values_class = np.zeros(num_features)
-    result = Result()
-    result.features = feature_values
-    weight_feat = 0.3   # weightage provided to feature-feature correlation
-    weight_class = 0.7  # weightage provided to feature-class correlation
-    
-    # generate the information matrix
-    for ind_1 in range(num_features):
-        for ind_2 in range(num_features):
-            MI_mat[ind_1, ind_2] = MI_mat[ind_2, ind_1] = compute_MI(feature_values[:, ind_1], feature_values[:, ind_2])
+    def user_input(self):
+        # accept the parameters as user inputs (if default_mode not set)
+        if self.default_mode:
+            self.set_default()
+        else:
+            self.algo_params["weight_feat"] = float(input(f"Weight for feature-feature correlation: {self.default_vals['weight_feat']}") or self.default_vals['weight_feat'])
+            self.algo_params["weight_class"] = float(input(f"Weight for feature-class correlation: {self.default_vals['weight_class']}") or self.default_vals['weight_class'])
 
-    for ind in range(num_features):
-        MI_values_feat[ind] = -np.sum(abs(MI_mat[ind,:]))
-        MI_values_class[ind] = compute_MI(feature_values[:, ind], target)
+    def initialize(self):
+        super().initialize()
+        self.correlation_matrix = np.zeros((self.num_features, self.num_features))
+        self.feature_feature_relation = np.zeros(self.num_features)
+        self.feature_class_relation = np.zeros(self.num_features)
 
-    # produce scores and ranks from the information matrix
-    MI_values_feat = normalize(MI_values_feat)
-    MI_values_class = normalize(MI_values_class)
-    MI_scores = (weight_class * MI_values_class) + (weight_feat * MI_values_feat)
-    MI_ranks = np.argsort(np.argsort(-MI_scores))
+    def compute_MI(self, x, y):
+        # function to compute mutual information between two variables 
+        sum_mi = 0.0
+        x_value_list = np.unique(x)
+        y_value_list = np.unique(y)
+        Px = np.array([ len(x[x==xval])/float(len(x)) for xval in x_value_list ]) #P(x)
+        Py = np.array([ len(y[y==yval])/float(len(y)) for yval in y_value_list ]) #P(y)
+        for i in range(len(x_value_list)):
+            if Px[i] ==0.:
+                continue
+            sy = y[x == x_value_list[i]]
+            if len(sy)== 0:
+                continue
+            pxy = np.array([len(sy[sy==yval])/float(len(y))  for yval in y_value_list]) #p(x,y)
+            t = pxy[Py>0.]/Py[Py>0.] /Px[i] # log(P(x,y)/( P(x)*P(y))
+            sum_mi += sum(pxy[t>0]*np.log2( t[t>0]) ) # sum ( P(x,y)* log(P(x,y)/( P(x)*P(y)) )
 
-    # assign the results to the appropriate fields
-    result.scores = MI_scores
-    result.ranks = MI_ranks
-    result.ranked_features = feature_values[:, np.argsort(-MI_scores)]
+        return sum_mi
 
-    return result  
+    def execute(self):
+        # generate the correlation matrix
+        self.feature_mean = np.mean(self.data, axis=0)
+        for ind_1 in range(self.num_features):
+            for ind_2 in range(self.num_features):
+                self.correlation_matrix[ind_1, ind_2] = self.correlation_matrix[ind_2, ind_1] = self.compute_MI(self.data[:, ind_1], self.data[:, ind_2])
 
-def compute_MI(x, y):
-    # function to compute mutual information between two variables 
-    sum_mi = 0.0
-    x_value_list = np.unique(x)
-    y_value_list = np.unique(y)
-    Px = np.array([ len(x[x==xval])/float(len(x)) for xval in x_value_list ]) #P(x)
-    Py = np.array([ len(y[y==yval])/float(len(y)) for yval in y_value_list ]) #P(y)
-    for i in range(len(x_value_list)):
-        if Px[i] ==0.:
-            continue
-        sy = y[x == x_value_list[i]]
-        if len(sy)== 0:
-            continue
-        pxy = np.array([len(sy[sy==yval])/float(len(y))  for yval in y_value_list]) #p(x,y)
-        t = pxy[Py>0.]/Py[Py>0.] /Px[i] # log(P(x,y)/( P(x)*P(y))
-        sum_mi += sum(pxy[t>0]*np.log2( t[t>0]) ) # sum ( P(x,y)* log(P(x,y)/( P(x)*P(y)) )
+        for ind in range(self.num_features):
+            self.feature_feature_relation[ind] = -np.sum(abs(self.correlation_matrix[ind,:])) # -ve because we want to remove the corralation
+            self.feature_class_relation[ind] = abs(self.compute_MI(self.data[:, ind], self.target))
 
-    return sum_mi
+        # produce scores and ranks from the information matrix
+        self.feature_feature_relation = normalize(self.feature_feature_relation)
+        self.feature_class_relation = normalize(self.feature_class_relation)
+        self.scores = (self.algo_params["weight_class"] * self.feature_class_relation) + (self.algo_params["weight_feature"] * self.feature_feature_relation)
 
+############# for testing purpose ################
 if __name__ == '__main__':
-    data = datasets.load_iris()
-    MI(data.data, data.target)
+    from scipy.stats.stats import pearsonr
+    data = datasets.load_wine()
+    algo = PCC(data.data, data.target)
+    res = algo.run()
+    print(res.correlation_matrix)
+############# for testing purpose ################

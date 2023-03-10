@@ -4,10 +4,63 @@ Programmer: Ritam Guha
 Date of Development: 28/10/2020
 
 """
-from ReliefF import ReliefF
+# set the directory path
+import os,sys
+import os.path as path
+abs_path_pkg =  path.abspath(path.join(__file__ ,"../../../"))
+dir_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, abs_path_pkg)
+
+# import other libraries
 import numpy as np
 from Py_FS.filter._utilities import normalize, Result
+from Py_FS.filter.algorithm import Algorithm
 from sklearn import datasets
+from ReliefF import ReliefF
+
+class PCC(Algorithm):
+    def __init__(self, 
+                data, 
+                target,
+                default_mode=False,
+                verbose=True):
+        
+        super().__init__(
+            data=data,
+            target=target,
+            default_mode=default_mode,
+            verbose=verbose
+        )
+    
+    def user_input(self):
+        # accept the parameters as user inputs (if default_mode not set)
+        self.default_vals["n_neighbors"] = 5
+
+        if self.default_mode:
+            self.set_default()
+        else:
+            self.algo_params["n_neighbors"] = float(input(f"Number of neighbors considered for relief scores: {self.default_vals['n_neighbors']}") or self.default_vals['n_neighbors'])
+
+    def initialize(self):
+        super().initialize()
+
+    def execute(self):
+        # generate the ReliefF scores
+        relief = ReliefF(n_neighbors=self.algo_params["n_neighbors"], n_features_to_keep=self.num_features)
+        relief.fit_transform(self.data, self.target)
+
+        # produce scores and ranks from the information matrix
+        self.scores = normalize(relief.feature_scores)
+
+############# for testing purpose ################
+if __name__ == '__main__':
+    from scipy.stats.stats import pearsonr
+    data = datasets.load_wine()
+    algo = PCC(data.data, data.target)
+    res = algo.run()
+    print(res.correlation_matrix)
+############# for testing purpose ################
+
 
 def Relief(data, target):
     # function that assigns scores to features according to Relief algorithm
