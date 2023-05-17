@@ -4,59 +4,95 @@ Programmer: Ritam Guha
 Date of Development: 28/10/2020
 
 """
+# set the directory path
+import os, sys
+import os.path as path
+
+abs_path_pkg = path.abspath(path.join(__file__, "../../../"))
+dir_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, abs_path_pkg)
+
+# import other libraries
 import numpy as np
 from Py_FS.filter._utilities import normalize, Result
+from Py_FS.filter.algorithm import Algorithm
 from sklearn import datasets
 
-def SCC(data, target):
-    # function that assigns scores to features according to Spearman's Correlation Coefficient (SCC)
-    # the rankings should be done in increasing order of the SCC scores 
 
-    # initialize the variables and result structure
-    feature_values = np.array(data)
-    num_features = feature_values.shape[1]
-    SCC_mat = np.zeros((num_features, num_features))
-    SCC_values_feat = np.zeros(num_features)
-    SCC_values_class = np.zeros(num_features)
-    result = Result()
-    result.features = feature_values
-    weight_feat = 0.3   # weightage provided to feature-feature correlation
-    weight_class = 0.7  # weightage provided to feature-class correlation
+class SCC(Algorithm):
+    def __init__(self,
+                 data,
+                 target,
+                 default_mode=False,
+                 verbose=True):
 
-    # generate the correlation matrix
-    for ind_1 in range(num_features):
-        for ind_2 in range(num_features):
-            SCC_mat[ind_1, ind_2] = SCC_mat[ind_2, ind_1] = compute_SCC(feature_values[:, ind_1], feature_values[:, ind_2])
+        super().__init__(
+            data=data,
+            target=target,
+            default_mode=default_mode,
+            verbose=verbose
+        )
+        self.feature_scores = None
+        self.feature_mean = None
+        self.feature_class_relation = None
+        self.feature_feature_relation = None
+        self.correlation_matrix = None
 
-    for ind in range(num_features):
-        SCC_values_feat[ind] = -np.sum(abs(SCC_mat[ind,:]))
-        SCC_values_class[ind] = compute_SCC(feature_values[:, ind], target)
+    def user_input(self):
+        # accept the parameters as user inputs (if default_mode not set)
+        if self.default_mode:
+            self.set_default()
+        else:
+            self.algo_params["weight_feat"] = float(
+                input(f"Weight for feature-feature correlation (default = {self.default_vals['weight_feat']}):") or
+                self.default_vals['weight_feat'])
+            self.algo_params["weight_class"] = float(
+                input(f"Weight for feature-class correlation (default = {self.default_vals['weight_class']}):") or
+                self.default_vals['weight_class'])
 
-    # produce scores and ranks from the information matrix
-    SCC_values_feat = normalize(SCC_values_feat)
-    SCC_values_class = normalize(SCC_values_class)
-    SCC_scores = (weight_class * SCC_values_class) + (weight_feat * SCC_values_feat)
-    SCC_ranks = np.argsort(np.argsort(-SCC_scores))
+    def initialize(self):
+        super().initialize()
+        self.correlation_matrix = np.zeros((self.num_features, self.num_features))
+        self.feature_feature_relation = np.zeros(self.num_features)
+        self.feature_class_relation = np.zeros(self.num_features)
 
-    # assign the results to the appropriate fields
-    result.scores = SCC_scores
-    result.ranks = SCC_ranks
-    result.ranked_features = feature_values[:, np.argsort(-SCC_scores)]
+    def compute_SCC(self, x, y):
+        # function to compute the SCC value for two variables
+        x_order = np.argsort(np.argsort(x))
+        y_order = np.argsort(np.argsort(y))
+        mean_x = np.mean(x_order)
+        mean_y = np.mean(y_order)
+        numerator = np.sum((x_order - mean_x) * (y_order - mean_y))
+        denominator = np.sqrt(np.sum(np.square(x_order - mean_x)) * np.sum(np.square(y_order - mean_y)))
+        SCC_val = numerator / denominator
 
-    return result
+        return SCC_val
 
-def compute_SCC(x, y):
-    # function to compute the SCC value for two variables
-    x_order = np.argsort(np.argsort(x))
-    y_order = np.argsort(np.argsort(y))
-    mean_x = np.mean(x_order)
-    mean_y = np.mean(y_order)
-    numerator = np.sum((x_order - mean_x) * (y_order - mean_y))
-    denominator = np.sqrt(np.sum(np.square(x_order - mean_x)) * np.sum(np.square(y_order - mean_y)))
-    SCC_val = numerator/denominator
+    def execute(self):
+        # generate the correlation matrix
+        self.feature_mean = np.mean(self.data, axis=0)
+        for ind_1 in range(self.num_features):
+            for ind_2 in range(self.num_features):
+                self.correlation_matrix[ind_1, ind_2] = self.correlation_matrix[ind_2, ind_1] = self.compute_SCC(
+                    self.data[:, ind_1], self.data[:, ind_2])
 
-    return SCC_val
+        for ind in range(self.num_features):
+            self.feature_feature_relation[ind] = -np.sum(
+                abs(self.correlation_matrix[ind, :]))  # -ve because we want to remove the corralation
+            self.feature_class_relation[ind] = abs(self.compute_SCC(self.data[:, ind], self.target))
 
+        # produce scores and ranks from the information matrix
+        self.feature_feature_relation = normalize(self.feature_feature_relation)
+        self.feature_class_relation = normalize(self.feature_class_relation)
+        self.feature_scores = (self.algo_params["weight_class"] * self.feature_class_relation) + (
+                    self.algo_params["weight_feat"] * self.feature_feature_relation)
+
+
+############# for testing purpose ################
 if __name__ == '__main__':
-    data = datasets.load_iris()
-    SCC(data.data, data.target)
+
+    data = datasets.load_wine()
+    algo = SCC(data.data, data.target)
+    res = algo.run()
+    print(res.correlation_matrix)
+############# for testing purpose ################

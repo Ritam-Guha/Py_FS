@@ -1,5 +1,5 @@
 # set the directory path
-import os,sys
+import os, sys
 import os.path as path
 abs_path_pkg =  path.abspath(path.join(__file__ ,"../../../"))
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -8,7 +8,7 @@ sys.path.insert(0, abs_path_pkg)
 from sklearn.neighbors import KNeighborsClassifier as KNN
 from sklearn.ensemble import RandomForestClassifier as RF
 from sklearn.svm import SVC as SVM
-from sklearn.metrics import precision_score, recall_score, f1_score, plot_confusion_matrix, confusion_matrix
+from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix, ConfusionMatrixDisplay
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -119,7 +119,6 @@ class Metric():
 
     def compute_f1(self):
         # function to compute the f1 score
-        # function to compute the average recall
         f1 = None
 
         if(len(self.labels) == 2):
@@ -139,7 +138,7 @@ class Metric():
 
     def plot_confusion_matrix(self, save_conf_mat=False):
         # function to plot the confusion matrix
-        plot_confusion_matrix(self.clf, self.test_X, self.test_Y)
+        ConfusionMatrixDisplay.from_estimator(self.clf, self.test_X, self.test_Y)
         if(save_conf_mat):
             plt.savefig('confusion_matrix.jpg')
         plt.title('Confusion Matrix')

@@ -31,7 +31,7 @@ class Algorithm():
         self.algo_params = None
         self.default_mode = default_mode
         self.algo_params = {}
-        self.default_vals = None
+        self.default_vals = {}
     
     @abstractmethod
     def user_input(self):
@@ -46,11 +46,11 @@ class Algorithm():
     def initialize(self):
         self.default_vals["weight_feat"] = 0.3
         self.default_vals["weight_class"] = 0.7
-        self.result.features = copy.deepcopy(self.data)
+        self.features = copy.deepcopy(self.data)
 
     def run(self):
+        self.initialize()  # initialize the algorithm
         self.user_input()   # take the user inputs
-        self.initialize()   # initialize the algorithm
         self.execute()
         self.feature_ranks = np.argsort(np.argsort(-self.feature_scores))
         self.ranked_features = self.data[:, self.feature_ranks]

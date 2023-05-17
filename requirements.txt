@@ -2,3 +2,5 @@ ReliefF
 numpy 
 matplotlib
 sklearn
+pandas
+tabulate

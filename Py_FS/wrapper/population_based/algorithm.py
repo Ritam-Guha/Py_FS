@@ -30,7 +30,7 @@ class Algorithm():
                  val_size=30,
                  seed=0,
                  save_conv_graph=True,
-                 max_evals=np.float("inf"),
+                 max_evals=np.float64("inf"),
                  algo_name=None,
                  agent_name=None,
                  default_mode=False,
@@ -144,7 +144,7 @@ class Algorithm():
         cur_obj = {
             'population': self.population,
             'fitness': self.fitness,
-            'accurcay': self.accuracy,
+            'accuracy': self.accuracy,
         }
         self.history.append(copy.deepcopy(cur_obj))
 
@@ -170,12 +170,12 @@ class Algorithm():
         return fig
 
     def post_processing(self):
-        # post processing steps
+        # post-processing steps
         self.fitness = self.obj_function(self.population, self.training_data)
         self.population, self.fitness = sort_agents(agents=self.population, fitness=self.fitness)
         self.accuracy = compute_accuracy(agents=self.population, data=self.training_data)
         
-        if(self.fitness[0] > self.Leader_fitness):
+        if self.fitness[0] > self.Leader_fitness:
             self.Leader_fitness = self.fitness[0]
             self.Leader_agent = self.population[0, :]
             self.Leader_accuracy = self.accuracy[0]
@@ -209,7 +209,7 @@ class Algorithm():
         if not self.default_mode:
             self.print('\n*****************************************************    Thank You    ******************************************************\n')
 
-        while(not self.check_end()):    # while the end criterion is not met
+        while not self.check_end():    # while the end criterion is not met
             self.next()                     # do one step of the algorithm
             self.post_processing()          # do the post processing steps
             self.display()                  # display the details of 1 iteration
@@ -231,7 +231,7 @@ class Algorithm():
 
         self.save_solution()
 
-        if(self.save_conv_graph):
+        if self.save_conv_graph:
             fig = self.plot()
             fig.savefig('convergence_curve_' + self.algo_name + '.jpg')
 

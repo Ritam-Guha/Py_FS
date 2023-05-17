@@ -1,6 +1,7 @@
 # Py_FS: A Python Package for Feature Selection
 Py_FS is a toolbox developed with complete focus on Feature Selection (FS) using Python as the underlying programming language. It comes with capabilities like nature-inspired evolutionary feature selection algorithms, filter methods and simple evaulation metrics to help with easy applications and comparisons among different feature selection algorithms over different datasets. It is still in the development phase. We wish to extend this package further to contain more extensive set of feature selection procedures and corresponding utilities.
 
+ <span style="color:green">[UPDATE!]</span> Py_FS now provides access to 30 popular pre-processed datasets used for feature selection. Please find the list of the datasets in the following link: [Py_FS database](./Py_FS/datasets/list_datasets.txt)
 ## Please cite this paper if you are using Py_FS:
 Guha, R., Chatterjee, B., Khalid Hassan, S. K., Ahmed, S., Bhattacharyya, T., & Sarkar, R. (2022). Py_FS: A Python Package for Feature Selection using Meta-heuristic Optimization Algorithms. In Computational Intelligence in Pattern Recognition (pp. 495-504). Springer, Singapore.
 DOI: https://link.springer.com/chapter/10.1007/978-981-16-2543-5_42
@@ -8,6 +9,7 @@ DOI: https://link.springer.com/chapter/10.1007/978-981-16-2543-5_42
 <p align="center">  
   <img src="https://raw.githubusercontent.com/Ritam-Guha/Py_FS/master/Images/logo.jpg" height="300" width="300">
 </p><br>
+
 
 ## Installation
 Please install the required utilities for the package by running this piece of code:
@@ -39,20 +41,23 @@ The current structure of the package is mentioned below. Depending on the level 
   * [Relief.py](./Py_FS/filter/Relief.py)
   * [SCC.py](./Py_FS/filter/SCC.py)
 * [wrapper/](./Py_FS/wrapper)
-  * [nature_inspired/](./Py_FS/wrapper/nature_inspired)
-    * [BBA.py](./Py_FS/wrapper/nature_inspired/BBA.py)
-    * [CS.py](./Py_FS/wrapper/nature_inspired/CS.py)
-    * [EO.py](./Py_FS/wrapper/nature_inspired/EO.py)
-    * [GA.py](./Py_FS/wrapper/nature_inspired/GA.py)
-    * [GSA.py](./Py_FS/wrapper/nature_inspired/GSA.py)
-    * [GWO.py](./Py_FS/wrapper/nature_inspired/GWO.py)
-    * [HS.py](./Py_FS/wrapper/nature_inspired/HS.py)
-    * [MA.py](./Py_FS/wrapper/nature_inspired/MA.py)
-    * [PSO.py](./Py_FS/wrapper/nature_inspired/PSO.py)
-    * [RDA.py](./Py_FS/wrapper/nature_inspired/RDA.py)
-    * [SCA.py](./Py_FS/wrapper/nature_inspired/SCA.py)
-    * [WOA.py](./Py_FS/wrapper/nature_inspired/WOA.py)
-* [evaluation.py](./Py_FS/evaluation.py)
+  * [population_based/](./Py_FS/wrapper/population_based)
+    * [BBA.py](./Py_FS/wrapper/population_based/BBA.py)
+    * [CS.py](./Py_FS/wrapper/population_based/CS.py)
+    * [EO.py](./Py_FS/wrapper/population_based/EO.py)
+    * [GA.py](./Py_FS/wrapper/population_based/GA.py)
+    * [GSA.py](./Py_FS/wrapper/population_based/GSA.py)
+    * [GWO.py](./Py_FS/wrapper/population_based/GWO.py)
+    * [HS.py](./Py_FS/wrapper/population_based/HS.py)
+    * [MA.py](./Py_FS/wrapper/population_based/MA.py)
+    * [PSO.py](./Py_FS/wrapper/population_based/PSO.py)
+    * [RDA.py](./Py_FS/wrapper/population_based/RDA.py)
+    * [SCA.py](./Py_FS/wrapper/population_based/SCA.py)
+    * [WOA.py](./Py_FS/wrapper/population_based/WOA.py)
+* [evaluation/](./Py_FS/evaluation)
+  * [evaluate.py](./Py_FS/evaluation/evaluate.py)
+* [datasets](./Py_FS/datasets)
+  * [get_dataset.py](./Py_FS/datasets/get_dataset.py)
 
 
 For example, if someone wants to use GA, it should be imported using the following statement:

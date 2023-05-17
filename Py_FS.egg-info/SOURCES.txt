@@ -1,4 +1,3 @@
-.DS_Store
 .gitignore
 .pypirc
 LICENSE
@@ -59,22 +58,14 @@ Py_FS/evaluation/__pycache__/__init__.cpython-38.pyc
 Py_FS/evaluation/__pycache__/_utilities.cpython-38.pyc
 Py_FS/evaluation/__pycache__/evaluate.cpython-38.pyc
 Py_FS/filter/MI.py
-Py_FS/filter/MI_test.py
 Py_FS/filter/PCC.py
-Py_FS/filter/PCC_test.py
 Py_FS/filter/Relief.py
-Py_FS/filter/Relief_test.py
 Py_FS/filter/SCC.py
-Py_FS/filter/SCC_test.py
 Py_FS/filter/__init__.py
 Py_FS/filter/_general_structure.py
 Py_FS/filter/_utilities.py
 Py_FS/filter/algorithm.py
-Py_FS/filter/__pycache__/MI.cpython-38.pyc
-Py_FS/filter/__pycache__/PCC.cpython-38.pyc
-Py_FS/filter/__pycache__/Relief.cpython-38.pyc
 Py_FS/filter/__pycache__/ReliefF.cpython-38.pyc
-Py_FS/filter/__pycache__/SCC.cpython-38.pyc
 Py_FS/filter/__pycache__/__init__.cpython-38.pyc
 Py_FS/filter/__pycache__/_utilities.cpython-38.pyc
 Py_FS/filter/__pycache__/algorithm.cpython-38.pyc

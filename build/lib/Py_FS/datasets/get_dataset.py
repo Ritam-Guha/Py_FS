@@ -47,6 +47,7 @@ def display_datasets(list_datasets):
 
     print(tabulate(table_list, headers=["Index", "Dataset"]))
 
+
 if __name__ == '__main__':
-    data = get_dataset('Vowl')
+    data = get_dataset("Vowl")
     
